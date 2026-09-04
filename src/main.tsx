@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { labExperiments, type LabExperiment } from './data/lab'
 import { workProjects, type WorkProject } from './data/work'
+import { contact } from './data/contact'
 import { CaseMedia, CaseMediaPair } from './components/work/CaseMedia'
 import './styles.css'
 
@@ -24,7 +25,7 @@ const responses: PortfolioResponse[] = [
   { terms: ['design or code', 'design and code', 'frontend', 'implementation'], mode: 'divide', targets: ['capabilities'], classification: { intent: 'CAPABILITIES', evidence: 'DESIGN + BUILD', representation: 'DIVIDE' } },
   { terms: ['how does malik approach complexity', 'complexity', 'systems thinking', 'systems'], mode: 'connect', targets: ['thinking'], classification: { intent: 'APPROACH', evidence: 'THINKING', representation: 'CONNECT' } },
   { terms: ['why malik', 'why should', 'experience'], mode: 'sequence', targets: ['experience'], classification: { intent: 'EVOLUTION', evidence: 'EXPERIENCE', representation: 'SEQUENCE' } },
-  { terms: ['contact', 'availability', 'available', 'talk'], mode: 'focus', targets: ['contact'], classification: { intent: 'CONTACT', evidence: 'CONTACT', representation: 'FOCUS' } }
+  { terms: ['contact', 'contact malik', 'email', 'linkedin', 'availability', 'available', 'talk'], mode: 'focus', targets: ['contact'], route: 'home', routeTarget: 'contact', classification: { intent: 'CONTACT', evidence: 'CONTACT', representation: 'FOCUS' } }
 ]
 
 const principles = [
@@ -53,7 +54,11 @@ function App() {
   const [query, setQuery] = useState('')
   const [interpreting, setInterpreting] = useState(false)
   const [response, setResponse] = useState<PortfolioResponse | null>(null)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [showBackToTop, setShowBackToTop] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const mobileMenuRef = useRef<HTMLDivElement>(null)
+  const mobileMenuTriggerRef = useRef<HTMLButtonElement>(null)
   const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
   const navigate = (next: Page, target?: string, slug?: string) => {
     const path = next === 'home' ? '/' : next === 'workCaseStudy' ? `/work/${slug}` : next === 'labExperiment' ? `/lab/${slug}` : `/${next}`
@@ -66,6 +71,7 @@ function App() {
     }, 30)
   }
   const openAsk = () => { setMachineOpen(true); setInterpreting(false); setQuery('') }
+  const closeMobileMenu = () => { setMobileMenuOpen(false); window.setTimeout(() => mobileMenuTriggerRef.current?.focus(), 0) }
   const restore = () => { setResponse(null); window.history.replaceState(null, '', page === 'home' ? '/' : `/${page}`) }
   const submit = (value: string) => {
     const match = responses.find(item => item.terms.some(term => value.toLowerCase().includes(term)))
@@ -80,14 +86,32 @@ function App() {
   }
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); openAsk() }
-      if (event.key === 'Escape') { if (machineOpen) setMachineOpen(false); else if (response) restore() }
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); setMobileMenuOpen(false); openAsk() }
+      if (event.key === 'Escape') { if (mobileMenuOpen) closeMobileMenu(); else if (machineOpen) setMachineOpen(false); else if (response) restore() }
     }
     const onPopState = () => { setRoute(routeFromPath()); setResponse(null) }
     window.addEventListener('keydown', onKey); window.addEventListener('popstate', onPopState)
     return () => { window.removeEventListener('keydown', onKey); window.removeEventListener('popstate', onPopState) }
-  }, [machineOpen, response, page])
+  }, [machineOpen, mobileMenuOpen, response, page])
   useEffect(() => { if (machineOpen) window.setTimeout(() => inputRef.current?.focus(), 150) }, [machineOpen])
+  useEffect(() => {
+    const updateBackToTop = () => {
+      const pastThreshold = window.scrollY > window.innerHeight * .5
+      const nearFooter = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 130
+      setShowBackToTop(pastThreshold && !nearFooter)
+    }
+    updateBackToTop()
+    window.addEventListener('scroll', updateBackToTop, { passive: true })
+    window.addEventListener('resize', updateBackToTop)
+    return () => { window.removeEventListener('scroll', updateBackToTop); window.removeEventListener('resize', updateBackToTop) }
+  }, [])
+  useEffect(() => {
+    if (!mobileMenuOpen) return
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    window.setTimeout(() => mobileMenuRef.current?.querySelector<HTMLButtonElement>('.mobile-menu-link')?.focus(), 100)
+    return () => { document.body.style.overflow = previousOverflow }
+  }, [mobileMenuOpen])
   const handleIntelligentMove = (event: React.PointerEvent<HTMLSpanElement>) => {
     if (reducedMotion() || event.pointerType !== 'mouse') return
     const speed = Math.min(1, (Math.abs(event.movementX) + Math.abs(event.movementY)) / 26)
@@ -99,17 +123,30 @@ function App() {
     if (current < 0) return
     event.preventDefault(); const offset = event.key === 'ArrowDown' || event.key === 'ArrowRight' ? 1 : -1; prompts[(current + offset + prompts.length) % prompts.length]?.focus()
   }
+  const trapMobileMenuFocus = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key !== 'Tab') return
+    const focusable = [...event.currentTarget.querySelectorAll<HTMLButtonElement>('button:not([disabled])')]
+    const current = focusable.indexOf(document.activeElement as HTMLButtonElement)
+    if (current < 0) return
+    event.preventDefault()
+    const next = event.shiftKey ? (current - 1 + focusable.length) % focusable.length : (current + 1) % focusable.length
+    focusable[next]?.focus()
+  }
   const active = response?.mode
+  const backToTop = () => window.scrollTo({ top: 0, behavior: reducedMotion() ? 'auto' : 'smooth' })
   return <main className={`${page !== 'home' ? `page-${page}` : ''} ${active ? `orchestrating mode-${active} response-${response?.classification.intent.toLowerCase()}` : ''}`}>
     {response && <button className="return" onClick={restore}>M<span>/</span> RETURN</button>}
-    <header className="nav"><button className="mark" onClick={() => navigate('home')} aria-label="Malik home">M<span>/</span></button><span className="year">2026</span><nav aria-label="Primary navigation"><button onClick={() => navigate('work')}>WORK</button><button onClick={() => navigate('about')}>ABOUT</button><button onClick={() => navigate('lab')}>LAB</button><button onClick={openAsk}>ASK MALIK <i>↗</i></button></nav></header>
+    {showBackToTop && !mobileMenuOpen && !machineOpen && !response && <button className="back-to-top" onClick={backToTop} aria-label="Back to top">M/ ↑ TOP</button>}
+    <header className="nav"><button className="mark brand-signature" onClick={() => navigate('home')} aria-label="Temitayo Lawal Malik - Home">M<span className="mark-slash">/</span><span className="brand-name">TEMITAYO LAWAL MALIK</span></button><span className="year">2026</span><nav aria-label="Primary navigation"><button onClick={() => navigate('work')}>WORK</button><button onClick={() => navigate('about')}>ABOUT</button><button onClick={() => navigate('lab')}>LAB</button><button onClick={openAsk}>ASK MALIK <i>↗</i></button></nav><button className="mobile-menu-trigger" ref={mobileMenuTriggerRef} onClick={() => setMobileMenuOpen(true)} aria-expanded={mobileMenuOpen} aria-controls="mobile-navigation">MENU +</button></header>
     {page === 'home' && <><section className="hero" id="hero"><div className="hero-title" aria-label="I design intelligent products for human decisions"><span>I DESIGN</span><span className="intelligent" onPointerMove={handleIntelligentMove}>INTELLIGENT</span><span>PRODUCTS</span><span>FOR HUMAN <em>decisions.</em></span></div><div className="role-response"><div>PRODUCT DESIGNER</div><span>AI / UX / SYSTEMS</span><p>I work where product thinking, interaction and implementation meet.</p></div><div className="hero-meta"><span>PRODUCT DESIGNER<br />AI / UX / SYSTEMS</span><span>LAGOS, NG<br />GLOBAL / REMOTE</span></div><button className="ask-entry" onClick={openAsk}><b>●</b> ASK ME SOMETHING</button><p className="annotation">because someone still has to make one.</p></section><SelectedWork onPrimaOpen={() => navigate('workCaseStudy', undefined, 'prima')} onAllWork={() => navigate('work')} /><HomeSections submit={submit} /></>}
     {page === 'about' && <About />}
     {page === 'work' && <WorkIndex onProjectOpen={slug => navigate('workCaseStudy', undefined, slug)} />}
     {page === 'workCaseStudy' && <WorkPreparation project={workProjects.find(project => project.slug === route.slug)} onBack={() => navigate('work')} />}
     {page === 'lab' && <Lab onExperimentOpen={slug => navigate('labExperiment', undefined, slug)} />}
     {page === 'labExperiment' && <LabExperimentPage experiment={labExperiments.find(experiment => experiment.slug === route.slug)} onBack={() => navigate('lab')} />}
-    {machineOpen && <section className="machine" aria-label="Ask Malik"><div className="machine-head"><button className="mark" onClick={() => setMachineOpen(false)} aria-label="Return to portfolio">M<span>/</span></button><span>MACHINE</span><span><b>●</b> ACTIVE</span><button className="close" onClick={() => setMachineOpen(false)}>ESC / CLOSE</button></div>{!interpreting ? <div className="ask-stage"><h2>WHAT WOULD YOU<br />LIKE TO KNOW?</h2><form onSubmit={event => { event.preventDefault(); submit(query) }}><label htmlFor="ask-input">&gt; ASK A QUESTION</label><input ref={inputRef} id="ask-input" value={query} onChange={event => setQuery(event.target.value)} placeholder="TYPE HERE" /></form><div className="prompts" onKeyDown={movePromptFocus}>{['WHAT DOES MALIK DO?', 'HOW DOES HE THINK ABOUT AI?', 'DESIGN OR CODE?', 'WHAT AI TOOLS DOES MALIK USE?', 'WHAT IS THE LAB?', 'WHY MALIK?'].map(prompt => <button key={prompt} onClick={() => submit(prompt)}>{prompt}<span>↗</span></button>)}</div></div> : <div className="classify"><strong>M/ INTERPRETING</strong><div><span>INTENT</span>{responses.find(item => item.terms.some(term => query.toLowerCase().includes(term)))?.classification.intent}</div><div><span>CONTEXT</span>{responses.find(item => item.terms.some(term => query.toLowerCase().includes(term)))?.classification.evidence}</div><div><span>REPRESENTATION</span>{responses.find(item => item.terms.some(term => query.toLowerCase().includes(term)))?.classification.representation}</div><div><span>CONFIDENCE</span>HIGH</div></div>}</section>}
+    {page !== 'home' && <GlobalFooter />}
+    {mobileMenuOpen && <div className="mobile-menu" ref={mobileMenuRef} id="mobile-navigation" role="dialog" aria-modal="true" aria-label="Mobile navigation" onKeyDown={trapMobileMenuFocus}><div className="mobile-menu-head"><button className="mark brand-signature" onClick={() => { closeMobileMenu(); navigate('home') }} aria-label="Temitayo Lawal Malik - Home">M<span className="mark-slash">/</span><span className="brand-name">TEMITAYO LAWAL MALIK</span></button><button className="mobile-menu-close" onClick={closeMobileMenu}>CLOSE ×</button></div><div className="mobile-menu-links"><button className="mobile-menu-link" onClick={() => { closeMobileMenu(); navigate('work') }}>WORK</button><button className="mobile-menu-link" onClick={() => { closeMobileMenu(); navigate('about') }}>ABOUT</button><button className="mobile-menu-link" onClick={() => { closeMobileMenu(); navigate('lab') }}>LAB</button><button className="mobile-menu-link" onClick={() => { closeMobileMenu(); openAsk() }}>ASK MALIK <span>↗</span></button></div><div className="mobile-menu-meta">PRODUCT DESIGNER<br />AI / UX / SYSTEMS<br /><br />LAGOS / GLOBAL<br />2026</div></div>}
+    {machineOpen && <section className="machine" aria-label="Ask Malik"><div className="machine-head"><button className="mark" onClick={() => setMachineOpen(false)} aria-label="Return to portfolio">M<span className="mark-slash">/</span></button><span>MACHINE</span><span><b>●</b> ACTIVE</span><button className="close" onClick={() => setMachineOpen(false)}>ESC / CLOSE</button></div>{!interpreting ? <div className="ask-stage"><h2>WHAT WOULD YOU<br />LIKE TO KNOW?</h2><form onSubmit={event => { event.preventDefault(); submit(query) }}><label htmlFor="ask-input">&gt; ASK A QUESTION</label><input ref={inputRef} id="ask-input" value={query} onChange={event => setQuery(event.target.value)} placeholder="TYPE HERE" /></form><div className="prompts" onKeyDown={movePromptFocus}>{['WHAT DOES MALIK DO?', 'HOW DOES HE THINK ABOUT AI?', 'DESIGN OR CODE?', 'WHAT AI TOOLS DOES MALIK USE?', 'WHAT IS THE LAB?', 'WHY MALIK?'].map(prompt => <button key={prompt} onClick={() => submit(prompt)}>{prompt}<span>↗</span></button>)}</div></div> : <div className="classify"><strong>M/ INTERPRETING</strong><div><span>INTENT</span>{responses.find(item => item.terms.some(term => query.toLowerCase().includes(term)))?.classification.intent}</div><div><span>CONTEXT</span>{responses.find(item => item.terms.some(term => query.toLowerCase().includes(term)))?.classification.evidence}</div><div><span>REPRESENTATION</span>{responses.find(item => item.terms.some(term => query.toLowerCase().includes(term)))?.classification.representation}</div><div><span>CONFIDENCE</span>HIGH</div></div>}</section>}
   </main>
 }
 
@@ -166,5 +203,7 @@ function LabExperimentPage({ experiment, onBack }: { experiment?: LabExperiment;
   return <article className="lab-experiment" id="top"><header><div className="section-label">M/LAB {experiment.id} <span>{experiment.category} / {experiment.year}</span></div><h1>{experiment.title}</h1></header><section><div className="section-label">M/ QUESTION <span>01</span></div><h2>{experiment.question}</h2></section><section><div className="section-label">M/ EXPERIMENT <span>02</span></div><p>{experiment.experiment}</p></section><section className="lab-thing"><div className="section-label">M/ THE THING <span>03</span></div>{Artifact ? <Artifact /> : <div className="lab-media-placeholder">MEDIA / ARTIFACT TO BE ADDED</div>}</section><section><div className="section-label">M/ WHAT I LEARNED <span>04</span></div><ul>{experiment.learning.map(item => <li key={item}>{item}</li>)}</ul></section><section><div className="section-label">M/ BUILT WITH <span>05</span></div><p className="lab-tools">{experiment.tools.join(' / ')}</p></section><footer><button onClick={onBack}>BACK TO M/LAB</button></footer></article>
 }
 
-function Contact() { return <section className="contact section" id="contact"><div className="section-label">M/ CONTACT <span>05</span></div><h2>HAVE A<br />COMPLICATED<br />PROBLEM?</h2><em>Good.</em><p className="talk">LET'S TALK <span>↗</span></p><div className="contact-meta"><span>EMAIL / TO BE ADDED</span><span>LAGOS, NG</span><span>GLOBAL / REMOTE</span><span>AVAILABLE FOR SELECTED COLLABORATIONS</span></div></section> }
+function GlobalFooter() { return <footer className="global-footer"><span>M/ CONTACT</span><div><a href={`mailto:${contact.email}`} aria-label={`Email Malik at ${contact.email}`}>EMAIL ↗</a><a href={contact.linkedin} target="_blank" rel="noreferrer" aria-label="Visit Malik's LinkedIn profile, opens in a new tab">LINKEDIN ↗</a></div></footer> }
+
+function Contact() { return <section className="contact section" id="contact"><div className="section-label">M/ CONTACT <span>05</span></div><h2>HAVE A<br />COMPLICATED<br />PROBLEM?</h2><em>Good.</em><a className="talk" href={`mailto:${contact.email}`} aria-label={`Email Malik at ${contact.email}`}>LET'S TALK <span>↗</span></a><div className="contact-links"><a href={`mailto:${contact.email}`} aria-label={`Email Malik at ${contact.email}`}>EMAIL ↗</a><a href={contact.linkedin} target="_blank" rel="noreferrer" aria-label="Visit Malik's LinkedIn profile, opens in a new tab">LINKEDIN ↗</a></div><div className="contact-meta"><span>{contact.email}</span><span>LAGOS, NG</span><span>GLOBAL / REMOTE</span><span>AVAILABLE FOR SELECTED COLLABORATIONS</span></div></section> }
 createRoot(document.getElementById('root')!).render(<App />)
