@@ -13,7 +13,7 @@ export function CaseBackButton({ onFallback, label = 'Back', floating = false }:
     if (arrivedViaInAppNavigation() && window.history.length > 1) { window.history.back(); return }
     onFallback()
   }
-  return <button className={`case-back-button${floating ? ' is-floating' : ''}`} type="button" onClick={goBack} aria-label={label ? `Go back — ${label}` : 'Go back'}>
+  return <button className={`case-back-button${floating ? ' is-floating' : ''}`} type="button" onClick={goBack} aria-label={label ? `Go back: ${label}` : 'Go back'}>
     <span className="case-back-glyph" aria-hidden="true">←</span>
     {label && <span className="case-back-label">{label}</span>}
   </button>
