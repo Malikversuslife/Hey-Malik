@@ -1,13 +1,21 @@
 import { useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
+import { createPortal } from 'react-dom'
 import { labExperiments, type LabExperiment } from './data/lab'
 import { workProjects, type WorkProject } from './data/work'
+import { brandProjects, brandingIndex } from './data/branding'
 import { contact } from './data/contact'
 import { CaseMedia, CaseMediaPair } from './components/work/CaseMedia'
+import { PrimaProductCase } from './components/work/PrimaProductCase'
+import { BrandCase } from './components/brand/BrandCase'
+import { markInAppNavigation } from './components/CaseBackButton'
+import { NewCaseShell } from './components/NewCaseShell'
+import { ProjectStackMedia } from './components/ProjectStackMedia'
 import './styles.css'
 
 type ResponseMode = 'focus' | 'recompose' | 'connect' | 'divide' | 'sequence'
-type Page = 'home' | 'about' | 'work' | 'workCaseStudy' | 'lab' | 'labExperiment'
+type HomeMode = 'product' | 'branding' | 'lab' | 'about'
+type Page = 'home' | 'about' | 'work' | 'workCaseStudy' | 'brandingCaseStudy' | 'lab' | 'labExperiment'
 type PortfolioResponse = { terms: string[]; mode: ResponseMode; targets: string[]; route?: Page; routeTarget?: string; classification: { intent: string; evidence: string; representation: string } }
 
 const responses: PortfolioResponse[] = [
@@ -73,117 +81,322 @@ const experienceRecords: [string, string, string, string, string[]][] = [
   ['MAY 2022 — PRESENT', 'INDEPENDENT DESIGN CONSULTANT', 'SELF-EMPLOYED', 'REMOTE', ['Partner with clients to design digital products across fintech, SaaS, e-commerce, and Web3.', 'Work across discovery, product thinking, UX flows, interface design, design systems, prototyping, and developer handoff.', 'Translate business requirements and complex workflows into clear, usable product experiences.']],
   ['2018 — PRESENT', 'INDEPENDENT BRAND DESIGNER', 'SELF-EMPLOYED', '', ['Built brand identities and visual systems for businesses and independent clients.', 'Work across brand identity, visual direction, marketing design, packaging, print, digital applications, and broader brand experiences.', 'This remains an active part of Malik’s multidisciplinary design practice alongside product and digital experience design.']]
 ]
+type AskAction = { label: string; href?: string; page?: Page; slug?: string }
+type AskMessage = { id: number; role: 'user' | 'assistant'; text: string; actions?: AskAction[]; followUps?: string[] }
+type AskAnswer = { text: string; actions?: AskAction[]; followUps: string[] }
+const askFollowUps: Record<string, string[]> = {
+  ROLE: ['What has Malik worked on?', 'How does Malik think about AI?', "What's in the Lab?"],
+  PROFILE: ['What does Malik do?', 'Where has Malik worked?', 'What has Malik worked on?'],
+  PHILOSOPHY: ['How does Malik use AI?', 'What does Malik care about?', 'What is Prima?'],
+  WORKFLOW: ['How does Malik think about AI?', "What's in the Lab?", 'How does Malik work?'],
+  CAPABILITIES: ['What has Malik worked on?', 'Where has Malik worked?', 'How does Malik work?'],
+  APPROACH: ['How does Malik think about AI?', 'What did Malik learn?', 'What has Malik worked on?'],
+  EXPERIENCE: ['What has Malik worked on?', 'How did Malik get into product design?', "What's in the Lab?"],
+  EVOLUTION: ['What does Malik do?', 'Where has Malik worked?', 'What has Malik worked on?'],
+  WORK: ['What is Prima?', "What's in the Lab?", 'How does Malik think about AI?'],
+  LAB: ['What has Malik worked on?', 'How does Malik think about AI?', 'What does Malik do?'],
+  CONTACT: ['What does Malik do?', "What's in the Lab?", 'What has Malik worked on?'],
+  BACKGROUND: ['Where has Malik worked?', 'What does Malik do?', 'What has Malik worked on?'],
+  PRINCIPLES: ['How does Malik think about AI?', 'What is Prima?', 'What did Malik learn?'],
+  'WORKING SYSTEM': ['What AI tools does Malik use?', 'How does Malik think about AI?', "What's in the Lab?"],
+  OFFLINE: ['What does Malik do?', "What's in the Lab?", 'What has Malik worked on?'],
+  PRIMA: ['What is Nomi?', "What's in the Lab?", 'How does Malik think about AI?'],
+  NOMI: ['What is Hanya?', "What's in the Lab?", 'What does Malik care about?'],
+  HANYA: ['What is Yousewire?', "What's in the Lab?", 'What has Malik worked on?'],
+  YOUSEWIRE: ['What is Prima?', "What's in the Lab?", 'What does Malik care about?']
+}
+const askFallback: AskAnswer = { text: "I can answer from what's documented on this site — Malik's role, thinking on AI, tools, the Lab, experience, and the Prima, Nomi, Hanya and Yousewire case studies.", followUps: askFollowUps.ROLE }
+const askAnswers: Record<string, AskAnswer> = {
+  ROLE: { text: "I'm a Product Designer working across product thinking, interaction, visual systems, prototyping and increasingly AI product design.\n\nI work where product thinking, interaction and implementation meet.", followUps: askFollowUps.ROLE },
+  PROFILE: { text: "I'm a Product Designer working across product thinking, interaction, visual systems, prototyping and increasingly AI product design.\n\nI didn't really leave visual design behind. I kept adding new questions to it.\n\nVisual thinker · Product designer · Systems oriented · Design + build · AI product design", followUps: askFollowUps.PROFILE },
+  PHILOSOPHY: { text: "DESIGN UNCERTAINTY.\nIntelligent products do not always have definitive answers. Design what happens when confidence is low.\n\nHUMANS STILL DECIDE.\nAI can assist judgement. It should not quietly replace it.", followUps: askFollowUps.PHILOSOPHY },
+  WORKFLOW: { text: "THINK — CHATGPT / OPENAI / CLAUDE\nDESIGN — FIGMA / FIGMA MAKE\nPROTOTYPE — LOVABLE\nBUILD / ITERATE — CLAUDE / OPENCODE\n\nI use AI across the process, not as a substitute for the process.", followUps: askFollowUps.WORKFLOW },
+  CAPABILITIES: { text: "DESIGN — product thinking, UX, interaction, visual systems, design systems\nCODE — HTML, CSS\n\nI use HTML and CSS to get closer to the thing people actually experience.", followUps: askFollowUps.CAPABILITIES },
+  APPROACH: { text: "MAKE INTELLIGENCE LEGIBLE.\nPeople should understand what a system knows, what it does not, and why it is responding.\n\nCONTEXT BEFORE AUTOMATION.\nAutomating the wrong interpretation only makes the wrong outcome faster.", followUps: askFollowUps.APPROACH },
+  'WORKING SYSTEM': { text: "PROTOTYPE THE SYSTEM, NOT ONLY THE SCREEN.\nInteraction reveals assumptions static layouts hide.\n\nEARN TRUST BEFORE ASKING FOR ACTION.\nExplain enough for people to make informed decisions.", followUps: askFollowUps['WORKING SYSTEM'] },
+  PRINCIPLES: { text: "TRUST & EXPLAINABILITY — making enough of a system visible for people to make informed decisions.\nSYSTEMS THINKING — looking for relationships, constraints and the effects that exist beyond one screen.\nHUMAN-CENTERED AI — exploring intelligence that supports judgement rather than quietly replacing it.", followUps: askFollowUps.PRINCIPLES },
+  BACKGROUND: { text: "I didn't really leave visual design behind. I kept adding new questions to it.\n\nVisual / Brand design → Product design → Product systems → Design leadership → Design + build → AI product design", followUps: askFollowUps.BACKGROUND },
+  EXPERIENCE: { text: 'OCT 2025 — PRESENT · PRODUCT DESIGN LEAD · EMERJ LLC\nOCT 2024 — AUG 2025 · DESIGN MENTOR + TEAM LEAD · HNG TECH\nFEB 2023 — FEB 2025 · FOUNDING PRODUCT DESIGNER · BELSQUARED INC.', actions: [{ label: 'Read the full story ↗', page: 'about' }], followUps: askFollowUps.EXPERIENCE },
+  WORK: { text: 'PRIMA — AI-assisted verification OS for decentralized payments.\nNOMI — An adaptive learning companion where practice, progress, recommendations, and contextual AI work together to shape what the learner does next.\nHANYA — AI-assisted healthcare navigation that helps people understand what kind of care to seek next.\nYOUSEWIRE — A unified cross-border financial system designed for personal money management and business financial operations.', actions: [{ label: 'View full work ↗', page: 'work' }], followUps: askFollowUps.WORK },
+  LAB: { text: 'The Lab is a collection of small experiments I use to explore how AI changes the way we design, build and interact with software.\n\nExperiments are currently in progress — new things will appear here as they are built.', actions: [{ label: 'Open the Lab ↗', page: 'lab' }], followUps: askFollowUps.LAB },
+  CONTACT: { text: 'EMAIL — heymalik05@gmail.com\nLINKEDIN — linkedin.com/in/temitayo-l-74984b16a\n\nAvailable for selected collaborations.', actions: [{ label: 'Email Malik ↗', href: 'mailto:heymalik05@gmail.com' }, { label: 'LinkedIn ↗', href: 'https://www.linkedin.com/in/temitayo-l-74984b16a/' }], followUps: askFollowUps.CONTACT },
+  EVOLUTION: { text: '2018 — PRESENT · INDEPENDENT BRAND DESIGNER\n2022 · INDEPENDENT DESIGN CONSULTANT\n2023 · FOUNDING PRODUCT DESIGNER · BELSQUARED\n2023 · PRODUCT DESIGNER · PYTHON NIGERIA\n2024 · DESIGN MENTOR + TEAM LEAD · HNG TECH\n2025 · PRODUCT DESIGN LEAD · EMERJ LLC\n2026 · AI PRODUCT DESIGN — intelligent products + systems', followUps: askFollowUps.EVOLUTION },
+  OFFLINE: { text: "That isn't documented on the site yet. Try asking about the work, the Lab, or how Malik thinks about AI.", followUps: askFollowUps.OFFLINE },
+  PRIMA: { text: 'Prima is an AI-assisted verification operating system that helps merchants verify decentralized identities and credentials, investigate suspicious transactions, and make informed settlement decisions.\n\nIt explores a future where decentralized identity, Verifiable Credentials and digital currencies have become part of everyday retail payments.', actions: [{ label: 'Open Prima case study ↗', page: 'workCaseStudy', slug: 'prima' }], followUps: askFollowUps.PRIMA },
+  NOMI: { text: 'Nomi is an adaptive learning product designed around a simple idea: learning should respond to the learner, not force every learner through the same path.\n\nPractice, progress, recommendations, and contextual AI work together to shape what the learner does next.', actions: [{ label: 'Open Nomi case study ↗', page: 'workCaseStudy', slug: 'nomi' }], followUps: askFollowUps.NOMI },
+  HANYA: { text: 'An AI-assisted healthcare navigator that helps people understand what kind of care to seek next, without pretending to diagnose them.\n\nSafety means steering people toward appropriate care — guidance, not diagnosis.', actions: [{ label: 'Open Hanya case study ↗', page: 'workCaseStudy', slug: 'hanya' }], followUps: askFollowUps.HANYA },
+  YOUSEWIRE: { text: 'A cross-border financial platform designed to help individuals and businesses hold, move, receive, convert, and manage money across currencies and payment networks.', actions: [{ label: 'Open Yousewire case study ↗', page: 'workCaseStudy', slug: 'yousewire' }], followUps: askFollowUps.YOUSEWIRE }
+}
+const ASK_SUGGESTIONS = ['What does Malik do?', 'How does Malik think about AI?', "What's in the Lab?", 'What did you design for Prima?']
+const HOME_VIEWS: Record<string, HomeMode> = { work: 'product', about: 'about', lab: 'lab' }
+const normalizeLegacyTopLevel = () => {
+  const path = window.location.pathname.replace(/^\/+|\/+$/g, '')
+  const view = HOME_VIEWS[path]
+  if (!view) return false
+  window.history.replaceState(null, '', `/?view=${view}`)
+  return true
+}
 const routeFromPath = () => {
+  if (normalizeLegacyTopLevel()) return { page: 'home' as Page }
   const segments = window.location.pathname.split('/').filter(Boolean)
-  if (segments[0] === 'about') return { page: 'about' as Page }
   if (segments[0] === 'work' && segments[1]) return { page: 'workCaseStudy' as Page, slug: segments[1] }
-  if (segments[0] === 'work') return { page: 'work' as Page }
+  if (segments[0] === 'branding' && segments[1]) return { page: 'brandingCaseStudy' as Page, slug: segments[1] }
+  if (segments[0] === 'branding') return { page: 'brandingCaseStudy' as Page }
   if (segments[0] === 'lab' && segments[1]) return { page: 'labExperiment' as Page, slug: segments[1] }
-  if (segments[0] === 'lab') return { page: 'lab' as Page }
   return { page: 'home' as Page }
 }
+
+const breadcrumbMark = <>M<span className="case-chrome-slash" aria-hidden="true">/</span></>
 
 function App() {
   const [route, setRoute] = useState(routeFromPath)
   const page = route.page
-  const [machineOpen, setMachineOpen] = useState(false)
-  const [query, setQuery] = useState('')
-  const [interpreting, setInterpreting] = useState(false)
-  const [response, setResponse] = useState<PortfolioResponse | null>(null)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [showBackToTop, setShowBackToTop] = useState(false)
-  const inputRef = useRef<HTMLInputElement>(null)
-  const mobileMenuRef = useRef<HTMLDivElement>(null)
-  const mobileMenuTriggerRef = useRef<HTMLButtonElement>(null)
+  const [askOpen, setAskOpen] = useState(false)
+  const [askInput, setAskInput] = useState('')
+  const [askInterpreting, setAskInterpreting] = useState(false)
+  const [askMessages, setAskMessages] = useState<AskMessage[]>([])
+  const askInputRef = useRef<HTMLInputElement>(null)
+  const askBodyRef = useRef<HTMLDivElement>(null)
+  const askReturnEl = useRef<HTMLElement | null>(null)
+  const askMsgId = useRef(0)
   const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  const navigate = (next: Page, target?: string, slug?: string) => {
-    const path = next === 'home' ? '/' : next === 'workCaseStudy' ? `/work/${slug}` : next === 'labExperiment' ? `/lab/${slug}` : `/${next}`
+  const navigate = (next: Page, target?: string, slug?: string, view?: HomeMode) => {
+    markInAppNavigation()
+    const homeView = next === 'work' ? 'product' : next === 'about' ? 'about' : next === 'lab' ? 'lab' : null
+    if (homeView) { navigate('home', target, undefined, homeView); return }
+    const path = next === 'home' ? (view ? `/?view=${view}` : '/') : next === 'workCaseStudy' ? `/work/${slug}` : next === 'brandingCaseStudy' ? `/branding/${slug}` : next === 'labExperiment' ? `/lab/${slug}` : `/${next}`
     window.history.pushState(null, '', path)
-    setRoute({ page: next, slug }); setResponse(null)
+    setRoute({ page: next, slug })
     window.setTimeout(() => {
       const destination = document.getElementById(target ?? 'top')
       if (destination) destination.scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth', block: 'start' })
       else window.scrollTo({ top: 0, behavior: reducedMotion() ? 'auto' : 'smooth' })
     }, 30)
   }
-  const openAsk = () => { setMachineOpen(true); setInterpreting(false); setQuery('') }
-  const closeMobileMenu = () => { setMobileMenuOpen(false); window.setTimeout(() => mobileMenuTriggerRef.current?.focus(), 0) }
-  const restore = () => { setResponse(null); window.history.replaceState(null, '', page === 'home' ? '/' : `/${page}`) }
-  const submit = (value: string) => {
-    const match = responses.find(item => item.terms.some(term => value.toLowerCase().includes(term)))
-    if (!match) return
-    setQuery(value); setInterpreting(true)
-    window.setTimeout(() => {
-      setInterpreting(false); setMachineOpen(false)
-      if (match.route) { navigate(match.route, match.routeTarget, match.classification.intent === 'PRIMA' ? 'prima' : match.classification.intent === 'HANYA' ? 'hanya' : match.classification.intent === 'YOUSEWIRE' ? 'yousewire' : match.classification.intent === 'NOMI' ? 'nomi' : undefined); return }
-      setResponse(match); window.history.replaceState({ ask: match.mode }, '', `#${match.targets[0]}`)
-      window.setTimeout(() => document.getElementById(match.targets[0])?.scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth', block: 'start' }), 40)
-    }, reducedMotion() ? 0 : 560)
+  const openAsk = (focus = true) => {
+    askReturnEl.current = document.activeElement as HTMLElement | null
+    setAskOpen(true)
+    if (focus) window.setTimeout(() => askInputRef.current?.focus(), 140)
   }
+  const closeAsk = () => {
+    setAskOpen(false)
+    const returnTo = askReturnEl.current
+    window.setTimeout(() => returnTo?.focus(), 0)
+  }
+  const resetAsk = () => { setAskMessages([]); setAskInterpreting(false); setAskInput('') }
+  const askQuestion = (raw: string) => {
+    const value = raw.trim()
+    if (!value || askInterpreting || !askOpen) return
+    setAskMessages(previous => [...previous, { id: ++askMsgId.current, role: 'user', text: value }])
+    setAskInput('')
+    const match = responses.find(item => item.terms.some(term => value.toLowerCase().includes(term)))
+    setAskInterpreting(true)
+    window.setTimeout(() => {
+      setAskInterpreting(false)
+      const answer = match ? askAnswers[match.classification.intent] ?? askFallback : askFallback
+      setAskMessages(previous => [...previous, { id: ++askMsgId.current, role: 'assistant', text: answer.text, actions: answer.actions, followUps: answer.followUps }])
+    }, 480)
+  }
+  const askAction = (action: AskAction) => {
+    if (action.href) window.open(action.href, '_blank', 'noreferrer')
+    else if (action.page) navigate(action.page, undefined, action.slug)
+    closeAsk()
+  }
+  const submit = askQuestion
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); setMobileMenuOpen(false); openAsk() }
-      if (event.key === 'Escape') { if (mobileMenuOpen) closeMobileMenu(); else if (machineOpen) setMachineOpen(false); else if (response) restore() }
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); if (askOpen) askInputRef.current?.focus(); else openAsk() }
+      if (event.key === 'Escape') { if (askOpen) closeAsk() }
     }
-    const onPopState = () => { setRoute(routeFromPath()); setResponse(null) }
+    const onPopState = () => { setRoute(routeFromPath()) }
     window.addEventListener('keydown', onKey); window.addEventListener('popstate', onPopState)
     return () => { window.removeEventListener('keydown', onKey); window.removeEventListener('popstate', onPopState) }
-  }, [machineOpen, mobileMenuOpen, response, page])
-  useEffect(() => { if (machineOpen) window.setTimeout(() => inputRef.current?.focus(), 150) }, [machineOpen])
+  }, [askOpen])
   useEffect(() => {
-    const updateBackToTop = () => {
-      const pastThreshold = window.scrollY > window.innerHeight * .5
-      const nearFooter = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 130
-      setShowBackToTop(pastThreshold && !nearFooter)
-    }
-    updateBackToTop()
-    window.addEventListener('scroll', updateBackToTop, { passive: true })
-    window.addEventListener('resize', updateBackToTop)
-    return () => { window.removeEventListener('scroll', updateBackToTop); window.removeEventListener('resize', updateBackToTop) }
-  }, [])
+    if (!askOpen) return
+    const focusTimer = window.setTimeout(() => askInputRef.current?.focus(), 140)
+    return () => window.clearTimeout(focusTimer)
+  }, [askOpen])
   useEffect(() => {
-    if (!mobileMenuOpen) return
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    window.setTimeout(() => mobileMenuRef.current?.querySelector<HTMLButtonElement>('.mobile-menu-link')?.focus(), 100)
-    return () => { document.body.style.overflow = previousOverflow }
-  }, [mobileMenuOpen])
+    const body = askBodyRef.current
+    if (body) body.scrollTop = body.scrollHeight
+  }, [askMessages, askInterpreting])
   const handleIntelligentMove = (event: React.PointerEvent<HTMLSpanElement>) => {
     if (reducedMotion() || event.pointerType !== 'mouse') return
     const speed = Math.min(1, (Math.abs(event.movementX) + Math.abs(event.movementY)) / 26)
     event.currentTarget.style.setProperty('--tilt', `${(event.clientX % 15 - 7) * speed * .16}deg`); event.currentTarget.style.setProperty('--stretch', `${1 + speed * .035}`)
   }
-  const movePromptFocus = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (!['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(event.key)) return
-    const prompts = [...event.currentTarget.querySelectorAll('button')]; const current = prompts.indexOf(document.activeElement as HTMLButtonElement)
-    if (current < 0) return
-    event.preventDefault(); const offset = event.key === 'ArrowDown' || event.key === 'ArrowRight' ? 1 : -1; prompts[(current + offset + prompts.length) % prompts.length]?.focus()
-  }
-  const trapMobileMenuFocus = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (event.key !== 'Tab') return
-    const focusable = [...event.currentTarget.querySelectorAll<HTMLButtonElement>('button:not([disabled])')]
-    const current = focusable.indexOf(document.activeElement as HTMLButtonElement)
-    if (current < 0) return
-    event.preventDefault()
-    const next = event.shiftKey ? (current - 1 + focusable.length) % focusable.length : (current + 1) % focusable.length
-    focusable[next]?.focus()
-  }
-  const active = response?.mode
-  const backToTop = () => window.scrollTo({ top: 0, behavior: reducedMotion() ? 'auto' : 'smooth' })
-  return <main className={`${page !== 'home' ? `page-${page}` : ''} ${active ? `orchestrating mode-${active} response-${response?.classification.intent.toLowerCase()}` : ''}`}>
-    {response && <button className="return" onClick={restore}>M<span>/</span> RETURN</button>}
-    {showBackToTop && !mobileMenuOpen && !machineOpen && !response && <button className="back-to-top" onClick={backToTop} aria-label="Back to top">M/ ↑ TOP</button>}
-    <header className="nav"><button className="mark brand-signature" onClick={() => navigate('home')} aria-label="Temitayo Lawal Malik - Home">M<span className="mark-slash">/</span><span className="brand-name">TEMITAYO LAWAL MALIK</span></button><span className="year">2026</span><nav aria-label="Primary navigation"><button onClick={() => navigate('work')}>WORK</button><button onClick={() => navigate('about')}>ABOUT</button><button onClick={() => navigate('lab')}>LAB</button><button onClick={openAsk}>ASK MALIK <i>↗</i></button></nav><button className="mobile-menu-trigger" ref={mobileMenuTriggerRef} onClick={() => setMobileMenuOpen(true)} aria-expanded={mobileMenuOpen} aria-controls="mobile-navigation">MENU +</button></header>
-    {page === 'home' && <><section className="hero" id="hero"><div className="hero-title" aria-label="I design intelligent products for human decisions"><span>I DESIGN</span><span className="intelligent" onPointerMove={handleIntelligentMove}>INTELLIGENT</span><span>PRODUCTS</span><span>FOR HUMAN <em>decisions.</em></span></div><div className="role-response"><div>PRODUCT DESIGNER</div><span>AI / UX / SYSTEMS</span><p>I work where product thinking, interaction and implementation meet.</p></div><div className="hero-meta"><span>PRODUCT DESIGNER<br />AI / UX / SYSTEMS</span><span>LAGOS, NG<br />GLOBAL / REMOTE</span></div><button className="ask-entry" onClick={openAsk}><b>●</b> ASK ME SOMETHING</button><p className="annotation">because someone still has to make one.</p></section><SelectedWork onProjectOpen={slug => navigate('workCaseStudy', undefined, slug)} onAllWork={() => navigate('work')} /><HomeSections submit={submit} /></>}
-    {page === 'about' && <About />}
-    {page === 'work' && <WorkIndex onProjectOpen={slug => navigate('workCaseStudy', undefined, slug)} />}
-    {page === 'workCaseStudy' && <WorkPreparation project={workProjects.find(project => project.slug === route.slug)} onBack={() => navigate('work')} />}
-    {page === 'lab' && <Lab onExperimentOpen={slug => navigate('labExperiment', undefined, slug)} />}
-    {page === 'labExperiment' && <LabExperimentPage experiment={labExperiments.find(experiment => experiment.slug === route.slug)} onBack={() => navigate('lab')} />}
-    {page !== 'home' && <GlobalFooter />}
-    {mobileMenuOpen && <div className="mobile-menu" ref={mobileMenuRef} id="mobile-navigation" role="dialog" aria-modal="true" aria-label="Mobile navigation" onKeyDown={trapMobileMenuFocus}><div className="mobile-menu-head"><button className="mark brand-signature" onClick={() => { closeMobileMenu(); navigate('home') }} aria-label="Temitayo Lawal Malik - Home">M<span className="mark-slash">/</span><span className="brand-name">TEMITAYO LAWAL MALIK</span></button><button className="mobile-menu-close" onClick={closeMobileMenu}>CLOSE ×</button></div><div className="mobile-menu-links"><button className="mobile-menu-link" onClick={() => { closeMobileMenu(); navigate('work') }}>WORK</button><button className="mobile-menu-link" onClick={() => { closeMobileMenu(); navigate('about') }}>ABOUT</button><button className="mobile-menu-link" onClick={() => { closeMobileMenu(); navigate('lab') }}>LAB</button><button className="mobile-menu-link" onClick={() => { closeMobileMenu(); openAsk() }}>ASK MALIK <span>↗</span></button></div><div className="mobile-menu-meta">PRODUCT DESIGNER<br />AI / UX / SYSTEMS<br /><br />LAGOS / GLOBAL<br />2026</div></div>}
-    {machineOpen && <section className="machine" aria-label="Ask Malik"><div className="machine-head"><button className="mark" onClick={() => setMachineOpen(false)} aria-label="Return to portfolio">M<span className="mark-slash">/</span></button><span>MACHINE</span><span><b>●</b> ACTIVE</span><button className="close" onClick={() => setMachineOpen(false)}>ESC / CLOSE</button></div>{!interpreting ? <div className="ask-stage"><h2>WHAT WOULD YOU<br />LIKE TO KNOW?</h2><form onSubmit={event => { event.preventDefault(); submit(query) }}><label htmlFor="ask-input">&gt; ASK A QUESTION</label><input ref={inputRef} id="ask-input" value={query} onChange={event => setQuery(event.target.value)} placeholder="TYPE HERE" /></form><div className="prompts" onKeyDown={movePromptFocus}>{['WHAT DOES MALIK DO?', 'HOW DOES HE THINK ABOUT AI?', 'DESIGN OR CODE?', 'WHAT AI TOOLS DOES MALIK USE?', 'WHAT IS THE LAB?', 'WHY MALIK?'].map(prompt => <button key={prompt} onClick={() => submit(prompt)}>{prompt}<span>↗</span></button>)}</div></div> : <div className="classify"><strong>M/ INTERPRETING</strong><div><span>INTENT</span>{responses.find(item => item.terms.some(term => query.toLowerCase().includes(term)))?.classification.intent}</div><div><span>CONTEXT</span>{responses.find(item => item.terms.some(term => query.toLowerCase().includes(term)))?.classification.evidence}</div><div><span>REPRESENTATION</span>{responses.find(item => item.terms.some(term => query.toLowerCase().includes(term)))?.classification.representation}</div><div><span>CONFIDENCE</span>HIGH</div></div>}</section>}
+  const caseBack = (view: HomeMode) => () => navigate('home', undefined, undefined, view)
+  return <main className={`${page !== 'home' ? `page-${page}` : ''}`}>
+    {page === 'home' && <HomeShell key={new URLSearchParams(window.location.search).get('view') ?? 'product'} onProjectOpen={slug => navigate('workCaseStudy', undefined, slug)} onBrandProjectOpen={slug => navigate('brandingCaseStudy', undefined, slug)} onLabExperiment={slug => navigate('labExperiment', undefined, slug)} />}{false && <><section className="hero" id="hero"><div className="hero-title" aria-label="I design intelligent products for human decisions"><span>I DESIGN</span><span className="intelligent" onPointerMove={handleIntelligentMove}>INTELLIGENT</span><span>PRODUCTS</span><span>FOR HUMAN <em>decisions.</em></span></div><div className="role-response"><div>PRODUCT DESIGNER</div><span>AI / UX / SYSTEMS</span><p>I work where product thinking, interaction and implementation meet.</p></div><div className="hero-meta"><span>PRODUCT DESIGNER<br />AI / UX / SYSTEMS</span><span>LAGOS, NG<br />GLOBAL / REMOTE</span></div><button className="ask-entry" onClick={() => openAsk()}><b>●</b> ASK ME SOMETHING</button><p className="annotation">because someone still has to make one.</p></section><SelectedWork onProjectOpen={slug => navigate('workCaseStudy', undefined, slug)} onAllWork={() => navigate('work')} /><HomeSections submit={submit} /></>}
+    {page === 'workCaseStudy' && <NewCaseShell kind="product" crumbs={[{ label: breadcrumbMark, onClick: caseBack('product'), mark: true }, { label: 'PRODUCT DESIGN', onClick: caseBack('product') }, { label: workProjects.find(project => project.slug === route.slug)?.name ?? 'CASE STUDY', current: true }]} onBack={caseBack('product')} onAsk={() => openAsk()}><WorkPreparation project={workProjects.find(project => project.slug === route.slug)} onBack={caseBack('product')} onNext={slug => navigate('workCaseStudy', undefined, slug)} /></NewCaseShell>}
+    {page === 'brandingCaseStudy' && <NewCaseShell kind="brand" crumbs={[{ label: breadcrumbMark, onClick: caseBack('branding'), mark: true }, { label: 'BRANDING', onClick: caseBack('branding') }, { label: brandProjects.find(project => project.slug === route.slug)?.name ?? 'CASE STUDY', current: true }]} onBack={caseBack('branding')} onAsk={() => openAsk()}><BrandCase project={brandProjects.find(project => project.slug === route.slug)} onNext={slug => navigate('brandingCaseStudy', undefined, slug)} /></NewCaseShell>}
+    {page === 'labExperiment' && <NewCaseShell kind="lab" crumbs={[{ label: breadcrumbMark, onClick: caseBack('lab'), mark: true }, { label: 'LAB', onClick: caseBack('lab') }, { label: labExperiments.find(experiment => experiment.slug === route.slug)?.title ?? 'EXPERIMENT', current: true }]} onBack={caseBack('lab')} onAsk={() => openAsk()}><LabExperimentPage experiment={labExperiments.find(experiment => experiment.slug === route.slug)} onBack={caseBack('lab')} /></NewCaseShell>}
+    {page === 'home' && !askOpen && <button className="askmalik-float" onClick={() => openAsk()} aria-haspopup="dialog">Ask Malik <span aria-hidden="true">✦</span></button>}
+    {askOpen && createPortal(<section className="askpanel" role="dialog" aria-modal="true" aria-label="Ask Malik">
+    <header className="askpanel-head">
+      <span className="askpanel-title">Ask Malik <span aria-hidden="true">✦</span></span>
+      {askMessages.length > 0 && <button className="askpanel-new" type="button" onClick={resetAsk}>New conversation</button>}
+      <button className="askpanel-close" type="button" onClick={closeAsk} aria-label="Close Ask Malik">×</button>
+    </header>
+    <div className="askpanel-body" ref={askBodyRef}>
+      {askMessages.length === 0 && !askInterpreting && <div className="askpanel-welcome">
+        <p>Ask about Malik's work, process, or how he approached a particular design decision.</p>
+        <div className="askpanel-suggestions">{ASK_SUGGESTIONS.map(question => <button key={question} type="button" className="askpanel-chip" onClick={() => askQuestion(question)}>{question}<span aria-hidden="true">↗</span></button>)}</div>
+      </div>}
+      {askMessages.map(message => message.role === 'user' ? <p key={message.id} className="askpanel-msg askpanel-user">{message.text}</p> : <div key={message.id} className="askpanel-msg askpanel-answer">
+        {message.text.split('\n').map((line, index) => line.trim() ? <p key={index}>{line}</p> : null)}
+        {message.actions && message.actions.length > 0 && <div className="askpanel-actions">{message.actions.map(action => action.href ? <a key={action.label} className="askpanel-action" href={action.href} target="_blank" rel="noreferrer">{action.label}<span aria-hidden="true">↗</span></a> : <button key={action.label} type="button" className="askpanel-action" onClick={() => askAction(action)}>{action.label}<span aria-hidden="true">↗</span></button>)}</div>}
+        {message.followUps && message.followUps.length > 0 && <div className="askpanel-followups">{message.followUps.map(question => <button key={question} type="button" className="askpanel-chip" onClick={() => askQuestion(question)}>{question}<span aria-hidden="true">↗</span></button>)}</div>}
+      </div>)}
+      {askInterpreting && <p className="askpanel-msg askpanel-thinking">M/ thinking…</p>}
+    </div>
+    <footer className="askpanel-composer">
+      <form onSubmit={event => { event.preventDefault(); askQuestion(askInput) }}>
+        <label htmlFor="askpanel-input" className="askpanel-sr">Ask Malik…</label>
+        <input ref={askInputRef} id="askpanel-input" value={askInput} onChange={event => setAskInput(event.target.value)} placeholder="Ask Malik..." autoComplete="off" />
+        <button type="submit" className="askpanel-send" aria-label="Ask" disabled={askInterpreting || !askInput.trim()}>↑</button>
+      </form>
+    </footer>
+  </section>, document.body)}
   </main>
+}
+
+function HomeShell({ onProjectOpen, onBrandProjectOpen, onLabExperiment }: { onProjectOpen: (slug: string) => void; onBrandProjectOpen: (slug: string) => void; onLabExperiment: (slug: string) => void }) {
+  const [mode, setMode] = useState<HomeMode>(() => {
+    const view = new URLSearchParams(window.location.search).get('view')
+    return view === 'branding' || view === 'lab' || view === 'about' ? view : 'product'
+  })
+  const canvasRef = useRef<HTMLDivElement>(null)
+  const lastScrollRef = useRef(0)
+  const calm = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const scrollKey = (key: HomeMode) => `m:portfolio:home-scroll:${key}`
+  const changeMode = (next: HomeMode) => {
+    if (next === mode) return
+    try { sessionStorage.setItem(scrollKey(mode), String(lastScrollRef.current)) } catch { /* storage unavailable */ }
+    window.history.pushState(null, '', `/?view=${next}`)
+    setMode(next)
+    canvasRef.current?.scrollTo({ top: 0 })
+  }
+  const onCanvasScroll = () => { lastScrollRef.current = canvasRef.current?.scrollTop ?? 0 }
+  useEffect(() => {
+    return () => { try { sessionStorage.setItem(scrollKey(mode), String(lastScrollRef.current)) } catch { /* storage unavailable */ } }
+  }, [mode])
+  useEffect(() => {
+    const saved = Number(sessionStorage.getItem(scrollKey(mode)) ?? '0')
+    if (saved > 0) {
+      window.setTimeout(() => { const el = canvasRef.current; if (el) el.scrollTo({ top: Math.min(saved, el.scrollHeight) }) }, 40)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  useEffect(() => {
+    if (calm()) return
+    const canvas = canvasRef.current
+    if (!canvas) return
+    let io: IntersectionObserver | null = null
+    const targets = canvas.querySelectorAll<HTMLElement>('.work-tile, .about-mini > *, .project-stack-project')
+    targets.forEach(el => { el.classList.add('js-reveal'); el.classList.remove('is-revealed') })
+    io = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-revealed'); io?.unobserve(entry.target) } }), { threshold: 0.18, root: canvas })
+    targets.forEach(el => io!.observe(el))
+    return () => io?.disconnect()
+  }, [mode])
+  const moveTab = (event: React.KeyboardEvent) => {
+    if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return
+    event.preventDefault()
+    const order = ['product', 'branding', 'lab', 'about'] as const
+    const at = order.indexOf(mode)
+    const next = event.key === 'ArrowRight' ? (at + 1) % order.length : (at - 1 + order.length) % order.length
+    changeMode(order[next])
+  }
+  const productLine: Record<string, string> = { prima: 'AI · Fintech', nomi: 'AI · Education', hanya: 'Healthcare · AI', yousewire: 'Fintech' }
+  return <div className="home-shell">
+    <aside className="home-rail" aria-label="Malik profile and site navigation">
+      <div className="rail-mark" aria-hidden="true">M<span>/</span></div>
+      <div className="rail-portrait" role="img" aria-label="Portrait of Temitayo Lawal Malik — image to be added"><small aria-hidden="true">Portrait coming soon</small></div>
+      <h1 className="rail-name">Temitayo<br />Lawal Malik</h1>
+      <p className="rail-role">Product &amp; Brand Designer</p>
+      <p className="rail-intro">I design digital products and visual identities, from early ideas and systems to prototypes and shipped experiences.</p>
+      <p className="rail-status"><i aria-hidden="true" />Available for selected collaborations</p>
+      <div className="rail-actions">
+        <button className="rail-link rail-placeholder" type="button" disabled title="Résumé to be added" aria-label="View résumé — résumé coming soon">View résumé <span aria-hidden="true">↗</span></button>
+        <a className="rail-link" href={`mailto:${contact.email}`}>Contact me <span aria-hidden="true">↗</span></a>
+      </div>
+      <div className="rail-social">
+        <a href={contact.linkedin} target="_blank" rel="noreferrer" aria-label="Visit Malik's LinkedIn profile, opens in a new tab">LinkedIn <span aria-hidden="true">↗</span></a>
+      </div>
+    </aside>
+    <div className="home-canvas" role="region" aria-label="Portfolio canvas" tabIndex={0} ref={canvasRef} onScroll={onCanvasScroll}>
+      <div className="canvas-head">
+        <div className="mode-tabs" role="tablist" aria-label="Portfolio work">
+          <button role="tab" id="tab-product" aria-selected={mode === 'product'} aria-controls="panel-product" className={mode === 'product' ? 'is-active' : ''} onClick={() => changeMode('product')} onKeyDown={moveTab}>Product design</button>
+          <button role="tab" id="tab-branding" aria-selected={mode === 'branding'} aria-controls="panel-branding" className={mode === 'branding' ? 'is-active' : ''} onClick={() => changeMode('branding')} onKeyDown={moveTab}>Branding</button>
+          <button role="tab" id="tab-lab" aria-selected={mode === 'lab'} aria-controls="panel-lab" className={mode === 'lab' ? 'is-active' : ''} onClick={() => changeMode('lab')} onKeyDown={moveTab}>Lab</button>
+          <button role="tab" id="tab-about" aria-selected={mode === 'about'} aria-controls="panel-about" className={mode === 'about' ? 'is-active' : ''} onClick={() => changeMode('about')} onKeyDown={moveTab}>About</button>
+        </div>
+      </div>
+      {mode === 'product' ? <section className="home-panel" key="product" id="panel-product" role="tabpanel" aria-labelledby="tab-product">
+        <h2 className="visually-hidden">Product design</h2>
+        <ProjectStack entries={workProjects.map(project => ({ id: project.slug, index: project.index, title: project.name, descriptor: productLine[project.slug] ?? project.category?.replace(/ \/ /g, ' · ') ?? project.status, live: true, slug: project.slug, label: `P/ ${project.index}` }))} onOpen={onProjectOpen} note="Real product capture to be added to each project as it is produced." anchor="product-anchor" />
+      </section> : mode === 'branding' ? <section className="home-panel" key="branding" id="panel-branding" role="tabpanel" aria-labelledby="tab-branding">
+        <h2 className="visually-hidden">Branding</h2>
+        <ProjectStack entries={brandingIndex.map(project => ({ id: project.id, index: project.index, title: project.title, descriptor: project.descriptor, live: project.caseStudy === 'live', slug: project.slug, label: `B/ ${project.index}` }))} onOpen={onBrandProjectOpen} note="1 live case — the rest land as their case studies are published." anchor="branding-anchor" />
+      </section> : mode === 'lab' ? <section className="home-panel" key="lab" id="panel-lab" role="tabpanel" aria-labelledby="tab-lab">
+        <h2 className="visually-hidden">Lab</h2>
+        {labExperiments.length ? <div className="work-gallery">
+          {labExperiments.map(experiment => <button key={experiment.slug} className="work-tile tile-standard" onClick={() => onLabExperiment(experiment.slug)} aria-label={`${experiment.title} — open experiment`}>
+            <span className="tile-visual" aria-hidden="true"><span className="tile-pending">Image coming soon</span></span>
+            <span className="tile-meta"><span className="tile-name">{experiment.title}</span><span className="tile-desc">{experiment.category.replace(/ \/ /g, ' · ')}</span></span>
+          </button>)}
+        </div> : <div className="empty-panel">
+          <div className="empty-well" aria-hidden="true"><span className="tile-pending">Experiments coming soon</span></div>
+          <p className="empty-title">Experiments in progress.</p>
+          <p className="empty-note">New things will appear here as I build them.</p>
+        </div>}
+      </section> : <section className="home-panel" key="about" id="panel-about" role="tabpanel" aria-labelledby="tab-about">
+        <h2 className="visually-hidden">About Malik</h2>
+        <div className="about-mini">
+          <div className="about-mini-hero">
+            <h3>Designing technology<br />that feels more human.</h3>
+            <p>I'm a Product Designer working across product thinking, interaction, visual systems, prototyping and increasingly AI product design.</p>
+          </div>
+          <section className="about-capabilities">
+            <h3>Capabilities</h3>
+            <div className="capability-groups">
+              <div><span>Product design</span><p>Product Strategy · UX &amp; Interaction Design · UI Design · Design Systems · Prototyping · AI Experiences</p></div>
+              <div><span>Brand &amp; visual</span><p>Brand Identity · Visual Direction · Campaign Design · Packaging · Illustration · Motion &amp; Digital Content</p></div>
+              <div><span>Design → build</span><p>Web Design · HTML / CSS · Framer · Webflow · Shopify · AI-assisted Prototyping</p></div>
+            </div>
+          </section>
+          <section className="about-experience">
+            <h3>Experience</h3>
+            <div className="experience-rows">
+              {experienceRecords.map(([range, role, org, location]) => <article key={`${role}-${org}`} className="experience-row">
+                <span className="exp-year">{range}</span>
+                <div className="exp-main"><b>{role}</b><span className="exp-org">{org}</span>{location ? <small className="exp-loc">{location}</small> : null}</div>
+              </article>)}
+            </div>
+          </section>
+        </div>
+      </section>}
+      {mode !== 'about' && <button className="canvas-more" onClick={() => changeMode('about')}>More about Malik — experience, process, principles <span aria-hidden="true">→</span></button>}
+    </div>
+  </div>
+}
+
+type ProjectStackEntry = { id: string; index: string; title: string; descriptor: string; live: boolean; slug: string; label: string }
+function ProjectStack({ entries, onOpen, note, anchor }: { entries: ProjectStackEntry[]; onOpen: (slug: string) => void; note?: string; anchor: string }) {
+  return <div className="project-stack" id={anchor}>
+    {entries.map(entry => entry.live
+      ? <button key={entry.id} type="button" className="project-stack-project is-live" onClick={() => onOpen(entry.slug)} aria-label={`${entry.title} — open case study`}>
+          <ProjectStackMedia label={entry.label} />
+          <span className="project-stack-meta"><span className="project-stack-title">{entry.title}</span><span className="project-stack-desc">{entry.descriptor}</span><span className="project-stack-arrow" aria-hidden="true">↗</span></span>
+        </button>
+      : <div key={entry.id} className="project-stack-project is-future">
+          <ProjectStackMedia label={entry.label} note="Case study in preparation" />
+          <span className="project-stack-meta"><span className="project-stack-title">{entry.title}</span><span className="project-stack-desc">{entry.descriptor}</span></span>
+        </div>)}
+    {note && <p className="project-stack-note">{note}</p>}
+  </div>
 }
 
 function SelectedWork({ onProjectOpen, onAllWork }: { onProjectOpen: (slug: string) => void; onAllWork: () => void }) { const selected = workProjects.filter(project => project.featured); return <section className="selected-work" id="selected-work"><div className="section-label">M/ SELECTED WORK <span>{String(selected.length).padStart(2, '0')} PROJECTS</span></div><h2>SELECTED<br />WORK.</h2><div className="selected-work-list">{selected.map(project => <article key={project.slug} className={project.hasCaseStudy ? 'is-ready' : ''}><div className="selected-media" aria-hidden="true"><span>M/ MEDIA {project.index}</span><small>PROJECT CAPTURE<br />PENDING</small></div><div className="selected-project-meta"><span>{project.index} /</span>{project.category && <small>{project.category}</small>}</div><h3>{project.name}</h3>{project.summary && <p>{project.summary}</p>}{project.hasCaseStudy ? <button onClick={() => onProjectOpen(project.slug)}>VIEW CASE <span>↗</span></button> : <span className="case-pending">CASE IN PREPARATION</span>}</article>)}</div><button className="all-work-link" onClick={onAllWork}><span>M/ WORK INDEX<br />ALL PROJECTS</span>VIEW ALL WORK <b>↗</b></button></section> }
@@ -200,8 +413,8 @@ function About() {
 
 function WorkIndex({ onProjectOpen }: { onProjectOpen: (slug: string) => void }) { return <section className="work-page" id="work"><div className="section-label">M/ WORK <span>INDEX</span></div><h1>SELECTED<br />PRODUCT<br />WORK.</h1><p className="work-intro">A selection of products, systems and experiences I've designed across AI, fintech and digital platforms.</p><div className="work-index">{workProjects.map(project => <article key={project.slug}><button onClick={() => onProjectOpen(project.slug)} aria-label={`Open ${project.name} ${project.hasCaseStudy ? 'case study' : 'case study preparation'}`}><span>{project.index} /</span><div className="work-media" aria-hidden="true">MEDIA / IN PREPARATION</div><h2>{project.name}</h2><small>{project.status}</small></button></article>)}</div></section> }
 
-function WorkPreparation({ project, onBack }: { project?: WorkProject; onBack: () => void }) {
-  if (project?.slug === 'prima') return <PrimaCase onBack={onBack} />
+function WorkPreparation({ project, onBack, onNext }: { project?: WorkProject; onBack: () => void; onNext: (slug: string) => void }) {
+  if (project?.slug === 'prima') return <PrimaProductCase onNext={onNext} />
   if (project?.slug === 'nomi') return <NomiCase onBack={onBack} />
   if (project?.slug === 'hanya') return <HanyaCase onBack={onBack} />
   if (project?.slug === 'yousewire') return <YousewireCase onBack={onBack} />
@@ -270,22 +483,23 @@ function PrimaCase({ onBack }: { onBack: () => void }) {
     acts.forEach(act => observer.observe(act))
     return () => observer.disconnect()
   }, [])
-  return <article className="prima-case" id="top"><div className="case-progress" aria-label={`Case study progress: act ${activeAct} of 9`}>M/ CASE 001 <span>{String(activeAct).padStart(2, '0')} / 09</span></div><header className="prima-hero"><div className="section-label">M/ CASE 001 <span>PRIMA</span></div><h1>DESIGNING TRUST<br />FOR PAYMENTS WITHOUT<br />TRADITIONAL<br />PAYMENT RAILS.</h1><p>Prima is an AI-assisted verification operating system that helps merchants verify decentralized identities and credentials, investigate suspicious transactions, and make informed settlement decisions.</p><dl className="case-metadata"><div><dt>ROLE</dt><dd>Product Designer</dd></div><div><dt>SCOPE</dt><dd>Product Strategy<br />UX/UI Design<br />AI Experience<br />Prototyping</dd></div><div><dt>PLATFORM</dt><dd>Merchant Web Application</dd></div><div><dt>PROJECT TYPE</dt><dd>Speculative Product Concept</dd></div><div><dt>PROTOTYPE</dt><dd>Interactive Frontend</dd></div></dl><CaseMedia index="01" title="OPERATIONS DASHBOARD" className="case-hero-media" /></header>
-    <CaseAct number="01" title="THE PREMISE" id="prima-premise"><CaseStatement>WHAT HAPPENS TO MERCHANT TRUST<br />WHEN THE PAYMENT RAILS<br />WE RELY ON DISAPPEAR?</CaseStatement><p className="case-body">Prima explores a future where decentralized identity, Verifiable Credentials and digital currencies have become part of everyday retail payments. A customer can authorize a payment directly from a digital wallet, without relying on the traditional card infrastructure merchants use today. But removing those intermediaries creates another problem.</p><CaseStatement>CAN I TRUST<br />THIS TRANSACTION<br />ENOUGH TO ACCEPT IT?</CaseStatement><p className="case-body">The merchant still needs to know whether the person, credential and transaction in front of them can be trusted. Prima became my exploration of what the merchant side of that future could look like.</p><p className="case-pull">VERIFICATION WAS HAPPENING.<br />UNDERSTANDING WASN'T.</p><p className="case-body">A decentralized payment can fail for very different reasons. A credential may have expired. Its cryptographic proof may be invalid. The issuing authority may be unavailable. The credential could have been revoked. A presentation might be replayed. Or the payment itself may simply be behaving unusually.</p><ul className="prima-fail-examples"><li>CRYPTOGRAPHIC PROOF<br /><b>FAILED</b></li><li>CREDENTIAL<br /><b>REVOKED</b></li><li>ISSUER<br /><b>UNAVAILABLE</b></li></ul><p className="case-body">For a merchant, reducing all of those situations to a red FAILED status creates another problem.</p><CaseStatement>WHAT EXACTLY FAILED,<br />AND WHAT SHOULD<br />I DO NEXT?</CaseStatement><p className="case-body">That shifted the project from designing a payment verifier to designing an operational system for understanding trust.</p></CaseAct>
-    <CaseAct number="02" title="THE SYSTEM UNDERNEATH" id="prima-system" dark><CaseStatement>THE SYSTEM<br />KNEW WHAT FAILED.<br />THE HUMAN DIDN'T.</CaseStatement><p className="case-body">Underneath a single verification are several independent checks. Each can succeed, fail or become temporarily indeterminate. The design challenge was therefore not to hide this complexity completely. It was to decide how much of it each person needed to see, and when.</p><div className="verification-architecture" aria-label="Verification architecture. Customer DID, credential, issuer, cryptographic proof, credential status, merchant policy, payment authorization, settlement.">{layers.map(layer => <button className={activeLayer === layer ? 'is-active' : ''} onClick={() => setActiveLayer(layer)} key={layer}><span>{layer}</span><small>{activeLayer === layer ? layer === 'SETTLEMENT' ? 'FINAL SYSTEM STATE' : 'INDEPENDENT CHECK' : ''}</small></button>)}</div><p className="case-body">A cashier needs a clear outcome. An operator needs to understand what requires attention. An investigator needs access to the evidence behind that outcome. This became the foundation of Prima's information architecture.</p></CaseAct>
-    <CaseAct number="03" title="THE AI PRODUCT DECISION" id="prima-ai-boundary"><CaseStatement>I SEPARATED<br />VERIFICATION FROM<br /><em>interpretation.</em></CaseStatement><p className="case-body">Introducing AI created an important product decision. If Prima used AI to determine whether cryptographic evidence was valid, the most important decision in the system would become probabilistic. That didn't make sense. So I separated the system into two layers.</p><div className="case-comparison"><section><span>DETERMINISTIC<br />VERIFICATION</span><h3>ESTABLISHES:<br />WHAT THE EVIDENCE SAYS</h3><p>DID Resolution<br />Credential Proof<br />Issuer Information<br />Credential Status<br />Merchant Policy<br />Payment Authorization</p><b>VERIFIED<br />FAILED<br />INDETERMINATE</b></section><section><span>AI-ASSISTED<br />INVESTIGATION</span><h3>HELPS HUMANS UNDERSTAND:<br />WHAT THE EVIDENCE MEANS</h3><p>Failure Explanation<br />Evidence Correlation<br />Probable Causes<br />Anomaly Interpretation<br />Recommended Actions</p><b>ANALYSIS<br />EVIDENCE<br />RECOMMENDATION</b></section></div><p className="case-thesis">AI CAN INTERPRET THE EVIDENCE.<br />IT CANNOT CHANGE WHAT THE EVIDENCE SAYS.</p></CaseAct>
-    <CaseAct number="04" title="MAKING VERIFICATION OBSERVABLE" id="prima-observable"><CaseStatement>MAKE VERIFICATION<br /><em>OBSERVABLE.</em></CaseStatement><p className="case-body">Most verification experiences collapse everything happening behind the interface into a loading state followed by an answer. I wanted Prima to expose enough of the process to make that answer understandable. The Verify experience follows the transaction through its verification pipeline, from receiving the customer's decentralized identity to evaluating credentials, merchant policy and payment authorization.</p><CaseMediaPair left={{ index: '02', title: 'VERIFY - PIPELINE' }} right={{ index: '03', title: 'IDENTITY VERIFIED / MERCHANT AUTHORIZATION' }} /><CaseStatement>VERIFICATION PASSED.<br />THE MERCHANT CAN<br />AUTHORIZE SETTLEMENT.</CaseStatement><p className="case-body">Verification and settlement remain separate decisions. A successful identity verification does not automatically move money.</p><p className="case-pull">VERIFICATION SUCCEEDS FIRST.<br />SETTLEMENT STILL REQUIRES<br />MERCHANT AUTHORIZATION.</p></CaseAct>
-    <CaseAct number="05" title="REPLAY + EVIDENCE" id="prima-replay" dark><CaseStatement>A FAILED PAYMENT<br />WASN'T ENOUGH.<br />I NEEDED TO SHOW<br />WHERE IT FAILED.</CaseStatement><p className="case-body">Instead of showing an operator a generic failure message, Verification Replay reconstructs the verification chronologically and highlights the exact point where the trust chain broke. A transaction can successfully resolve the customer's DID, receive the credential and resolve its issuer before failing during cryptographic proof verification. Settlement is then halted at that exact point.</p><div className="replay-state"><span>DID<br /><b>PASSED</b></span><span>CREDENTIAL<br /><b>PASSED</b></span><span>ISSUER<br /><b>PASSED</b></span><span>CRYPTOGRAPHIC PROOF<br /><b>FAILED</b></span><span>SETTLEMENT<br /><b>HALTED</b></span></div><CaseMedia index="04" title="VERIFICATION REPLAY" caption="WHAT PASSED: DID, credential and issuer resolved successfully. WHERE IT FAILED: cryptographic proof verification. WHAT HAPPENED NEXT: settlement authorization halted." /><p className="case-pull">AN OPAQUE SYSTEM ERROR<br />BECAME AN INSPECTABLE EVENT.</p><div id="prima-evidence"><CaseStatement>EVIDENCE FIRST.<br /><em>EXPLANATION SECOND.</em></CaseStatement><CaseMediaPair left={{ index: '05', title: 'VERIFICATION DETAILS' }} right={{ index: '06', title: 'CREDENTIAL TRUST CHAIN' }} /><p className="case-body">Rather than combining everything into a single trust score, Prima separates the signals that describe a transaction: Verification Result, Cryptographic Proof, Credential Status, Issuer Status, Merchant Policy, Investigation Status and Settlement Status. The Trust Chain then shows how those pieces relate to one another.</p></div></CaseAct>
-    <CaseAct number="06" title="INVESTIGATION + HUMAN CONTROL" id="prima-human-control"><div id="prima-investigator"><CaseStatement>AI EXPLAINS<br />THE EVIDENCE.<br />IT DOESN'T DECIDE<br />THE <em>truth.</em></CaseStatement><p className="case-body">Some failures are deterministic but still difficult for a person to interpret. Instead of replacing the verification engine, the AI Investigator receives its evidence and turns it into an operational explanation: a concise incident analysis, the supporting evidence, probable causes ranked from what is available, and a recommended action.</p><CaseMedia index="07" title="AI INVESTIGATOR - CRYPTOGRAPHIC MISMATCH" /><p className="case-pull">AI ANALYSIS CONFIDENCE<br />DESCRIBES PRIMA'S INTERPRETATION,<br />NOT THE VALIDITY OF THE<br />CRYPTOGRAPHIC EVIDENCE.</p></div><CaseStatement>HUMAN DECISIONS<br /><em>REMAIN VISIBLE.</em></CaseStatement><p className="case-body">AI recommendations don't silently become merchant actions. An operator can escalate an investigation, resolve it or follow the appropriate operational workflow, while Prima maintains the original verification result separately.</p><div className="state-separation"><section><span>FAILED PATH</span><p>VERIFICATION<br /><b>FAILED</b><i>↓</i>INVESTIGATION<br /><b>ESCALATED</b><i>↓</i>SETTLEMENT<br /><b>BLOCKED</b></p></section><section><span>SUCCESSFUL PATH</span><p>VERIFICATION<br /><b>VERIFIED</b><i>↓</i>MERCHANT AUTHORIZATION<i>↓</i>SETTLEMENT<br /><b>CONFIRMED</b></p></section></div><p className="case-thesis">ESCALATING AN INVESTIGATION<br />DOESN'T REWRITE<br />THE VERIFICATION RESULT.</p><CaseMediaPair left={{ index: '11', title: 'AI INVESTIGATOR - ESCALATED' }} right={{ index: '12', title: 'AI INVESTIGATOR - DEGRADED ISSUER / HIGH-VALUE ANOMALY' }} /><div className="knowledge-comparison" id="prima-uncertainty"><section><span>FAILED</span><h3>Cryptographic proof invalid.</h3><p><b>SYSTEM KNOWLEDGE:</b> Enough evidence exists to reject verification.</p><strong>SETTLEMENT BLOCKED.</strong></section><section><span>INDETERMINATE</span><h3>Issuer service unavailable.</h3><p><b>SYSTEM KNOWLEDGE:</b> Prima cannot currently establish validity.</p><strong>TRANSACTION HELD FOR REVIEW.</strong></section></div><CaseStatement>NOT EVERY<br />FAILURE MEANS<br />THE SAME THING.</CaseStatement><p className="case-body">Prima needed to distinguish between invalid evidence and evidence that could not currently be verified. A cryptographic mismatch can produce a deterministic failure and stop settlement. If an issuer's credential-status service is temporarily unavailable, Prima may not have enough information to safely produce the same conclusion, and the transaction becomes Indeterminate rather than being incorrectly classified as fraudulent or invalid.</p></CaseAct>
-    <CaseAct number="07" title="THE OPERATING SYSTEM" id="prima-operating-system" dark><CaseStatement>VERIFICATION<br />WASN'T A SCREEN.<br />IT BECAME AN<br /><em>OPERATING SYSTEM.</em></CaseStatement><p className="case-body">Once individual transactions worked, I zoomed out to the merchant's broader operational problem. A merchant handling thousands of verifications needs more than a Verify button. Operations became the command surface for the system, bringing verification volume, auto-clear rate, blocked transactions, service health, Priority Review and AI-assisted operational interpretation into one place.</p><CaseMedia index="08" title="OPERATIONS - PRIORITY REVIEW" caption="The Priority Review queue surfaces the transactions that need human attention and shows how many unresolved items are waiting. Operators can investigate an individual event immediately or move into the full investigation queue." /><p className="case-body">The AI Operational Summary sits beside deterministic operational signals. It interprets what is happening across the system without replacing the underlying evidence. Alerts surface security, infrastructure and transaction anomalies without treating every unusual event as fraud.</p><CaseMediaPair left={{ index: '09', title: 'ALERTS' }} right={{ index: '10', title: 'TRUST POLICIES' }} /><p className="case-body">Integrations separates settlement networks from verification services, webhooks and API credentials. This keeps Prima's product model independent from any single payment or identity network.</p><CaseMedia index="14" title="INTEGRATIONS" /><section className="merchant-authority" id="prima-merchant-authority"><CaseStatement>MERCHANT CONTROL<br />STOPS AT THE MERCHANT.</CaseStatement><p className="case-body">Designing Trust Policies surfaced another important boundary. A merchant using Prima can decide that it no longer accepts credentials from a particular issuer. It cannot revoke that issuer. Likewise, Prima can restrict a DID within the merchant's own environment or add it to a watchlist, but it cannot globally block someone's decentralized identity. That distinction shaped the language and controls throughout the product: <strong>ACTIVE → PAUSED → DISABLED</strong></p><CaseMedia index="13" title="TRUST POLICIES - PAUSED" /><p className="case-thesis">PRIMA MANAGES THE MERCHANT'S<br />ACCEPTANCE POLICY.<br />NOT THE DECENTRALIZED<br />ECOSYSTEM ITSELF.</p></section></CaseAct>
-    <CaseAct number="08" title="THE CONNECTED PROTOTYPE" id="prima-prototype"><CaseStatement>I DESIGNED FOR FAILURE,<br />NOT JUST THE<br /><em>HAPPY PATH.</em></CaseStatement><p className="case-body">A clean transaction is the easiest part of a verification product to design. The more interesting experience begins when something goes wrong. To explore that properly, I created eight deterministic scenarios for the interactive prototype. Each scenario propagates through the relevant parts of Prima, allowing the interface to demonstrate different verification, investigation and settlement outcomes without relying on random prototype behaviour.</p><div className="scenario-matrix" id="prima-scenarios">{[['✓','CLEAN VERIFICATION','SUCCESSFUL VERIFICATION'],['✕','CRYPTOGRAPHIC PROOF MISMATCH','INVALID EVIDENCE'],['✕','REVOKED CREDENTIAL','CREDENTIAL STATUS'],['✕','EXPIRED CREDENTIAL','CREDENTIAL VALIDITY'],['?','DID SERVICE UNAVAILABLE','INFRASTRUCTURE UNCERTAINTY'],['?','ISSUER SERVICE UNAVAILABLE','INFRASTRUCTURE UNCERTAINTY'],['⚠','DUPLICATE PRESENTATION / REPLAY','SECURITY ANOMALY'],['⚠','HIGH-VALUE ANOMALY','BEHAVIOURAL ANOMALY']].map(([state, title, description]) => <div key={title}><b>{state}</b><strong>{title}</strong><small>{description}</small></div>)}</div><CaseStatement>THE SCREENS NEEDED<br />TO BEHAVE LIKE<br /><em>ONE SYSTEM.</em></CaseStatement><p className="case-body">A verification event opened from Operations needed to remain the same event in Verification Timeline. Its investigation needed to contain the same evidence. Escalating that investigation needed to update the investigation state without changing the underlying verification result. Alerts needed to lead back to the correct event. Merchant policy changes needed to persist across the experience. And a successful verification needed to progress from verification to merchant authorization and finally settlement confirmation.</p><div className="connected-system" aria-label="Connected product architecture"><span>OPERATIONS</span><span>VERIFY</span><span>VERIFICATION TIMELINE</span><span>TRUST CHAIN</span><span>VERIFICATION REPLAY</span><span>AI INVESTIGATION</span><span>ALERTS</span><span>TRUST POLICIES</span><span>SETTLEMENT</span></div><p className="case-pull">I BUILT ENOUGH OF PRIMA<br />TO TEST THE PRODUCT LOGIC,<br />NOT JUST THE SCREENS.</p><p className="case-body">Building those relationships exposed inconsistencies that static screens would have hidden. The final Prima prototype is a connected frontend application rather than a production payment system. It simulates the product's core operational behaviour using deterministic scenarios and shared application state.</p><CaseMedia index="15" title="VERIFY - SETTLEMENT CONFIRMED" /><CaseStatement>DESIGNING THE SAME SYSTEM<br />FOR SMALLER SCREENS.</CaseStatement><p className="case-body">Complex operational interfaces could not simply be compressed onto mobile. For dense desktop experiences such as Verification Timeline, AI Investigator and Integrations, I changed the interaction model into focused list-to-detail flows on smaller screens. A user selects the record they need, enters a focused detail state, and returns through a single clear navigation action.</p><CaseMediaPair left={{ index: '16', title: 'MOBILE VERIFICATION TIMELINE' }} right={{ index: '17', title: 'MOBILE AI INVESTIGATOR' }} /><section className="prototype-disclosure" id="prima-boundary"><span>M/ PROTOTYPE</span><h3>CONNECTED FRONTEND PROTOTYPE</h3><div><p><b>SIMULATES:</b><br />deterministic verification scenarios<br />shared application state<br />connected operational behaviour</p><p><b>DOES NOT INCLUDE:</b><br />real authentication<br />real DID resolution<br />real VC verification<br />real AI calls<br />real payment settlement<br />real blockchain/network connections<br />production backend infrastructure</p></div><a className="prima-live" href="https://prima-mu-nine.vercel.app/" target="_blank" rel="noreferrer">VIEW LIVE PROTOTYPE ↗</a></section></CaseAct>
-    <CaseAct number="09" title="REFLECTION" id="prima-reflection"><div className="section-label">M/ REFLECTION <span>WHAT I LEARNED</span></div><CaseStatement>EXPLAINABILITY<br />ISN'T THE SAME AS<br /><em>simplification.</em></CaseStatement><p className="case-body">Prima started as an interface for verifying decentralized payments. It became an exploration of something broader: how people make decisions when the systems providing the evidence are too complex to understand at a glance. I initially approached that complexity as something the interface should hide. Designing Verification Replay changed my thinking.</p><p className="case-body">For high-stakes systems, the better experience isn't always to remove complexity. Sometimes it is to reveal the right complexity at the right moment.</p><p className="case-body">I also learned that designing AI responsibly can mean deliberately reducing its authority. Prima became more believable when AI stopped being the thing that 'verified' transactions and became what it was better suited for: helping humans understand evidence, investigate uncertainty and decide what to do next.</p><p className="case-closing-thesis">RESPONSIBLE AI DESIGN<br />CAN SOMETIMES MEAN<br />DELIBERATELY GIVING AI<br />LESS AUTHORITY.</p></CaseAct>
+  return <article className="prima-case" id="top"><div className="case-progress" aria-label={`Case study progress: chapter ${activeAct} of 9`}>M/ CASE 001 <span>{String(activeAct).padStart(2, '0')} / 09</span></div><header className="prima-hero"><div className="section-label">M/ CASE 001 <span>PRIMA</span></div><h1>DESIGNING TRUST<br />FOR PAYMENTS WITHOUT<br />TRADITIONAL<br />PAYMENT RAILS.</h1><p>Prima is an AI-assisted verification operating system that helps merchants verify decentralized identities and credentials, investigate suspicious transactions, and make informed settlement decisions.</p><dl className="case-metadata"><div><dt>ROLE</dt><dd>Product Designer</dd></div><div><dt>SCOPE</dt><dd>Product Strategy<br />UX/UI Design<br />AI Experience<br />Prototyping</dd></div><div><dt>PLATFORM</dt><dd>Merchant Web Application</dd></div><div><dt>PROJECT TYPE</dt><dd>Speculative Product Concept</dd></div><div><dt>PROTOTYPE</dt><dd>Interactive Frontend</dd></div></dl><CaseMedia index="01" title="OPERATIONS DASHBOARD" className="case-hero-media" /></header>
+    <CaseAct chapter number="01" title="PROBLEM" id="prima-premise"><CaseStatement className="prima-statement-primary">VERIFICATION WAS HAPPENING.<br />UNDERSTANDING WASN'T.</CaseStatement><CaseStatement className="prima-statement-heading">WHAT HAPPENS TO MERCHANT TRUST<br />WHEN THE PAYMENT RAILS<br />WE RELY ON DISAPPEAR?</CaseStatement><p className="case-body">Prima explores a future where decentralized identity, Verifiable Credentials and digital currencies have become part of everyday retail payments. A customer can authorize a payment directly from a digital wallet, without relying on the traditional card infrastructure merchants use today. But removing those intermediaries creates another problem.</p><p className="prima-human-moment">CAN I TRUST<br />THIS TRANSACTION<br />ENOUGH TO ACCEPT IT?</p><p className="case-body">The merchant still needs to know whether the person, credential and transaction in front of them can be trusted. Prima became my exploration of what the merchant side of that future could look like.</p><p className="case-body">A decentralized payment can fail for very different reasons. A credential may have expired. Its cryptographic proof may be invalid. The issuing authority may be unavailable. The credential could have been revoked. A presentation might be replayed. Or the payment itself may simply be behaving unusually.</p><ul className="prima-fail-examples"><li>CRYPTOGRAPHIC PROOF<br /><b>FAILED</b></li><li>CREDENTIAL<br /><b>REVOKED</b></li><li>ISSUER<br /><b>UNAVAILABLE</b></li></ul><p className="case-body">For a merchant, reducing all of those situations to a red FAILED status creates another problem.</p><CaseStatement className="prima-statement-heading">WHAT EXACTLY FAILED,<br />AND WHAT SHOULD<br />I DO NEXT?</CaseStatement><p className="case-body">That shifted the project from designing a payment verifier to designing an operational system for understanding trust.</p></CaseAct>
+    <CaseAct chapter number="02" title="SYSTEM" id="prima-system" dark><CaseStatement className="prima-statement-primary">THE SYSTEM<br />KNEW WHAT FAILED.<br />THE HUMAN DIDN'T.</CaseStatement><p className="case-body">Underneath a single verification are several independent checks. Each can succeed, fail or become temporarily indeterminate. The design challenge was therefore not to hide this complexity completely. It was to decide how much of it each person needed to see, and when.</p><div className="verification-architecture" aria-label="Verification architecture. Customer DID, credential, issuer, cryptographic proof, credential status, merchant policy, payment authorization, settlement.">{layers.map(layer => <button className={activeLayer === layer ? 'is-active' : ''} onClick={() => setActiveLayer(layer)} key={layer}><span>{layer}</span><small>{activeLayer === layer ? layer === 'SETTLEMENT' ? 'FINAL SYSTEM STATE' : 'INDEPENDENT CHECK' : ''}</small></button>)}</div><p className="case-body">A cashier needs a clear outcome. An operator needs to understand what requires attention. An investigator needs access to the evidence behind that outcome. This became the foundation of Prima's information architecture.</p></CaseAct>
+    <CaseAct chapter number="03" title="AI DECISION" id="prima-ai-boundary"><CaseStatement className="prima-statement-primary">I SEPARATED<br />VERIFICATION FROM<br /><em>interpretation.</em></CaseStatement><p className="case-body">Introducing AI created an important product decision. If Prima used AI to determine whether cryptographic evidence was valid, the most important decision in the system would become probabilistic. That didn't make sense. So I separated the system into two layers.</p><EditorialNote label="DESIGN DECISION">AI should help interpret deterministic evidence, not decide whether that evidence is valid.</EditorialNote><div className="case-comparison"><section><span>DETERMINISTIC<br />VERIFICATION</span><h3>ESTABLISHES:<br />WHAT THE EVIDENCE SAYS</h3><p>DID Resolution<br />Credential Proof<br />Issuer Information<br />Credential Status<br />Merchant Policy<br />Payment Authorization</p><b>VERIFIED<br />FAILED<br />INDETERMINATE</b></section><section><span>AI-ASSISTED<br />INVESTIGATION</span><h3>HELPS HUMANS UNDERSTAND:<br />WHAT THE EVIDENCE MEANS</h3><p>Failure Explanation<br />Evidence Correlation<br />Probable Causes<br />Anomaly Interpretation<br />Recommended Actions</p><b>ANALYSIS<br />EVIDENCE<br />RECOMMENDATION</b></section></div><p className="case-thesis">AI CAN INTERPRET THE EVIDENCE.<br />IT CANNOT CHANGE WHAT THE EVIDENCE SAYS.</p></CaseAct>
+    <CaseAct chapter number="04" title="VERIFICATION" id="prima-observable"><CaseStatement className="prima-statement-primary">MAKE VERIFICATION<br /><em>OBSERVABLE.</em></CaseStatement><p className="case-body">Most verification experiences collapse everything happening behind the interface into a loading state followed by an answer. I wanted Prima to expose enough of the process to make that answer understandable. The Verify experience follows the transaction through its verification pipeline, from receiving the customer's decentralized identity to evaluating credentials, merchant policy and payment authorization.</p><CaseMediaPair left={{ index: '02', title: 'VERIFY - PIPELINE', caption: 'VERIFY / PIPELINE — Each check resolves in view before the answer is delivered.' }} right={{ index: '03', title: 'IDENTITY VERIFIED / MERCHANT AUTHORIZATION', caption: 'VERIFY / AUTHORIZATION — Identity resolved. Settlement remains a separate merchant decision.' }} /><CaseStatement className="prima-statement-system">VERIFICATION PASSED.<br />THE MERCHANT CAN<br />AUTHORIZE SETTLEMENT.</CaseStatement><p className="case-body">Verification and settlement remain separate decisions. A successful identity verification does not automatically move money.</p><p className="prima-relationship">VERIFICATION SUCCEEDS FIRST.<br />SETTLEMENT STILL REQUIRES<br />MERCHANT AUTHORIZATION.</p></CaseAct>
+    <CaseAct chapter number="05" title="REPLAY" id="prima-replay" dark><CaseStatement className="prima-statement-primary">A FAILED PAYMENT<br />WASN'T ENOUGH.<br />I NEEDED TO SHOW<br />WHERE IT FAILED.</CaseStatement><p className="case-body">Instead of showing an operator a generic failure message, Verification Replay reconstructs the verification chronologically and highlights the exact point where the trust chain broke. A transaction can successfully resolve the customer's DID, receive the credential and resolve its issuer before failing during cryptographic proof verification. Settlement is then halted at that exact point.</p><div className="replay-state"><span>DID<br /><b>PASSED</b></span><span>CREDENTIAL<br /><b>PASSED</b></span><span>ISSUER<br /><b>PASSED</b></span><span>CRYPTOGRAPHIC PROOF<br /><b>FAILED</b></span><span>SETTLEMENT<br /><b>HALTED</b></span></div><EditorialNote label="WHY THIS CHANGED">"Failed" explained the outcome. Replay exposes the point of failure.</EditorialNote><CaseMedia index="04" title="VERIFICATION REPLAY" caption="WHAT PASSED: DID, credential and issuer resolved successfully. WHERE IT FAILED: cryptographic proof verification. WHAT HAPPENED NEXT: settlement authorization halted." /><p className="case-pull">AN OPAQUE SYSTEM ERROR<br />BECAME AN INSPECTABLE EVENT.</p><div id="prima-evidence"><CaseStatement className="prima-statement-heading">EVIDENCE FIRST.<br /><em>EXPLANATION SECOND.</em></CaseStatement><CaseMediaPair left={{ index: '05', title: 'VERIFICATION DETAILS' }} right={{ index: '06', title: 'CREDENTIAL TRUST CHAIN' }} /><p className="case-body">Rather than combining everything into a single trust score, Prima separates the signals that describe a transaction: Verification Result, Cryptographic Proof, Credential Status, Issuer Status, Merchant Policy, Investigation Status and Settlement Status. The Trust Chain then shows how those pieces relate to one another.</p></div></CaseAct>
+    <CaseAct chapter number="06" title="INVESTIGATION" id="prima-human-control"><div id="prima-investigator"><CaseStatement className="prima-statement-primary">AI EXPLAINS<br />THE EVIDENCE.<br />IT DOESN'T DECIDE<br />THE <em>truth.</em></CaseStatement><p className="case-body">Some failures are deterministic but still difficult for a person to interpret. Instead of replacing the verification engine, the AI Investigator receives its evidence and turns it into an operational explanation: a concise incident analysis, the supporting evidence, probable causes ranked from what is available, and a recommended action.</p><CaseMedia index="07" title="AI INVESTIGATOR - CRYPTOGRAPHIC MISMATCH" caption="AI INVESTIGATOR / MISMATCH — Concise incident analysis above evidence and ranked probable causes." /><p className="prima-definition">AI ANALYSIS CONFIDENCE<br />DESCRIBES PRIMA'S INTERPRETATION,<br />NOT THE VALIDITY OF THE<br />CRYPTOGRAPHIC EVIDENCE.</p></div><CaseStatement className="prima-statement-heading">HUMAN DECISIONS<br /><em>REMAIN VISIBLE.</em></CaseStatement><p className="case-body">AI recommendations don't silently become merchant actions. An operator can escalate an investigation, resolve it or follow the appropriate operational workflow, while Prima maintains the original verification result separately.</p><div className="state-separation"><section><span>FAILED PATH</span><p>VERIFICATION<br /><b>FAILED</b><i>↓</i>INVESTIGATION<br /><b>ESCALATED</b><i>↓</i>SETTLEMENT<br /><b>BLOCKED</b></p></section><section><span>SUCCESSFUL PATH</span><p>VERIFICATION<br /><b>VERIFIED</b><i>↓</i>MERCHANT AUTHORIZATION<i>↓</i>SETTLEMENT<br /><b>CONFIRMED</b></p></section></div><p className="case-thesis">ESCALATING AN INVESTIGATION<br />DOESN'T REWRITE<br />THE VERIFICATION RESULT.</p><CaseMediaPair left={{ index: '11', title: 'AI INVESTIGATOR - ESCALATED', caption: 'AI INVESTIGATOR / ESCALATED — Recommendation surfaced; the verification result stays untouched.' }} right={{ index: '12', title: 'AI INVESTIGATOR - DEGRADED ISSUER / HIGH-VALUE ANOMALY', caption: 'AI INVESTIGATOR / ANOMALY — Interpretation separated from the deterministic result.' }} /><div className="knowledge-comparison" id="prima-uncertainty"><section><span>FAILED</span><h3>Cryptographic proof invalid.</h3><p><b>SYSTEM KNOWLEDGE:</b> Enough evidence exists to reject verification.</p><strong>SETTLEMENT BLOCKED.</strong></section><section><span>INDETERMINATE</span><h3>Issuer service unavailable.</h3><p><b>SYSTEM KNOWLEDGE:</b> Prima cannot currently establish validity.</p><strong>TRANSACTION HELD FOR REVIEW.</strong></section></div><EditorialNote label="IMPORTANT DISTINCTION">Unavailable evidence isn't the same as invalid evidence.</EditorialNote><CaseStatement className="prima-statement-heading">NOT EVERY<br />FAILURE MEANS<br />THE SAME THING.</CaseStatement><p className="case-body">Prima needed to distinguish between invalid evidence and evidence that could not currently be verified. A cryptographic mismatch can produce a deterministic failure and stop settlement. If an issuer's credential-status service is temporarily unavailable, Prima may not have enough information to safely produce the same conclusion, and the transaction becomes Indeterminate rather than being incorrectly classified as fraudulent or invalid.</p></CaseAct>
+    <CaseAct chapter number="07" title="OPERATIONS" id="prima-operating-system" dark><CaseStatement className="prima-statement-primary">VERIFICATION<br />WASN'T A SCREEN.<br />IT BECAME AN<br /><em>OPERATING SYSTEM.</em></CaseStatement><p className="case-body">Once individual transactions worked, I zoomed out to the merchant's broader operational problem. A merchant handling thousands of verifications needs more than a Verify button. Operations became the command surface for the system, bringing verification volume, auto-clear rate, blocked transactions, service health, Priority Review and AI-assisted operational interpretation into one place.</p><CaseMedia index="08" title="OPERATIONS - PRIORITY REVIEW" caption="The Priority Review queue surfaces the transactions that need human attention and shows how many unresolved items are waiting. Operators can investigate an individual event immediately or move into the full investigation queue." /><p className="case-body">The AI Operational Summary sits beside deterministic operational signals. It interprets what is happening across the system without replacing the underlying evidence. Alerts surface security, infrastructure and transaction anomalies without treating every unusual event as fraud.</p><CaseMediaPair left={{ index: '09', title: 'ALERTS', caption: 'ALERTS / INBOUND — Security, infrastructure and transaction anomalies separated from routine events.' }} right={{ index: '10', title: 'TRUST POLICIES', caption: 'TRUST POLICIES / MASTER — Active, paused and disabled acceptance rules.' }} /><p className="case-body">Integrations separates settlement networks from verification services, webhooks and API credentials. This keeps Prima's product model independent from any single payment or identity network.</p><CaseMedia index="14" title="INTEGRATIONS" caption="INTEGRATIONS / NETWORKS + SERVICES — Settlement networks separated from verification services, webhooks and API credentials." /><section className="merchant-authority" id="prima-merchant-authority"><CaseStatement className="prima-statement-heading">MERCHANT CONTROL<br />STOPS AT THE MERCHANT.</CaseStatement><p className="case-body">Designing Trust Policies surfaced another important boundary. A merchant using Prima can decide that it no longer accepts credentials from a particular issuer. It cannot revoke that issuer. Likewise, Prima can restrict a DID within the merchant's own environment or add it to a watchlist, but it cannot globally block someone's decentralized identity. That distinction shaped the language and controls throughout the product: <strong>ACTIVE → PAUSED → DISABLED</strong></p><EditorialNote label="AUTHORITY BOUNDARY">Prima controls what this merchant accepts, not the decentralized ecosystem.</EditorialNote><CaseMedia index="13" title="TRUST POLICIES - PAUSED" caption="TRUST POLICIES / PAUSED — A merchant can pause what it accepts. It cannot revoke the issuer's credential." /><p className="case-thesis">PRIMA MANAGES THE MERCHANT'S<br />ACCEPTANCE POLICY.<br />NOT THE DECENTRALIZED<br />ECOSYSTEM ITSELF.</p></section></CaseAct>
+    <CaseAct chapter number="08" title="PROTOTYPE" id="prima-prototype"><CaseStatement className="prima-statement-heading">I DESIGNED FOR FAILURE,<br />NOT JUST THE<br /><em>HAPPY PATH.</em></CaseStatement><p className="case-body">A clean transaction is the easiest part of a verification product to design. The more interesting experience begins when something goes wrong. To explore that properly, I created eight deterministic scenarios for the interactive prototype. Each scenario propagates through the relevant parts of Prima, allowing the interface to demonstrate different verification, investigation and settlement outcomes without relying on random prototype behaviour.</p><div className="scenario-matrix" id="prima-scenarios">{[['✓','CLEAN VERIFICATION','SUCCESSFUL VERIFICATION'],['✕','CRYPTOGRAPHIC PROOF MISMATCH','INVALID EVIDENCE'],['✕','REVOKED CREDENTIAL','CREDENTIAL STATUS'],['✕','EXPIRED CREDENTIAL','CREDENTIAL VALIDITY'],['?','DID SERVICE UNAVAILABLE','INFRASTRUCTURE UNCERTAINTY'],['?','ISSUER SERVICE UNAVAILABLE','INFRASTRUCTURE UNCERTAINTY'],['⚠','DUPLICATE PRESENTATION / REPLAY','SECURITY ANOMALY'],['⚠','HIGH-VALUE ANOMALY','BEHAVIOURAL ANOMALY']].map(([state, title, description]) => <div key={title}><b>{state}</b><strong>{title}</strong><small>{description}</small></div>)}</div><EditorialNote label="PROTOTYPE DECISION">I built enough of the system to test behaviour and state relationships, not production infrastructure.</EditorialNote><CaseStatement className="prima-statement-primary">THE SCREENS NEEDED<br />TO BEHAVE LIKE<br /><em>ONE SYSTEM.</em></CaseStatement><p className="case-body">A verification event opened from Operations needed to remain the same event in Verification Timeline. Its investigation needed to contain the same evidence. Escalating that investigation needed to update the investigation state without changing the underlying verification result. Alerts needed to lead back to the correct event. Merchant policy changes needed to persist across the experience. And a successful verification needed to progress from verification to merchant authorization and finally settlement confirmation.</p><div className="connected-system" aria-label="Connected product architecture"><span>OPERATIONS</span><span>VERIFY</span><span>VERIFICATION TIMELINE</span><span>TRUST CHAIN</span><span>VERIFICATION REPLAY</span><span>AI INVESTIGATION</span><span>ALERTS</span><span>TRUST POLICIES</span><span>SETTLEMENT</span></div><p className="case-pull">I BUILT ENOUGH OF PRIMA<br />TO TEST THE PRODUCT LOGIC,<br />NOT JUST THE SCREENS.</p><p className="case-body">Building those relationships exposed inconsistencies that static screens would have hidden. The final Prima prototype is a connected frontend application rather than a production payment system. It simulates the product's core operational behaviour using deterministic scenarios and shared application state.</p><CaseMedia index="15" title="VERIFY - SETTLEMENT CONFIRMED" caption="VERIFY / SETTLEMENT CONFIRMED — Verification → merchant authorization → settlement confirmation. Nothing settles automatically." /><CaseStatement className="prima-statement-heading">DESIGNING THE SAME SYSTEM<br />FOR SMALLER SCREENS.</CaseStatement><p className="case-body">Complex operational interfaces could not simply be compressed onto mobile. For dense desktop experiences such as Verification Timeline, AI Investigator and Integrations, I changed the interaction model into focused list-to-detail flows on smaller screens. A user selects the record they need, enters a focused detail state, and returns through a single clear navigation action.</p><CaseMediaPair left={{ index: '16', title: 'MOBILE VERIFICATION TIMELINE', caption: 'MOBILE / VERIFICATION TIMELINE — Focused list-to-detail navigation on narrower screens.' }} right={{ index: '17', title: 'MOBILE AI INVESTIGATOR', caption: 'MOBILE / AI INVESTIGATOR — A detail state entered from a compact list, with a single clear return.' }} /><section className="prototype-disclosure" id="prima-boundary"><span>M/ PROTOTYPE</span><h3>CONNECTED FRONTEND PROTOTYPE</h3><div><p><b>SIMULATES:</b><br />deterministic verification scenarios<br />shared application state<br />connected operational behaviour</p><p><b>DOES NOT INCLUDE:</b><br />real authentication<br />real DID resolution<br />real VC verification<br />real AI calls<br />real payment settlement<br />real blockchain/network connections<br />production backend infrastructure</p></div><a className="prima-live" href="https://prima-mu-nine.vercel.app/" target="_blank" rel="noreferrer">VIEW LIVE PROTOTYPE ↗</a></section></CaseAct>
+    <CaseAct chapter number="09" title="REFLECTION" id="prima-reflection"><div className="section-label">M/ REFLECTION <span>WHAT I LEARNED</span></div><CaseStatement className="prima-statement-primary">EXPLAINABILITY<br />ISN'T THE SAME AS<br /><em>simplification.</em></CaseStatement><p className="case-body">Prima started as an interface for verifying decentralized payments. It became an exploration of something broader: how people make decisions when the systems providing the evidence are too complex to understand at a glance. I initially approached that complexity as something the interface should hide. Designing Verification Replay changed my thinking.</p><p className="case-body">For high-stakes systems, the better experience isn't always to remove complexity. Sometimes it is to reveal the right complexity at the right moment.</p><EditorialNote label="WHAT CHANGED MY THINKING">I used to hide the system. Now the system teaches when it matters.</EditorialNote><p className="case-body">I also learned that designing AI responsibly can mean deliberately reducing its authority. Prima became more believable when AI stopped being the thing that 'verified' transactions and became what it was better suited for: helping humans understand evidence, investigate uncertainty and decide what to do next.</p><p className="case-closing-thesis">RESPONSIBLE AI DESIGN<br />CAN SOMETIMES MEAN<br />DELIBERATELY GIVING AI<br />LESS AUTHORITY.</p></CaseAct>
     <footer className="prima-closing"><div className="section-label">M/ CASE 001 <span>PRIMA</span></div><h2>MAKING MACHINE TRUST<br />UNDERSTANDABLE TO<br /><em>humans.</em></h2><p>A speculative exploration of decentralized payments, explainable verification and human-centered AI.</p><button onClick={onBack}>← MORE WORK</button><span>NEXT CASE<br />NOMI</span></footer>
   </article>
 }
 
-function CaseAct({ number, title, id, dark = false, children }: { number: string; title: string; id: string; dark?: boolean; children: React.ReactNode }) { return <section className={`case-act ${dark ? 'case-act-dark' : ''}`} id={id} data-act={number}><div className="case-act-label">ACT {number}<span>{title}</span></div>{children}</section> }
-function CaseStatement({ children }: { children: React.ReactNode }) { return <h2 className="case-statement">{children}</h2> }
+function CaseAct({ number, title, id, dark = false, chapter = false, children }: { number: string; title: string; id: string; dark?: boolean; chapter?: boolean; children: React.ReactNode }) { return <section className={`case-act ${dark ? 'case-act-dark' : ''}`} id={id} data-act={number}><div className="case-act-label">{chapter ? <><b>{number}</b><span>/ {title}</span></> : <>ACT {number}<span>{title}</span></>}</div>{children}</section> }
+function CaseStatement({ className = '', children }: { className?: string; children: React.ReactNode }) { return <h2 className={`case-statement ${className}`.trim()}>{children}</h2> }
+function EditorialNote({ label, children }: { label: string; children: React.ReactNode }) { return <aside className="editorial-note"><span>{label}</span><p>{children}</p></aside> }
 
 function Lab({ onExperimentOpen }: { onExperimentOpen: (slug: string) => void }) { return <section className="lab-page" id="lab"><div className="section-label">M/LAB <span>INDEX</span></div><h1>SMALL THINGS<br />BUILT TO ANSWER<br /><em>interesting questions.</em></h1><p className="lab-intro">A collection of small experiments I use to explore how AI changes the way we design, build and interact with software.</p>{labExperiments.length ? <div className="lab-experiment-index">{labExperiments.map(experiment => <button onClick={() => onExperimentOpen(experiment.slug)} key={experiment.id}><span>M/LAB {experiment.id}</span><h2>{experiment.title}</h2><small>{experiment.status}</small></button>)}</div> : <div className="lab-empty"><span>M/ CURRENT STATE</span><h2>EXPERIMENTS<br />IN PROGRESS.</h2><p>New things will appear here as I build them.</p></div>}</section> }
 
