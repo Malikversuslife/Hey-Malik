@@ -24,6 +24,14 @@ type Page = 'home' | 'about' | 'work' | 'workCaseStudy' | 'brandingCaseStudy' | 
 type PortfolioResponse = { terms: string[]; mode: ResponseMode; targets: string[]; route?: Page; routeTarget?: string; classification: { intent: string; evidence: string; representation: string } }
 
 const responses: PortfolioResponse[] = [
+  { terms: ['what branding does malik do', 'malik branding', 'brand design', 'branding practice', 'branding experience', 'visual identity', 'brand identity', 'packaging design', 'art direction'], mode: 'connect', targets: ['branding-anchor'], route: 'home', routeTarget: 'branding-anchor', classification: { intent: 'BRANDING', evidence: 'BRANDING INDEX', representation: 'CONNECT' } },
+  { terms: ['branding work', 'branding projects', 'brand projects', 'show me branding', 'show me brand work', 'what brands has malik designed', 'what branding has malik done'], mode: 'focus', targets: ['branding-anchor'], route: 'home', routeTarget: 'branding-anchor', classification: { intent: 'BRANDING_WORK', evidence: 'BRANDING INDEX', representation: 'FOCUS' } },
+  { terms: ['what is side b', 'tell me about side b', 'side b case study', 'side b branding', 'side b identity', 'side b packaging', 'old stuff new socks'], mode: 'connect', targets: ['sideb-premise'], route: 'brandingCaseStudy', routeTarget: 'sideb-premise', classification: { intent: 'SIDE_B', evidence: 'BRAND CASE 001', representation: 'CONNECT' } },
+  { terms: ['the kim couture', 'kim couture'], mode: 'focus', targets: ['branding-anchor'], route: 'home', routeTarget: 'branding-anchor', classification: { intent: 'KIM_COUTURE', evidence: 'BRANDING INDEX', representation: 'FOCUS' } },
+  { terms: ['finlancer'], mode: 'focus', targets: ['branding-anchor'], route: 'home', routeTarget: 'branding-anchor', classification: { intent: 'FINLANCER', evidence: 'BRANDING INDEX', representation: 'FOCUS' } },
+  { terms: ['pycon nigeria 2024', 'pycon branding', 'pycon identity'], mode: 'focus', targets: ['branding-anchor'], route: 'home', routeTarget: 'branding-anchor', classification: { intent: 'PYCON_BRAND', evidence: 'BRANDING INDEX', representation: 'FOCUS' } },
+  { terms: ['nomi branding', 'nomi visual identity', 'nomi brand identity'], mode: 'focus', targets: ['branding-anchor'], route: 'home', routeTarget: 'branding-anchor', classification: { intent: 'NOMI_BRAND', evidence: 'BRANDING INDEX', representation: 'FOCUS' } },
+  { terms: ['belsquared brand', 'belsquared branding', 'belsquared identity', 'belsquared packaging'], mode: 'focus', targets: ['branding-anchor'], route: 'home', routeTarget: 'branding-anchor', classification: { intent: 'BELSQUARED_BRAND', evidence: 'BRANDING INDEX', representation: 'FOCUS' } },
   { terms: ['what is yousewire', 'tell me about yousewire', 'malik do on yousewire', 'design fintech', 'personal and business differ', 'yousewire verification', 'transaction tiers', 'business payments', 'roles and permissions', 'approval workflows', 'design payroll', 'work with developers', 'consistency without uniformity'], mode: 'connect', targets: ['yousewire-contexts'], route: 'workCaseStudy', routeTarget: 'yousewire-contexts', classification: { intent: 'YOUSEWIRE', evidence: 'CASE 003', representation: 'CONNECT' } },
   { terms: ['what is hanya', 'tell me about hanya', 'hanya healthcare', 'ai in healthcare', 'design hanya', 'hanya handle safety', 'hanya diagnose', 'ai do in hanya', 'deterministic logic', 'test hanya', 'provider discovery'], mode: 'connect', targets: ['hanya-navigation-gap'], route: 'workCaseStudy', routeTarget: 'hanya-navigation-gap', classification: { intent: 'HANYA', evidence: 'CASE 002', representation: 'CONNECT' } },
   { terms: ['what is prima', 'prima', 'prima case study', 'prima project', 'design for trust', 'handle uncertainty', 'systems thinking example'], mode: 'connect', targets: ['prima-premise'], route: 'workCaseStudy', routeTarget: 'prima-premise', classification: { intent: 'PRIMA', evidence: 'CASE 001', representation: 'CONNECT' } },
@@ -86,7 +94,7 @@ const experienceRecords: [string, string, string, string, string[]][] = [
   ['MAY 2022–PRESENT', 'INDEPENDENT DESIGN CONSULTANT', 'SELF-EMPLOYED', 'REMOTE', ['Partner with clients to design digital products across fintech, SaaS, e-commerce, and Web3.', 'Work across discovery, product thinking, UX flows, interface design, design systems, prototyping, and developer handoff.', 'Translate business requirements and complex workflows into clear, usable product experiences.']],
   ['2018–PRESENT', 'INDEPENDENT BRAND DESIGNER', 'SELF-EMPLOYED', '', ['Built brand identities and visual systems for businesses and independent clients.', 'Work across brand identity, visual direction, marketing design, packaging, print, digital applications, and broader brand experiences.', 'This remains an active part of Malik’s multidisciplinary design practice alongside product and digital experience design.']]
 ]
-type AskAction = { label: string; href?: string; page?: Page; slug?: string }
+type AskAction = { label: string; href?: string; page?: Page; slug?: string; view?: HomeMode }
 type AskMessage = { id: number; role: 'user' | 'assistant'; text: string; actions?: AskAction[]; followUps?: string[] }
 type AskAnswer = { text: string; actions?: AskAction[]; followUps: string[] }
 const askFollowUps: Record<string, string[]> = {
@@ -108,9 +116,17 @@ const askFollowUps: Record<string, string[]> = {
   PRIMA: ['What is Nomi?', "What's in the Lab?", 'How does Malik think about AI?'],
   NOMI: ['What is Hanya?', "What's in the Lab?", 'What does Malik care about?'],
   HANYA: ['What is Yousewire?', "What's in the Lab?", 'What has Malik worked on?'],
-  YOUSEWIRE: ['What is Prima?', "What's in the Lab?", 'What does Malik care about?']
+  YOUSEWIRE: ['What is Prima?', "What's in the Lab?", 'What does Malik care about?'],
+  BRANDING: ['What branding projects are in the portfolio?', 'What is SIDE B?', 'How did Malik get into product design?'],
+  BRANDING_WORK: ['What is SIDE B?', 'What branding does Malik do?', 'Tell me about The Kim Couture.'],
+  SIDE_B: ['What branding does Malik do?', 'What branding projects are in the portfolio?', 'Tell me about The Kim Couture.'],
+  KIM_COUTURE: ['What is SIDE B?', 'What branding projects are in the portfolio?', 'What branding does Malik do?'],
+  FINLANCER: ['What is SIDE B?', 'What branding projects are in the portfolio?', 'What branding does Malik do?'],
+  PYCON_BRAND: ['What is SIDE B?', 'What branding projects are in the portfolio?', 'What branding does Malik do?'],
+  NOMI_BRAND: ['What is SIDE B?', 'What branding projects are in the portfolio?', 'What branding does Malik do?'],
+  BELSQUARED_BRAND: ['What is SIDE B?', 'What branding projects are in the portfolio?', 'What branding does Malik do?']
 }
-const askFallback: AskAnswer = { text: "I can answer from what's documented on this site : Malik's role, thinking on AI, tools, the Lab, experience, and the Prima, Nomi, Hanya and Yousewire case studies.", followUps: askFollowUps.ROLE }
+const askFallback: AskAnswer = { text: "I can answer from what's documented on this site: Malik's role, branding practice, product and branding work, thinking on AI, tools, the Lab, experience, and the published case studies.", followUps: ['What branding projects are in the portfolio?', 'What has Malik worked on?', 'How does Malik think about AI?'] }
 const askAnswers: Record<string, AskAnswer> = {
   ROLE: { text: "I'm a Product Designer working across product thinking, interaction, visual systems, prototyping and increasingly AI product design.\n\nI work where product thinking, interaction and implementation meet.", followUps: askFollowUps.ROLE },
   PROFILE: { text: "I'm a Product Designer working across product thinking, interaction, visual systems, prototyping and increasingly AI product design.\n\nI didn't really leave visual design behind. I kept adding new questions to it.\n\nVisual thinker · Product designer · Systems oriented · Design + build · AI product design", followUps: askFollowUps.PROFILE },
@@ -130,9 +146,17 @@ const askAnswers: Record<string, AskAnswer> = {
   PRIMA: { text: 'Prima is an AI-assisted verification operating system that helps merchants verify decentralized identities and credentials, investigate suspicious transactions, and make informed settlement decisions.\n\nIt explores a future where decentralized identity, Verifiable Credentials and digital currencies have become part of everyday retail payments.', actions: [{ label: 'Open Prima case study ↗', page: 'workCaseStudy', slug: 'prima' }], followUps: askFollowUps.PRIMA },
   NOMI: { text: 'Nomi is an adaptive learning product designed around a simple idea: learning should respond to the learner, not force every learner through the same path.\n\nPractice, progress, recommendations, and contextual AI work together to shape what the learner does next.', actions: [{ label: 'Open Nomi case study ↗', page: 'workCaseStudy', slug: 'nomi' }], followUps: askFollowUps.NOMI },
   HANYA: { text: 'An AI-assisted healthcare navigator that helps people understand what kind of care to seek next, without pretending to diagnose them.\n\nSafety means steering people toward appropriate care : guidance, not diagnosis.', actions: [{ label: 'Open Hanya case study ↗', page: 'workCaseStudy', slug: 'hanya' }], followUps: askFollowUps.HANYA },
-  YOUSEWIRE: { text: 'A cross-border financial platform designed to help individuals and businesses hold, move, receive, convert, and manage money across currencies and payment networks.', actions: [{ label: 'Open Yousewire case study ↗', page: 'workCaseStudy', slug: 'yousewire' }], followUps: askFollowUps.YOUSEWIRE }
+  YOUSEWIRE: { text: 'A cross-border financial platform designed to help individuals and businesses hold, move, receive, convert, and manage money across currencies and payment networks.', actions: [{ label: 'Open Yousewire case study ↗', page: 'workCaseStudy', slug: 'yousewire' }], followUps: askFollowUps.YOUSEWIRE },
+  BRANDING: { text: 'Malik has worked independently in brand design since 2018, alongside his product practice. His branding work covers identity systems, visual direction, packaging, print, campaign design, and digital applications.\n\nThe same systems thinking carries across both disciplines: establish a clear idea, build a visual language around it, and make it hold together across every touchpoint.', actions: [{ label: 'View branding work ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.BRANDING },
+  BRANDING_WORK: { text: 'The branding portfolio currently includes SIDE B, The Kim Couture, Finlancer, PyCon Nigeria 2024, Nomi, and Belsquared.\n\nSIDE B has a published case study. The remaining projects are indexed with their disciplines and will open as their full case studies are published.', actions: [{ label: 'View branding work ↗', page: 'home', view: 'branding' }, { label: 'Open SIDE B case study ↗', page: 'brandingCaseStudy', slug: 'side-b' }], followUps: askFollowUps.BRANDING_WORK },
+  SIDE_B: { text: 'SIDE B is a 2026 sock-label identity built around the idea “Old stuff. New socks.” Malik designed the brand identity, packaging, and art direction.\n\nThe system treats an ordinary object as a cultural artefact and carries one voice through the logo, colour, type, illustration, photography, product, packaging, campaign, social content, and digital store experience.', actions: [{ label: 'Open SIDE B case study ↗', page: 'brandingCaseStudy', slug: 'side-b' }], followUps: askFollowUps.SIDE_B },
+  KIM_COUTURE: { text: 'The Kim Couture is a fashion brand-identity project in Malik’s branding portfolio. Its full case study is being prepared, so the portfolio currently documents the project and discipline rather than the complete design process.', actions: [{ label: 'View branding index ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.KIM_COUTURE },
+  FINLANCER: { text: 'Finlancer is a brand and visual-identity project in Malik’s branding portfolio. Its full case study is still being prepared.', actions: [{ label: 'View branding index ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.FINLANCER },
+  PYCON_BRAND: { text: 'PyCon Nigeria 2024 is a conference-identity project in Malik’s branding portfolio. Malik’s wider portfolio also documents his product-design work for PyCon Nigeria’s 2024 and 2025 digital experiences. The full branding case study is still being prepared.', actions: [{ label: 'View branding index ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.PYCON_BRAND },
+  NOMI_BRAND: { text: 'Nomi is also represented as a brand and visual-identity project in Malik’s branding portfolio. Its full branding case study is still being prepared; the published Nomi product case study covers the adaptive learning experience.', actions: [{ label: 'View branding index ↗', page: 'home', view: 'branding' }, { label: 'Open Nomi product case ↗', page: 'workCaseStudy', slug: 'nomi' }], followUps: askFollowUps.NOMI_BRAND },
+  BELSQUARED_BRAND: { text: 'Belsquared is a brand-identity and packaging project in Malik’s branding portfolio. Its full branding case study is still being prepared.', actions: [{ label: 'View branding index ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.BELSQUARED_BRAND }
 }
-const ASK_SUGGESTIONS = ['What does Malik do?', 'How does Malik think about AI?', "What's in the Lab?", 'What did you design for Prima?']
+const ASK_SUGGESTIONS = ['What does Malik do?', 'What branding projects are in the portfolio?', 'What is SIDE B?', 'How does Malik think about AI?']
 const HOME_VIEWS: Record<string, HomeMode> = { work: 'product', about: 'about', lab: 'lab' }
 const normalizeLegacyTopLevel = () => {
   const path = window.location.pathname.replace(/^\/+|\/+$/g, '')
@@ -204,7 +228,7 @@ function App() {
   }
   const askAction = (action: AskAction) => {
     if (action.href) window.open(action.href, '_blank', 'noreferrer')
-    else if (action.page) navigate(action.page, undefined, action.slug)
+    else if (action.page) navigate(action.page, undefined, action.slug, action.view)
     closeAsk()
   }
   const submit = askQuestion
