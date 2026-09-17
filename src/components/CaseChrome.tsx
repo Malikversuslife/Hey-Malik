@@ -1,3 +1,4 @@
+import { Icon } from './Icon'
 import type { ReactNode } from 'react'
 import { CaseBackButton } from './CaseBackButton'
 
@@ -22,6 +23,6 @@ export function CaseChrome({ onBack, onAsk, crumbs }: { onBack: () => void; onAs
         ))}
       </ol>
     </nav>
-    <button className="case-chrome-ask" type="button" onClick={onAsk}>ASK MALIK <span aria-hidden="true">↗</span></button>
+    <button className="case-chrome-ask" type="button" onClick={onAsk}><Icon name="chat" /> ASK MALIK</button>
   </header>
 }

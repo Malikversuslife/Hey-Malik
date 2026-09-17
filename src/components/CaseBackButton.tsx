@@ -1,3 +1,4 @@
+import { Icon } from './Icon'
 export const IN_APP_NAV_KEY = 'm:portfolio:inapp-nav'
 
 export function markInAppNavigation() {
@@ -14,7 +15,7 @@ export function CaseBackButton({ onFallback, label = 'Back', floating = false }:
     onFallback()
   }
   return <button className={`case-back-button${floating ? ' is-floating' : ''}`} type="button" onClick={goBack} aria-label={label ? `Go back: ${label}` : 'Go back'}>
-    <span className="case-back-glyph" aria-hidden="true">←</span>
+    <Icon name="arrowLeft" className="case-back-glyph" />
     {label && <span className="case-back-label">{label}</span>}
   </button>
 }

@@ -1,8 +1,9 @@
+import { Icon } from '../Icon'
 import { Fragment, useEffect, useRef, type CSSProperties, type ReactNode } from 'react'
 import type { ProductCaseMediaData, ProductCaseMeta } from '../../data/productCases'
 
 /* =========================================================================
-   PRODUCT CASE — shared primitives for the product case-study system.
+   PRODUCT CASE : shared primitives for the product case-study system.
    Composition stays per-case (editorial freedom); these are the building
    blocks Nomi / Hanya / Yousewire can reuse.
    ========================================================================= */
@@ -56,13 +57,12 @@ function MetaRow({ label, value }: { label: string; value: ReactNode }) {
 
 export function ProductCaseHero({ meta, media }: { meta: ProductCaseMeta; media: ProductCaseMediaData }) {
   return (
-    <header className="pc-hero pc-reveal">
+    <header className="pc-hero">
       <div className="pc-hero-top">
         <span className="pc-eyebrow">{meta.discipline}</span>
         <span className="pc-index">CASE {pad(meta.index)}</span>
       </div>
-      <h1 className="pc-hero-title">{meta.title}</h1>
-      <p className="pc-hero-descriptor">{meta.descriptor}</p>
+      <div className="pc-hero-opening"><h1 className="pc-hero-title">{meta.title}</h1><p className="pc-hero-descriptor">{meta.descriptor}</p></div>
       <dl className="pc-meta">
         <MetaRow label="ROLE" value={meta.role} />
         <MetaRow label="SCOPE" value={meta.scope} />
@@ -121,6 +121,14 @@ export function ProductCaseThesis({ children }: { children: ReactNode }) {
   return <p className="pc-thesis pc-reveal">{children}</p>
 }
 
+export function ProductCaseSticky({ children }: { children: ReactNode }) {
+  return (
+    <aside className="pc-sticky" aria-label="Design note">
+      <span className="pc-sticky-label">Design note</span>
+      <p>{children}</p>
+    </aside>
+  )
+}
 export function ProductCaseNote({ label, children }: { label?: ReactNode; children: ReactNode }) {
   return (
     <aside className="pc-note pc-reveal">
@@ -299,8 +307,8 @@ export function ProductCasePaths({
           <div key={c.title} className={`pc-paths-col pc-tone-${c.tone ?? 'muted'}`}>
             <h3>{c.title}</h3>
             <ol>
-              {c.steps.map((s) => (
-                <li key={s}>{s}</li>
+              {c.steps.map((s, index) => (
+                <li key={`${index}-${s}`}>{s}</li>
               ))}
             </ol>
             <p className="pc-paths-outcome">{c.outcome}</p>
@@ -364,7 +372,7 @@ export function ProductCaseDisclosure({
         </div>
       </div>
       <a className="pc-disclosure-link" href={url} target="_blank" rel="noopener noreferrer">
-        {cta} <span aria-hidden="true">↗</span>
+        {cta} <Icon name="arrowUpRight" />
       </a>
     </div>
   )
@@ -387,7 +395,7 @@ export function ProductCaseNext({
       </div>
       <div className="pc-next-line">
         <span className="pc-next-title">{next.title}</span>
-        <span className="pc-next-arrow" aria-hidden="true">↗</span>
+        <Icon name="arrowRight" className="pc-next-arrow" />
       </div>
       <div className="pc-next-meta">
         <span className="pc-next-descriptor">{next.descriptor}</span>

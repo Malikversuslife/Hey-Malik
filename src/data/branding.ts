@@ -70,11 +70,10 @@ export const brandProjects: BrandProject[] = [
     name: 'SIDE B',
     tagline: 'OLD STUFF.\nNEW SOCKS.',
     descriptor: 'Brand Identity · Packaging · Art Direction',
-    intro: 'SIDE B is a sock label built on a simple belief — the objects we stop noticing deserve as much attention as the ones we talk about. This pilot walks a full brand arc, from first mark to product world, packaging, campaign and digital space, for the people who dress for themselves.',
+    intro: 'SIDE B is a sock label built on a simple belief: the objects we stop noticing deserve as much attention as the ones we talk about. This pilot walks a full brand arc, from first mark to product world, packaging, campaign and digital space, for the people who dress for themselves.',
     meta: [
       { label: 'YEAR', value: '2026' },
       { label: 'SCOPE OF WORK', value: 'Brand Identity · Packaging · Art Direction' },
-      { label: 'WORLD', value: 'Cobalt · Cherry · Yellow · Forest · Purple · Cream' },
       { label: 'STATUS', value: 'Pilot case study' }
     ],
     hero: { index: 1, title: 'HERO CAMPAIGN IMAGE', ratio: 'ultra-wide' },
@@ -85,7 +84,7 @@ export const brandProjects: BrandProject[] = [
         title: 'PREMISE',
         id: 'sideb-premise',
         segments: [
-          { kind: 'copy', text: 'Socks are old stuff — repeated daily, worn without ceremony, noticed last. SIDE B starts where most brands stop looking, on the most ordinary object in the drawer.' },
+          { kind: 'copy', text: 'Socks are old stuff: repeated daily, worn without ceremony, noticed last. SIDE B starts where most brands stop looking, on the most ordinary object in the drawer.' },
           { kind: 'media', media: { index: 1, title: 'HERO CAMPAIGN IMAGE', ratio: 'ultra-wide', caption: 'The object before the idea.' } },
           { kind: 'media', media: { index: 2, title: 'PREMISE STUDY', ratio: '1:1', caption: 'Small canvas. Bigger voice.' } }
         ]
@@ -107,7 +106,7 @@ export const brandProjects: BrandProject[] = [
         title: 'VISUAL LANGUAGE',
         id: 'sideb-visual-language',
         segments: [
-          { kind: 'copy', text: 'Illustration and photography share one voice — the drawn world extends what the real world gives it.' },
+          { kind: 'copy', text: 'Illustration and photography share one voice; the drawn world extends what the real world gives it.' },
           { kind: 'pair', left: { index: 8, title: 'ILLUSTRATION SYSTEM', ratio: '1:1' }, right: { index: 9, title: 'ICON SYSTEM', ratio: '1:1' } },
           { kind: 'media', media: { index: 10, title: 'PATTERN WORLD', ratio: '21:9' } },
           { kind: 'pair', left: { index: 11, title: 'REAL × ILLUSTRATED', ratio: '3:4' }, right: { index: 12, title: 'STICKER WORLD', ratio: '4:5' } }
@@ -131,7 +130,7 @@ export const brandProjects: BrandProject[] = [
         title: 'PACKAGING',
         id: 'sideb-packaging',
         segments: [
-          { kind: 'copy', text: 'Packaging carries the same point of view as the sock — from the shipping box to the catalogue.' },
+          { kind: 'copy', text: 'Packaging carries the same point of view as the sock, from the shipping box to the catalogue.' },
           { kind: 'media', media: { index: 19, title: 'SHIPPING BOX', ratio: '1:1' } },
           { kind: 'pair', left: { index: 20, title: 'MAILER', ratio: '4:5' }, right: { index: 21, title: 'HANG TAGS', ratio: '4:5' } },
           { kind: 'pair', left: { index: 22, title: 'STICKERS', ratio: '1:1' }, right: { index: 23, title: 'TOTE', ratio: '3:4' } },
@@ -145,7 +144,7 @@ export const brandProjects: BrandProject[] = [
         id: 'sideb-campaign',
         segments: [
           { kind: 'statement', text: 'OLD STUFF.\nNEW SOCKS.' },
-          { kind: 'copy', text: 'The campaign treats the sock like a cultural artefact — big enough to claim the street, small enough to be worn.' },
+          { kind: 'copy', text: 'The campaign treats the sock like a cultural artefact: big enough to claim the street, small enough to be worn.' },
           { kind: 'media', media: { index: 26, title: 'OOH / HERO POSTER', ratio: 'ultra-wide' } },
           { kind: 'pair', left: { index: 27, title: 'POSTER SERIES', ratio: '4:5' }, right: { index: 28, title: 'BILLBOARD', ratio: '21:9' } },
           { kind: 'grid', tiles: [{ index: 29, title: 'GRAFFITI MOMENT', ratio: '3:4' }, { index: 30, title: 'SKATE PARK', ratio: '4:5' }, { index: 31, title: 'STREETWEAR MOMENT', ratio: '3:4' }] },
@@ -158,7 +157,7 @@ export const brandProjects: BrandProject[] = [
         title: 'DIGITAL WORLD',
         id: 'sideb-digital-world',
         segments: [
-          { kind: 'copy', text: 'The same voice at thumb-motion size — feed, story, store and reel.' },
+          { kind: 'copy', text: 'The same voice at thumb-motion size: feed, story, store and reel.' },
           { kind: 'media', media: { index: 35, title: 'INSTAGRAM', ratio: '1:1' } },
           { kind: 'pair', left: { index: 36, title: 'STORIES', ratio: '9:16' }, right: { index: 37, title: 'MOBILE SHOPPING', ratio: '9:16', caption: 'Tap to own.' } },
           { kind: 'media', media: { index: 38, title: 'WEBSITE', ratio: '16:9' } },

@@ -1,3 +1,5 @@
+import { Icon } from '../Icon'
+import { contact } from '../../data/contact'
 import { Fragment, useEffect, useRef } from 'react'
 import type { BrandMediaData, BrandProject, BrandRatio, BrandSegment } from '../../data/branding'
 import { brandProjects } from '../../data/branding'
@@ -67,20 +69,34 @@ export function BrandNextProject({ next, onNext }: { next: BrandProject['next'];
   const label = <span className="brand-next-eyebrow">NEXT PROJECT <b>{next.name}</b></span>
   return <footer className="brand-next">{label}
     {available
-      ? <button type="button" className="brand-next-link" onClick={() => onNext!(next.slug)} aria-label={`Open next project — ${next.name}`}><span className="brand-next-name"><Lines text={next.name} /></span><span className="brand-next-meta"><small>{next.note}</small><span className="brand-next-arrow" aria-hidden="true">→</span></span></button>
+      ? <button type="button" className="brand-next-link" onClick={() => onNext!(next.slug)} aria-label={`Open next project: ${next.name}`}><span className="brand-next-name"><Lines text={next.name} /></span><span className="brand-next-meta"><small>{next.note}</small><Icon name="arrowRight" className="brand-next-arrow" /></span></button>
       : <div className="brand-next-link is-future"><span className="brand-next-name"><Lines text={next.name} /></span><span className="brand-next-meta"><small>{next.note}</small></span></div>}
   </footer>
 }
 
 function BrandHero({ project }: { project: BrandProject }) {
+  const narrative = project.movements.filter(movement => movement.segments.some(segment => ['copy', 'statement', 'quote', 'label'].includes(segment.kind)))
   return <header className="brand-hero" id="top">
-    <div className="brand-case-label"><b>B/ {project.category}</b><span>{project.number}</span></div>
-    <div className="brand-hero-name">{project.name}</div>
-    <h1 className="brand-hero-title brand-reveal"><Lines text={project.tagline} /></h1>
-    <p className="brand-descriptor">{project.descriptor}</p>
-    <dl className="brand-meta">{project.meta.map(entry => <div key={entry.label}><dt>{entry.label}</dt><dd>{entry.value}</dd></div>)}</dl>
-    <p className="brand-intro brand-reveal">{project.intro}</p>
-    <BrandMedia media={project.hero} priority />
+    <BrandMedia media={{ ...project.hero, caption: project.hero.caption ?? project.movements.flatMap(movement => movement.segments).find((segment): segment is Extract<BrandSegment, { kind: 'media' }> => segment.kind === 'media' && segment.media.index === project.hero.index && segment.media.title === project.hero.title)?.media.caption }} priority />
+    <div className="brand-overview">
+      <dl className="brand-meta">
+        <div><dt>PROJECT</dt><dd>{project.name}</dd></div>
+        <div><dt>DISCIPLINE</dt><dd>{project.category}</dd></div>
+        {project.meta.map(entry => <div key={entry.label}><dt>{entry.label}</dt><dd>{entry.value}</dd></div>)}
+      </dl>
+      <div className="brand-story">
+        <h1 className="brand-hero-title"><Lines text={project.tagline} /></h1>
+        <p className="brand-descriptor">{project.descriptor}</p>
+        <p className="brand-intro">{project.intro}</p>
+        <details className="brand-story-details">
+          <summary><span className="brand-expand-label">Expand info</span><span className="brand-collapse-label">Less info</span><Icon name="arrowRight" /></summary>
+          <div className="brand-story-expanded">{narrative.map(movement => <section key={movement.id} aria-labelledby={`${movement.id}-story-title`}>
+            <h2 id={`${movement.id}-story-title`}>{movement.title.toLowerCase()}</h2>
+            {movement.segments.filter(segment => ['copy', 'statement', 'quote', 'label'].includes(segment.kind)).map((segment, index) => <BrandSegmentRenderer key={index} segment={segment} />)}
+          </section>)}</div>
+        </details>
+      </div>
+    </div>
   </header>
 }
 
@@ -123,13 +139,13 @@ export function BrandCase({ project, onNext }: { project?: BrandProject; onNext:
   }
   return <article className={`brand-case brand-world-${project.world}`} ref={rootRef} data-world={project.world} id={project.slug}>
     <BrandHero project={project} />
-    {project.movements.map(movement => movement.title === 'NEXT PROJECT' ? (
-      <BrandNextProject key={movement.id} next={project.next} onNext={onNext} />
-    ) : (
-      <section key={movement.id} className={`brand-movement${movement.title === 'CLOSING' ? ' is-closing' : ''}`} id={movement.id} aria-labelledby={`${movement.id}-label`}>
-        <BrandSectionLabel number={movement.number} title={movement.title} id={`${movement.id}-label`} />
-        {movement.segments.map((segment, index) => <BrandSegmentRenderer key={index} segment={segment} />)}
-      </section>
-    ))}
+    <div className="brand-gallery" aria-label={`${project.name} brand gallery`}>
+      {project.movements.flatMap(movement => movement.segments
+        .filter(segment => ['media', 'pair', 'grid', 'video'].includes(segment.kind))
+        .filter(segment => !(segment.kind === 'media' && segment.media.index === project.hero.index && segment.media.title === project.hero.title))
+        .map((segment, index) => <BrandSegmentRenderer key={`${movement.id}-${index}`} segment={segment} />))}
+    </div>
+    <div className="brand-contact"><a href={`mailto:${contact.email}`}>Start a project <Icon name="arrowUpRight" /></a></div>
+    <BrandNextProject next={project.next} onNext={onNext} />
   </article>
 }
