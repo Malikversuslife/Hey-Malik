@@ -1,5 +1,6 @@
 import { Icon } from './components/Icon'
 import { SocialLinks } from './components/SocialLinks'
+import { AboutEditorial } from './components/AboutEditorial'
 import { useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createPortal } from 'react-dom'
@@ -80,17 +81,17 @@ const principles = [
 const stages = [
   ['2018–PRESENT', 'INDEPENDENT BRAND DESIGNER', 'BRAND IDENTITY / VISUAL DESIGN', 'origin'],
   ['2022', 'INDEPENDENT DESIGN CONSULTANT', 'FINTECH / SAAS / E-COMMERCE / WEB3', ''],
-  ['2023', 'FOUNDING PRODUCT DESIGNER', 'BELSQUARED', ''],
-  ['2023', 'PRODUCT DESIGNER', 'PYTHON NIGERIA', ''],
+  ['2023', 'FOUNDING PRODUCT DESIGNER & VISUAL/BRAND DESIGNER', 'BELSQUARED', ''],
+  ['2023', 'PRODUCT DESIGNER & VISUAL/BRAND DESIGNER', 'PYTHON NIGERIA', ''],
   ['2024', 'DESIGN MENTOR + TEAM LEAD', 'HNG TECH', ''],
-  ['2025', 'PRODUCT DESIGN LEAD', 'EMERJ LLC', ''],
+  ['2025', 'PRODUCT DESIGN & VISUAL/BRAND DESIGN LEAD', 'EMERJ LLC', ''],
   ['2026', 'AI PRODUCT DESIGN', 'INTELLIGENT PRODUCTS + SYSTEMS', 'current']
 ]
 const experienceRecords: [string, string, string, string, string[]][] = [
-  ['OCT 2025–PRESENT', 'PRODUCT DESIGN LEAD', 'EMERJ LLC', 'SHERIDAN, WYOMING, UNITED STATES', ['Lead UX strategy and end-to-end design across a multi-product SaaS portfolio spanning fintech and e-commerce.', 'Design interaction models, flows, and high-fidelity product experiences across complex SaaS products.', 'Contribute to product systems, reusable patterns, and consistency across products.']],
-  ['OCT 2024–AUG 2025', 'DESIGN MENTOR + TEAM LEAD', 'HNG TECH', '', ['Led and mentored design interns and product teams through structured product-design cycles.', 'Provided design reviews, critique, direction, and quality assurance across live product work.', 'Helped teams translate product requirements into usable interfaces and implementation-ready design decisions.']],
-  ['DEC 2023–NOV 2025', 'PRODUCT DESIGNER', 'PYTHON NIGERIA', 'LAGOS, NIGERIA', ['Led UX/UI design for PyCon Nigeria 2024 and 2025 digital experiences.', 'Designed event discovery, ticketing, speaker and session experiences.', 'Created scalable UI patterns and collaborated with developers through implementation.']],
-  ['FEB 2023–FEB 2025', 'FOUNDING PRODUCT DESIGNER', 'BELSQUARED INC.', 'ONTARIO, CANADA', ['Led product and experience design for a consumer e-commerce platform.', 'Worked across information architecture, customer journeys, interface design, and high-fidelity product experiences.', 'Supported the product from design decisions through implementation and handoff.']],
+  ['OCT 2025–PRESENT', 'PRODUCT DESIGN & VISUAL/BRAND DESIGN LEAD', 'EMERJ LLC', 'SHERIDAN, WYOMING, UNITED STATES', ['Lead UX strategy and end-to-end design across a multi-product SaaS portfolio spanning fintech and e-commerce.', 'Design interaction models, flows, and high-fidelity product experiences across complex SaaS products.', 'Contribute to product systems, reusable patterns, and consistency across products.']],
+  ['JUL 2024–JUN 2026', 'DESIGN MENTOR + TEAM LEAD', 'HNG TECH', '', ['Led and mentored design interns and product teams through structured product-design cycles.', 'Provided design reviews, critique, direction, and quality assurance across live product work.', 'Helped teams translate product requirements into usable interfaces and implementation-ready design decisions.']],
+  ['DEC 2023–NOV 2025', 'PRODUCT DESIGNER & VISUAL/BRAND DESIGNER', 'PYTHON NIGERIA', 'LAGOS, NIGERIA', ['Led UX/UI design for PyCon Nigeria 2024 and 2025 digital experiences.', 'Designed event discovery, ticketing, speaker and session experiences.', 'Created scalable UI patterns and collaborated with developers through implementation.']],
+  ['FEB 2023–FEB 2025', 'FOUNDING PRODUCT DESIGNER & VISUAL/BRAND DESIGNER', 'BELSQUARED INC.', 'ONTARIO, CANADA', ['Led product and experience design for a consumer e-commerce platform.', 'Worked across information architecture, customer journeys, interface design, and high-fidelity product experiences.', 'Supported the product from design decisions through implementation and handoff.']],
   ['MAY 2022–PRESENT', 'INDEPENDENT DESIGN CONSULTANT', 'SELF-EMPLOYED', 'REMOTE', ['Partner with clients to design digital products across fintech, SaaS, e-commerce, and Web3.', 'Work across discovery, product thinking, UX flows, interface design, design systems, prototyping, and developer handoff.', 'Translate business requirements and complex workflows into clear, usable product experiences.']],
   ['2018–PRESENT', 'INDEPENDENT BRAND DESIGNER', 'SELF-EMPLOYED', '', ['Built brand identities and visual systems for businesses and independent clients.', 'Work across brand identity, visual direction, marketing design, packaging, print, digital applications, and broader brand experiences.', 'This remains an active part of Malik’s multidisciplinary design practice alongside product and digital experience design.']]
 ]
@@ -137,11 +138,11 @@ const askAnswers: Record<string, AskAnswer> = {
   'WORKING SYSTEM': { text: "PROTOTYPE THE SYSTEM, NOT ONLY THE SCREEN.\nInteraction reveals assumptions static layouts hide.\n\nEARN TRUST BEFORE ASKING FOR ACTION.\nExplain enough for people to make informed decisions.", followUps: askFollowUps['WORKING SYSTEM'] },
   PRINCIPLES: { text: "TRUST & EXPLAINABILITY : making enough of a system visible for people to make informed decisions.\nSYSTEMS THINKING : looking for relationships, constraints and the effects that exist beyond one screen.\nHUMAN-CENTERED AI : exploring intelligence that supports judgement rather than quietly replacing it.", followUps: askFollowUps.PRINCIPLES },
   BACKGROUND: { text: "I didn't really leave visual design behind. I kept adding new questions to it.\n\nVisual / Brand design → Product design → Product systems → Design leadership → Design + build → AI product design", followUps: askFollowUps.BACKGROUND },
-  EXPERIENCE: { text: 'OCT 2025–PRESENT · PRODUCT DESIGN LEAD · EMERJ LLC\nOCT 2024–AUG 2025 · DESIGN MENTOR + TEAM LEAD · HNG TECH\nFEB 2023–FEB 2025 · FOUNDING PRODUCT DESIGNER · BELSQUARED INC.', actions: [{ label: 'Read the full story ↗', page: 'about' }], followUps: askFollowUps.EXPERIENCE },
+  EXPERIENCE: { text: 'OCT 2025–PRESENT · PRODUCT DESIGN & VISUAL/BRAND DESIGN LEAD · EMERJ LLC\nJUL 2024–JUN 2026 · DESIGN MENTOR + TEAM LEAD · HNG TECH\nFEB 2023–FEB 2025 · FOUNDING PRODUCT DESIGNER & VISUAL/BRAND DESIGNER · BELSQUARED INC.', actions: [{ label: 'Read the full story ↗', page: 'about' }], followUps: askFollowUps.EXPERIENCE },
   WORK: { text: 'PRODUCT WORK\nPRIMA : AI-assisted verification for decentralized payments.\nNOMI : Adaptive learning and contextual AI.\nHANYA : AI-assisted healthcare navigation.\nYOUSEWIRE : Cross-border personal and business finance.\n\nBRANDING WORK\nSIDE B : Brand identity, packaging, and art direction.\nTHE KIM COUTURE : Fashion identity.\nFINLANCER and NOMI : Brand and visual identity.\nPYCON NIGERIA 2024 : Conference identity.\nBELSQUARED : Brand identity and packaging.', actions: [{ label: 'View product work ↗', page: 'home', view: 'product' }, { label: 'View branding work ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.WORK },
   LAB: { text: 'The Lab is a collection of small experiments I use to explore how AI changes the way we design, build and interact with software.\n\nExperiments are currently in progress : new things will appear here as they are built.', actions: [{ label: 'Open the Lab ↗', page: 'lab' }], followUps: askFollowUps.LAB },
   CONTACT: { text: 'EMAIL : heymalik05@gmail.com\nLINKEDIN : linkedin.com/in/temitayo-l-74984b16a\n\nAvailable for selected collaborations.', actions: [{ label: 'Email Malik ↗', href: 'mailto:heymalik05@gmail.com' }, { label: 'LinkedIn ↗', href: 'https://www.linkedin.com/in/temitayo-l-74984b16a/' }], followUps: askFollowUps.CONTACT },
-  EVOLUTION: { text: '2018–PRESENT · INDEPENDENT BRAND DESIGNER\n2022 · INDEPENDENT DESIGN CONSULTANT\n2023 · FOUNDING PRODUCT DESIGNER · BELSQUARED\n2023 · PRODUCT DESIGNER · PYTHON NIGERIA\n2024 · DESIGN MENTOR + TEAM LEAD · HNG TECH\n2025 · PRODUCT DESIGN LEAD · EMERJ LLC\n2026 · AI PRODUCT DESIGN : intelligent products + systems', followUps: askFollowUps.EVOLUTION },
+  EVOLUTION: { text: '2018–PRESENT · INDEPENDENT BRAND DESIGNER\n2022 · INDEPENDENT DESIGN CONSULTANT\n2023 · FOUNDING PRODUCT DESIGNER & VISUAL/BRAND DESIGNER · BELSQUARED\n2023 · PRODUCT DESIGNER & VISUAL/BRAND DESIGNER · PYTHON NIGERIA\nJUL 2024–JUN 2026 · DESIGN MENTOR + TEAM LEAD · HNG TECH\n2025 · PRODUCT DESIGN & VISUAL/BRAND DESIGN LEAD · EMERJ LLC\n2026 · AI PRODUCT DESIGN : intelligent products + systems', followUps: askFollowUps.EVOLUTION },
   OFFLINE: { text: "That isn't documented on the site yet. Try asking about the work, the Lab, or how Malik thinks about AI.", followUps: askFollowUps.OFFLINE },
   PRIMA: { text: 'Prima is an AI-assisted verification operating system that helps merchants verify decentralized identities and credentials, investigate suspicious transactions, and make informed settlement decisions.\n\nIt explores a future where decentralized identity, Verifiable Credentials and digital currencies have become part of everyday retail payments.', actions: [{ label: 'Open Prima case study ↗', page: 'workCaseStudy', slug: 'prima' }], followUps: askFollowUps.PRIMA },
   NOMI: { text: 'Nomi is an adaptive learning product designed around a simple idea: learning should respond to the learner, not force every learner through the same path.\n\nPractice, progress, recommendations, and contextual AI work together to shape what the learner does next.', actions: [{ label: 'Open Nomi case study ↗', page: 'workCaseStudy', slug: 'nomi' }], followUps: askFollowUps.NOMI },
@@ -198,8 +199,8 @@ function App() {
     setRoute({ page: next, slug })
     window.setTimeout(() => {
       const destination = document.getElementById(target ?? 'top')
-      if (destination) destination.scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth', block: 'start' })
-      else window.scrollTo({ top: 0, behavior: reducedMotion() ? 'auto' : 'smooth' })
+      if (destination) destination.scrollIntoView({ behavior: target && !reducedMotion() ? 'smooth' : 'auto', block: 'start' })
+      else window.scrollTo({ top: 0, behavior: 'auto' })
     }, 30)
   }
   const openAsk = (focus = true) => {
@@ -258,9 +259,9 @@ function App() {
   const caseBack = (view: HomeMode) => () => navigate('home', undefined, undefined, view)
   return <main className={`${page !== 'home' ? `page-${page}` : ''}`}>
     {page === 'home' && <HomeShell key={new URLSearchParams(window.location.search).get('view') ?? 'product'} onProjectOpen={slug => navigate('workCaseStudy', undefined, slug)} onBrandProjectOpen={slug => navigate('brandingCaseStudy', undefined, slug)} onLabExperiment={slug => navigate('labExperiment', undefined, slug)} />}{false && <><section className="hero" id="hero"><div className="hero-title" aria-label="I design intelligent products for human decisions"><span>I DESIGN</span><span className="intelligent" onPointerMove={handleIntelligentMove}>INTELLIGENT</span><span>PRODUCTS</span><span>FOR HUMAN <em>decisions.</em></span></div><div className="role-response"><div>PRODUCT DESIGNER</div><span>AI / UX / SYSTEMS</span><p>I work where product thinking, interaction and implementation meet.</p></div><div className="hero-meta"><span>PRODUCT DESIGNER<br />AI / UX / SYSTEMS</span><span>LAGOS, NG<br />GLOBAL / REMOTE</span></div><button className="ask-entry" onClick={() => openAsk()}><b>●</b> ASK ME SOMETHING</button><p className="annotation">because someone still has to make one.</p></section><SelectedWork onProjectOpen={slug => navigate('workCaseStudy', undefined, slug)} onAllWork={() => navigate('work')} /><HomeSections submit={submit} /></>}
-    {page === 'workCaseStudy' && <NewCaseShell kind="product" crumbs={[{ label: breadcrumbMark, onClick: caseBack('product'), mark: true }, { label: 'PRODUCT DESIGN', onClick: caseBack('product') }, { label: workProjects.find(project => project.slug === route.slug)?.name ?? 'CASE STUDY', current: true }]} onBack={caseBack('product')} onAsk={() => openAsk()}><WorkPreparation project={workProjects.find(project => project.slug === route.slug)} onBack={caseBack('product')} onNext={slug => navigate('workCaseStudy', undefined, slug)} /></NewCaseShell>}
-    {page === 'brandingCaseStudy' && <NewCaseShell kind="brand" crumbs={[{ label: breadcrumbMark, onClick: caseBack('branding'), mark: true }, { label: 'BRANDING', onClick: caseBack('branding') }, { label: brandProjects.find(project => project.slug === route.slug)?.name ?? 'CASE STUDY', current: true }]} onBack={caseBack('branding')} onAsk={() => openAsk()}><BrandCase project={brandProjects.find(project => project.slug === route.slug)} onNext={slug => navigate('brandingCaseStudy', undefined, slug)} /></NewCaseShell>}
-    {page === 'labExperiment' && <NewCaseShell kind="lab" crumbs={[{ label: breadcrumbMark, onClick: caseBack('lab'), mark: true }, { label: 'LAB', onClick: caseBack('lab') }, { label: labExperiments.find(experiment => experiment.slug === route.slug)?.title ?? 'EXPERIMENT', current: true }]} onBack={caseBack('lab')} onAsk={() => openAsk()}><LabExperimentPage experiment={labExperiments.find(experiment => experiment.slug === route.slug)} onBack={caseBack('lab')} /></NewCaseShell>}
+    {page === 'workCaseStudy' && <NewCaseShell key={`product-${route.slug}`} kind="product" crumbs={[{ label: breadcrumbMark, onClick: caseBack('product'), mark: true }, { label: 'PRODUCT DESIGN', onClick: caseBack('product') }, { label: workProjects.find(project => project.slug === route.slug)?.name ?? 'CASE STUDY', current: true }]} onBack={caseBack('product')} onAsk={() => openAsk()}><WorkPreparation project={workProjects.find(project => project.slug === route.slug)} onBack={caseBack('product')} onNext={slug => navigate('workCaseStudy', undefined, slug)} /></NewCaseShell>}
+    {page === 'brandingCaseStudy' && <NewCaseShell key={`brand-${route.slug}`} kind="brand" crumbs={[{ label: breadcrumbMark, onClick: caseBack('branding'), mark: true }, { label: 'BRANDING', onClick: caseBack('branding') }, { label: brandProjects.find(project => project.slug === route.slug)?.name ?? 'CASE STUDY', current: true }]} onBack={caseBack('branding')} onAsk={() => openAsk()}><BrandCase project={brandProjects.find(project => project.slug === route.slug)} onNext={slug => navigate('brandingCaseStudy', undefined, slug)} /></NewCaseShell>}
+    {page === 'labExperiment' && <NewCaseShell key={`lab-${route.slug}`} kind="lab" crumbs={[{ label: breadcrumbMark, onClick: caseBack('lab'), mark: true }, { label: 'LAB', onClick: caseBack('lab') }, { label: labExperiments.find(experiment => experiment.slug === route.slug)?.title ?? 'EXPERIMENT', current: true }]} onBack={caseBack('lab')} onAsk={() => openAsk()}><LabExperimentPage experiment={labExperiments.find(experiment => experiment.slug === route.slug)} onBack={caseBack('lab')} /></NewCaseShell>}
     {page === 'home' && !askOpen && <button className="askmalik-float" onClick={() => openAsk()} aria-haspopup="dialog"><Icon name="chat" />Ask Malik</button>}
     {askOpen && createPortal(<section className="askpanel" role="dialog" aria-modal="true" aria-label="Ask Malik">
     <header className="askpanel-head">
@@ -381,29 +382,7 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen, onLabExperiment }: { onP
         </div>}
       </section> : <section className="home-panel" key="about" id="panel-about" role="tabpanel" aria-labelledby="tab-about">
         <h2 className="visually-hidden">About Malik</h2>
-        <div className="about-mini">
-          <div className="about-mini-hero">
-            <h3>Designing technology<br />that feels more human.</h3>
-            <p>I'm a Product Designer working across product thinking, interaction, visual systems, prototyping and increasingly AI product design.</p>
-          </div>
-          <section className="about-capabilities">
-            <h3>Capabilities</h3>
-            <div className="capability-groups">
-              <div><span>Product design</span><p>Product Strategy · UX &amp; Interaction Design · UI Design · Design Systems · Prototyping · AI Experiences</p></div>
-              <div><span>Brand &amp; visual</span><p>Brand Identity · Visual Direction · Campaign Design · Packaging · Illustration · Motion &amp; Digital Content</p></div>
-              <div><span>Design → build</span><p>Web Design · HTML / CSS · Framer · Webflow · Shopify · AI-assisted Prototyping</p></div>
-            </div>
-          </section>
-          <section className="about-experience">
-            <h3>Experience</h3>
-            <div className="experience-rows">
-              {experienceRecords.map(([range, role, org, location]) => <article key={`${role}-${org}`} className="experience-row">
-                <span className="exp-year">{range}</span>
-                <div className="exp-main"><b>{role}</b><span className="exp-org">{org}</span>{location ? <small className="exp-loc">{location}</small> : null}</div>
-              </article>)}
-            </div>
-          </section>
-        </div>
+        <AboutEditorial experienceRecords={experienceRecords} />
       </section>}
       {mode !== 'about' && <button className="canvas-more" onClick={() => changeMode('about')}>More about Malik : experience, process, principles <span aria-hidden="true">→</span></button>}
     </div>
