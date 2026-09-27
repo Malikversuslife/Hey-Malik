@@ -258,7 +258,7 @@ function App() {
   }
   const caseBack = (view: HomeMode) => () => navigate('home', undefined, undefined, view)
   return <main className={`${page !== 'home' ? `page-${page}` : ''}`}>
-    {page === 'home' && <HomeShell key={new URLSearchParams(window.location.search).get('view') ?? 'product'} onProjectOpen={slug => navigate('workCaseStudy', undefined, slug)} onBrandProjectOpen={slug => navigate('brandingCaseStudy', undefined, slug)} onLabExperiment={slug => navigate('labExperiment', undefined, slug)} />}{false && <><section className="hero" id="hero"><div className="hero-title" aria-label="I design intelligent products for human decisions"><span>I DESIGN</span><span className="intelligent" onPointerMove={handleIntelligentMove}>INTELLIGENT</span><span>PRODUCTS</span><span>FOR HUMAN <em>decisions.</em></span></div><div className="role-response"><div>PRODUCT DESIGNER</div><span>AI / UX / SYSTEMS</span><p>I work where product thinking, interaction and implementation meet.</p></div><div className="hero-meta"><span>PRODUCT DESIGNER<br />AI / UX / SYSTEMS</span><span>LAGOS, NG<br />GLOBAL / REMOTE</span></div><button className="ask-entry" onClick={() => openAsk()}><b>●</b> ASK ME SOMETHING</button><p className="annotation">because someone still has to make one.</p></section><SelectedWork onProjectOpen={slug => navigate('workCaseStudy', undefined, slug)} onAllWork={() => navigate('work')} /><HomeSections submit={submit} /></>}
+    {page === 'home' && <HomeShell key={new URLSearchParams(window.location.search).get('view') ?? 'product'} onProjectOpen={slug => navigate('workCaseStudy', undefined, slug)} onBrandProjectOpen={slug => navigate('brandingCaseStudy', undefined, slug)} />}{false && <><section className="hero" id="hero"><div className="hero-title" aria-label="I design intelligent products for human decisions"><span>I DESIGN</span><span className="intelligent" onPointerMove={handleIntelligentMove}>INTELLIGENT</span><span>PRODUCTS</span><span>FOR HUMAN <em>decisions.</em></span></div><div className="role-response"><div>PRODUCT DESIGNER</div><span>AI / UX / SYSTEMS</span><p>I work where product thinking, interaction and implementation meet.</p></div><div className="hero-meta"><span>PRODUCT DESIGNER<br />AI / UX / SYSTEMS</span><span>LAGOS, NG<br />GLOBAL / REMOTE</span></div><button className="ask-entry" onClick={() => openAsk()}><b>●</b> ASK ME SOMETHING</button><p className="annotation">because someone still has to make one.</p></section><SelectedWork onProjectOpen={slug => navigate('workCaseStudy', undefined, slug)} onAllWork={() => navigate('work')} /><HomeSections submit={submit} /></>}
     {page === 'workCaseStudy' && <NewCaseShell key={`product-${route.slug}`} kind="product" crumbs={[{ label: breadcrumbMark, onClick: caseBack('product'), mark: true }, { label: 'PRODUCT DESIGN', onClick: caseBack('product') }, { label: workProjects.find(project => project.slug === route.slug)?.name ?? 'CASE STUDY', current: true }]} onBack={caseBack('product')} onAsk={() => openAsk()}><WorkPreparation project={workProjects.find(project => project.slug === route.slug)} onBack={caseBack('product')} onNext={slug => navigate('workCaseStudy', undefined, slug)} /></NewCaseShell>}
     {page === 'brandingCaseStudy' && <NewCaseShell key={`brand-${route.slug}`} kind="brand" crumbs={[{ label: breadcrumbMark, onClick: caseBack('branding'), mark: true }, { label: 'BRANDING', onClick: caseBack('branding') }, { label: brandProjects.find(project => project.slug === route.slug)?.name ?? 'CASE STUDY', current: true }]} onBack={caseBack('branding')} onAsk={() => openAsk()}><BrandCase project={brandProjects.find(project => project.slug === route.slug)} onNext={slug => navigate('brandingCaseStudy', undefined, slug)} /></NewCaseShell>}
     {page === 'labExperiment' && <NewCaseShell key={`lab-${route.slug}`} kind="lab" crumbs={[{ label: breadcrumbMark, onClick: caseBack('lab'), mark: true }, { label: 'LAB', onClick: caseBack('lab') }, { label: labExperiments.find(experiment => experiment.slug === route.slug)?.title ?? 'EXPERIMENT', current: true }]} onBack={caseBack('lab')} onAsk={() => openAsk()}><LabExperimentPage experiment={labExperiments.find(experiment => experiment.slug === route.slug)} onBack={caseBack('lab')} /></NewCaseShell>}
@@ -292,11 +292,12 @@ function App() {
   </main>
 }
 
-function HomeShell({ onProjectOpen, onBrandProjectOpen, onLabExperiment }: { onProjectOpen: (slug: string) => void; onBrandProjectOpen: (slug: string) => void; onLabExperiment: (slug: string) => void }) {
+function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug: string) => void; onBrandProjectOpen: (slug: string) => void }) {
   const [mode, setMode] = useState<HomeMode>(() => {
     const view = new URLSearchParams(window.location.search).get('view')
     return view === 'branding' || view === 'lab' || view === 'about' ? view : 'product'
   })
+  const [activeLab, setActiveLab] = useState<LabExperiment | null>(null)
   const canvasRef = useRef<HTMLDivElement>(null)
   const lastScrollRef = useRef(0)
   const calm = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -312,6 +313,12 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen, onLabExperiment }: { onP
   useEffect(() => {
     return () => { try { sessionStorage.setItem(scrollKey(mode), String(lastScrollRef.current)) } catch { /* storage unavailable */ } }
   }, [mode])
+  useEffect(() => {
+    if (!activeLab) return
+    const close = (event: KeyboardEvent) => { if (event.key === 'Escape') setActiveLab(null) }
+    document.addEventListener('keydown', close)
+    return () => document.removeEventListener('keydown', close)
+  }, [activeLab])
   useEffect(() => {
     const saved = Number(sessionStorage.getItem(scrollKey(mode)) ?? '0')
     if (saved > 0) {
@@ -371,9 +378,11 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen, onLabExperiment }: { onP
       </section> : mode === 'lab' ? <section className="home-panel" key="lab" id="panel-lab" role="tabpanel" aria-labelledby="tab-lab">
         <h2 className="visually-hidden">Lab</h2>
         {labExperiments.length ? <div className="work-gallery">
-          {labExperiments.map(experiment => <button key={experiment.slug} className="work-tile tile-standard" onClick={() => onLabExperiment(experiment.slug)} aria-label={`${experiment.title} : open experiment`}>
-            <span className="tile-visual" aria-hidden="true"><span className="tile-pending">Image coming soon</span></span>
-            <span className="tile-meta"><span className="tile-name">{experiment.title}</span><span className="tile-desc">{experiment.category.replace(/ \/ /g, ' · ')}</span></span>
+          {labExperiments.map(experiment => <button key={experiment.slug} className="work-tile tile-standard lab-card" onClick={() => setActiveLab(experiment)} aria-label={`${experiment.title} : open interactive preview`}>
+            <span className="tile-visual" aria-hidden="true">{experiment.cover ? <img src={experiment.cover} alt="" /> : <span className="tile-pending">Image coming soon</span>}</span>
+            <span className="tile-meta lab-card-meta"><span className="tile-name">{experiment.title}</span></span>
+            <span className="lab-card-description">{experiment.summary}</span>
+            <span className="lab-card-tool"><span>Tool</span><strong><img src="/openai-logo.svg" alt="" aria-hidden="true" />{experiment.aiTool}</strong></span>
           </button>)}
         </div> : <div className="empty-panel">
           <div className="empty-well" aria-hidden="true"><span className="tile-pending">Experiments coming soon</span></div>
@@ -386,6 +395,13 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen, onLabExperiment }: { onP
       </section>}
       {mode !== 'about' && <button className="canvas-more" onClick={() => changeMode('about')}>More about Malik : experience, process, principles <span aria-hidden="true">→</span></button>}
     </div>
+    {activeLab && <div className="lab-preview-overlay" role="dialog" aria-modal="true" aria-labelledby="lab-preview-title" onMouseDown={event => { if (event.target === event.currentTarget) setActiveLab(null) }}>
+      <div className="lab-preview-panel">
+        <div className="lab-preview-head"><div><span>LIVE EXPERIMENT</span><h2 id="lab-preview-title">{activeLab.title}</h2></div><button type="button" onClick={() => setActiveLab(null)} aria-label="Close Clear Road preview">CLOSE <span aria-hidden="true">×</span></button></div>
+        <div className="lab-preview-device"><iframe src={activeLab.liveUrl} title={`${activeLab.title} interactive mobile preview`} allow="geolocation" /></div>
+        <a href={activeLab.liveUrl} target="_blank" rel="noreferrer">OPEN FULL SITE <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>}
   </div>
 }
 
@@ -512,7 +528,7 @@ function Lab({ onExperimentOpen }: { onExperimentOpen: (slug: string) => void })
 function LabExperimentPage({ experiment, onBack }: { experiment?: LabExperiment; onBack: () => void }) {
   if (!experiment) return <section className="lab-experiment-empty" id="top"><div className="section-label">M/LAB <span>EXPERIMENT</span></div><h1>EXPERIMENT<br /><em>IN PREPARATION.</em></h1><p>This experiment is not indexed yet.</p><button onClick={onBack}>← BACK TO M/LAB</button></section>
   const Artifact = experiment.Artifact
-  return <article className="lab-experiment" id="top"><header><div className="section-label">M/LAB {experiment.id} <span>{experiment.category} / {experiment.year}</span></div><h1>{experiment.title}</h1></header><section><div className="section-label">M/ QUESTION <span>01</span></div><h2>{experiment.question}</h2></section><section><div className="section-label">M/ EXPERIMENT <span>02</span></div><p>{experiment.experiment}</p></section><section className="lab-thing"><div className="section-label">M/ THE THING <span>03</span></div>{Artifact ? <Artifact /> : <div className="lab-media-placeholder">MEDIA / ARTIFACT TO BE ADDED</div>}</section><section><div className="section-label">M/ WHAT I LEARNED <span>04</span></div><ul>{experiment.learning.map(item => <li key={item}>{item}</li>)}</ul></section><section><div className="section-label">M/ BUILT WITH <span>05</span></div><p className="lab-tools">{experiment.tools.join(' / ')}</p></section><footer><button onClick={onBack}>BACK TO M/LAB</button></footer></article>
+  return <article className="lab-experiment" id="top"><header><div className="section-label">M/LAB {experiment.id} <span>{experiment.category} / {experiment.year}</span></div><h1>{experiment.title}</h1><p className="lab-summary">{experiment.summary}</p></header><section><div className="section-label">M/ QUESTION <span>01</span></div><h2>{experiment.question}</h2></section><section><div className="section-label">M/ EXPERIMENT <span>02</span></div><p>{experiment.experiment}</p></section><section className="lab-thing"><div className="section-label">M/ THE THING <span>03</span></div>{Artifact ? <Artifact /> : experiment.media ? <div className="lab-artifact"><img src={experiment.media} alt={`${experiment.title} interface`} />{experiment.liveUrl && <a href={experiment.liveUrl} target="_blank" rel="noreferrer">VISIT LIVE EXPERIMENT <span aria-hidden="true">↗</span></a>}</div> : <div className="lab-media-placeholder">MEDIA / ARTIFACT TO BE ADDED</div>}</section><section><div className="section-label">M/ WHAT I LEARNED <span>04</span></div><ul>{experiment.learning.map(item => <li key={item}>{item}</li>)}</ul></section><section><div className="section-label">M/ BUILT WITH <span>05</span></div><p className="lab-tools">{experiment.tools.join(' / ')}</p></section><footer><button onClick={onBack}>BACK TO M/LAB</button></footer></article>
 }
 
 function GlobalFooter() { return <footer className="global-footer"><span>M/ CONTACT</span><div><a href={`mailto:${contact.email}`} aria-label={`Email Malik at ${contact.email}`}><Icon name="mail" /> EMAIL</a><SocialLinks /></div></footer> }
