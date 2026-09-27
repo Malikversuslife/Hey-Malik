@@ -186,7 +186,7 @@ export function AboutEditorial({ experienceRecords }: { experienceRecords: Exper
     <section className="about-section about-testimonials" aria-labelledby="about-testimonials-title">
       <div className="about-testimonials-heading"><div><small>THE PEOPLE BEHIND THE WORK</small><h3 id="about-testimonials-title">Testimonials</h3></div></div>
       <p>Kind words from people I've worked with.</p>
-      <div className="about-testimonials-track" aria-label="Testimonials from collaborators" aria-live="off" tabIndex={0}>
+      <div className="about-testimonials-track" aria-label="Testimonials from collaborators" aria-live="off">
         <div className="about-testimonials-rail">
           <div className="about-testimonials-set"><TestimonialCards /></div>
           <div className="about-testimonials-set" aria-hidden="true"><TestimonialCards /></div>
