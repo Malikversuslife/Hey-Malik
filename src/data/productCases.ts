@@ -6,6 +6,7 @@ export type ProductCaseMediaData = {
   ratio?: ProductRatio
   caption?: string
   note?: string
+  source?: string
 }
 
 export type ProductCaseMeta = {

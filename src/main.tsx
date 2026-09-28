@@ -371,7 +371,7 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
       </div>
       {mode === 'product' ? <section className="home-panel" key="product" id="panel-product" role="tabpanel" aria-labelledby="tab-product">
         <h2 className="visually-hidden">Product design</h2>
-        <ProjectStack entries={workProjects.map(project => ({ id: project.slug, index: project.index, title: project.name, descriptor: productLine[project.slug] ?? project.category?.replace(/ \/ /g, ' · ') ?? project.status, live: true, slug: project.slug, label: `P/ ${project.index}` }))} onOpen={onProjectOpen} note="Real product capture to be added to each project as it is produced." anchor="product-anchor" />
+        <ProjectStack entries={workProjects.map(project => ({ id: project.slug, index: project.index, title: project.name, descriptor: productLine[project.slug] ?? project.category?.replace(/ \/ /g, ' · ') ?? project.status, live: true, slug: project.slug, label: `P/ ${project.index}`, cover: project.cover }))} onOpen={onProjectOpen} note="Real product capture to be added to each project as it is produced." anchor="product-anchor" />
       </section> : mode === 'branding' ? <section className="home-panel" key="branding" id="panel-branding" role="tabpanel" aria-labelledby="tab-branding">
         <h2 className="visually-hidden">Branding</h2>
         <ProjectStack entries={brandingIndex.map(project => ({ id: project.id, index: project.index, title: project.title, descriptor: project.descriptor, live: project.caseStudy === 'live', slug: project.slug, label: `B/ ${project.index}` }))} onOpen={onBrandProjectOpen} note="1 live case : the rest land as their case studies are published." anchor="branding-anchor" />
@@ -405,12 +405,12 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
   </div>
 }
 
-type ProjectStackEntry = { id: string; index: string; title: string; descriptor: string; live: boolean; slug: string; label: string }
+type ProjectStackEntry = { id: string; index: string; title: string; descriptor: string; live: boolean; slug: string; label: string; cover?: string | null }
 function ProjectStack({ entries, onOpen, note, anchor }: { entries: ProjectStackEntry[]; onOpen: (slug: string) => void; note?: string; anchor: string }) {
   return <div className="project-stack" id={anchor}>
     {entries.map(entry => entry.live
       ? <button key={entry.id} type="button" className="project-stack-project is-live" onClick={() => onOpen(entry.slug)} aria-label={`${entry.title} : open case study`}>
-          <ProjectStackMedia label={entry.label} />
+          <ProjectStackMedia label={entry.label} source={entry.cover} />
           <span className="project-stack-meta"><span className="project-stack-title">{entry.title}</span><span className="project-stack-desc">{entry.descriptor}</span></span>
         </button>
       : <div key={entry.id} className="project-stack-project is-future">

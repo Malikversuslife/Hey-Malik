@@ -9,7 +9,7 @@ export function PrimaProductCase({ onNext }: { onNext: (slug: string) => void })
     <ProductCase className="pc-case-prima" id="top">
       <ProductCaseHero
         meta={PRIMA}
-        media={{ index: '01', title: 'OPERATIONS DASHBOARD', ratio: 'full', note: 'The command surface for the Prima system: verification volume, blocked transactions, service health and Priority Review.' }}
+        media={{ index: '01', title: 'OPERATIONS DASHBOARD', ratio: 'full', source: '/Prima Files/OPERATIONS DASHBOARD.mp4', note: 'The command surface for the Prima system: verification volume, blocked transactions, service health and Priority Review.' }}
       />
 
       <ProductCaseIntro>Prima explores a future where decentralized identity, Verifiable Credentials and digital currencies have become part of everyday retail payments, and what the merchant side of that future needs to look like.</ProductCaseIntro>
@@ -70,8 +70,8 @@ export function PrimaProductCase({ onNext }: { onNext: (slug: string) => void })
       <ProductCaseSection id="prima-observable" label="DESIGNING THE EXPERIENCE">
         <ProductCaseStatement>Make verification observable.</ProductCaseStatement>
         <ProductCasePair
-          a={{ index: '02', title: 'VERIFY · PIPELINE', ratio: 'wide', note: 'VERIFY / PIPELINE: Each check resolves in view before the answer is delivered.' }}
-          b={{ index: '03', title: 'IDENTITY VERIFIED / MERCHANT AUTHORIZATION', ratio: 'wide', note: 'A successful identity verification does not automatically move money.' }}
+          a={{ index: '02', title: 'VERIFY · PIPELINE', ratio: 'wide', source: '/Prima Files/VERIFY · PIPELINE.mp4', note: 'VERIFY / PIPELINE: Each check resolves in view before the answer is delivered.' }}
+          b={{ index: '03', title: 'IDENTITY VERIFIED / MERCHANT AUTHORIZATION', ratio: 'wide', source: '/Prima Files/IDENTITY VERIFIED _ MERCHANT AUTHORIZATION.mp4', note: 'A successful identity verification does not automatically move money.' }}
         />
 
         <div id="prima-replay">
@@ -84,7 +84,7 @@ export function PrimaProductCase({ onNext }: { onNext: (slug: string) => void })
             { label: 'CRYPTOGRAPHIC PROOF', state: 'FAILED', tone: 'danger' },
             { label: 'SETTLEMENT', state: 'HALTED', tone: 'danger' }
           ]} />
-          <ProductCaseMedia media={{ index: '04', title: 'VERIFICATION REPLAY', ratio: 'full', note: 'WHAT PASSED: DID, credential and issuer resolved successfully. WHERE IT FAILED: cryptographic proof verification. WHAT HAPPENED NEXT: settlement authorization halted.' }} />
+          <ProductCaseMedia media={{ index: '04', title: 'VERIFICATION REPLAY', ratio: 'full', source: '/Prima Files/VERIFICATION REPLAY.mp4', note: 'WHAT PASSED: DID, credential and issuer resolved successfully. WHERE IT FAILED: cryptographic proof verification. WHAT HAPPENED NEXT: settlement authorization halted.' }} />
           <ProductCaseSticky>Instead of a generic failure message, Replay reconstructs the verification and highlights where the trust chain broke. “Failed” explained the outcome; Replay exposes the point of failure.</ProductCaseSticky>
 
           <div id="prima-uncertainty">
@@ -113,7 +113,7 @@ export function PrimaProductCase({ onNext }: { onNext: (slug: string) => void })
         <div id="prima-investigator">
           <ProductCaseStatement>AI explains the evidence. It doesn’t decide the truth.</ProductCaseStatement>
           <ProductCaseCopy>Rather than combining everything into a single trust score, Prima separates the signals that describe a transaction (verification result, proof, credential and issuer status, merchant policy, investigation and settlement), and the Trust Chain shows how they relate. The AI Investigator receives that evidence and turns it into an operational explanation: incident analysis, supporting evidence, probable causes, recommended action. Escalating an investigation never rewrites the verification result.</ProductCaseCopy>
-          <ProductCaseMedia media={{ index: '07', title: 'AI INVESTIGATOR · CRYPTOGRAPHIC MISMATCH', ratio: 'full', note: 'AI INVESTIGATOR / MISMATCH: Incident analysis above evidence and ranked probable causes. Analysis confidence describes Prima’s interpretation, not the validity of the cryptographic evidence.' }} />
+          <ProductCaseMedia media={{ index: '07', title: 'AI INVESTIGATOR · CRYPTOGRAPHIC MISMATCH', ratio: 'full', source: '/Prima Files/AI INVESTIGATOR · CRYPTOGRAPHIC MISMATCH.mp4', note: 'AI INVESTIGATOR / MISMATCH: Incident analysis above evidence and ranked probable causes. Analysis confidence describes Prima’s interpretation, not the validity of the cryptographic evidence.' }} />
           <ProductCasePaths
             label="STATE SEPARATION"
             columns={[
@@ -128,13 +128,13 @@ export function PrimaProductCase({ onNext }: { onNext: (slug: string) => void })
       <ProductCaseSection id="prima-operating-system" label="FROM FEATURE TO OPERATING SYSTEM">
         <ProductCaseStatement>Verification wasn’t a screen. It became an operating system.</ProductCaseStatement>
         <ProductCaseCopy>Once individual transactions worked, I zoomed out to the merchant’s operational problem. Operations brings verification volume, blocked transactions, service health, Priority Review and AI-assisted interpretation into a single command surface.</ProductCaseCopy>
-        <ProductCaseMedia media={{ index: '08', title: 'OPERATIONS · PRIORITY REVIEW', ratio: 'full', note: 'The Priority Review queue surfaces the transactions that need human attention. AI operational summaries sit beside deterministic signals, interpreting the system without replacing the underlying evidence. Alerts surface security, infrastructure and transaction anomalies without treating every unusual event as fraud.' }} />
+        <ProductCaseMedia media={{ index: '08', title: 'OPERATIONS · PRIORITY REVIEW', ratio: 'full', source: '/Prima Files/OPERATIONS · PRIORITY REVIEW.mp4', note: 'The Priority Review queue surfaces the transactions that need human attention. AI operational summaries sit beside deterministic signals, interpreting the system without replacing the underlying evidence. Alerts surface security, infrastructure and transaction anomalies without treating every unusual event as fraud.' }} />
 
         <div id="prima-merchant-authority">
           <ProductCaseStatement className="pc-statement-heading">Merchant control stops at the merchant.</ProductCaseStatement>
           <ProductCasePair
-            a={{ index: '09', title: 'ALERTS', ratio: 'wide', note: 'Security, infrastructure and transaction anomalies separated from routine events.' }}
-            b={{ index: '10', title: 'TRUST POLICIES', ratio: 'wide', note: 'Active, paused and disabled acceptance rules bound to integrations. A merchant can pause acceptance of an issuer’s credentials; it cannot revoke that issuer.' }}
+            a={{ index: '09', title: 'ALERTS', ratio: 'wide', source: '/Prima Files/ALERTS.mp4', note: 'Security, infrastructure and transaction anomalies separated from routine events.' }}
+            b={{ index: '10', title: 'TRUST POLICIES', ratio: 'wide', source: '/Prima Files/TRUST POLICIES.mp4', note: 'Active, paused and disabled acceptance rules bound to integrations. A merchant can pause acceptance of an issuer’s credentials; it cannot revoke that issuer.' }}
           />
           <ProductCaseNote label="AUTHORITY BOUNDARY">Prima manages what this merchant accepts, not the decentralized ecosystem. Settlement networks and verification services stay separated from the merchant’s integrations and webhooks.</ProductCaseNote>
         </div>
@@ -144,7 +144,7 @@ export function PrimaProductCase({ onNext }: { onNext: (slug: string) => void })
           <ProductCaseStatement className="pc-statement-heading">The screens needed to behave like one system.</ProductCaseStatement>
           <ProductCaseCopy>A verification event opened from Operations remains the same event in Verification Timeline. Investigations contain the same evidence; escalating one updates the investigation state without changing the underlying verification result. A clean verification progresses to merchant authorization and settlement confirmation.</ProductCaseCopy>
           <ProductCaseConnected items={['OPERATIONS', 'VERIFY', 'VERIFICATION TIMELINE', 'TRUST CHAIN', 'VERIFICATION REPLAY', 'AI INVESTIGATION', 'ALERTS', 'TRUST POLICIES', 'SETTLEMENT']} />
-          <ProductCaseMedia media={{ index: '15', title: 'VERIFY · SETTLEMENT CONFIRMED', ratio: 'wide', note: 'Verification → merchant authorization → settlement confirmation. Nothing settles automatically.' }} />
+          <ProductCaseMedia media={{ index: '15', title: 'VERIFY · SETTLEMENT CONFIRMED', ratio: 'wide', source: '/Prima Files/VERIFY · SETTLEMENT CONFIRMED.mp4', note: 'Verification → merchant authorization → settlement confirmation. Nothing settles automatically.' }} />
           <ProductCasePull>I BUILT ENOUGH OF PRIMA TO TEST THE PRODUCT LOGIC, NOT JUST THE SCREENS.</ProductCasePull>
 
           <div id="prima-scenarios">

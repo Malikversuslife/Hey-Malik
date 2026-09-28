@@ -1,10 +1,11 @@
 import type { ReactNode } from 'react'
 
-export type IconName = 'arrowUpRight' | 'arrowRight' | 'arrowLeft' | 'mail' | 'file' | 'chat' | 'close' | 'send' | 'product' | 'brand' | 'lab' | 'user' | 'linkedin' | 'instagram' | 'behance' | 'x' | 'substack' | 'dribbble'
+export type IconName = 'arrowUpRight' | 'arrowRight' | 'arrowLeft' | 'play' | 'mail' | 'file' | 'chat' | 'close' | 'send' | 'product' | 'brand' | 'lab' | 'user' | 'linkedin' | 'instagram' | 'behance' | 'x' | 'substack' | 'dribbble'
 const shapes: Record<IconName, ReactNode> = {
   arrowUpRight: <path d="M6 18 18 6M6 6h12v12" />,
   arrowRight: <path d="M4 12h16m-6-6 6 6-6 6" />,
   arrowLeft: <path d="M20 12H4m6-6-6 6 6 6" />,
+  play: <path d="m9 6 9 6-9 6z" />,
   mail: <><rect x="3" y="5" width="18" height="14" rx="3" /><path d="m4 7 8 6 8-6" /></>,
   file: <><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9zM14 3v6h6M8 13h8M8 17h5" /></>,
   chat: <path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5H4l-2 2v-9.5A8.5 8.5 0 0 1 10.5 4H13a8 8 0 0 1 8 7.5ZM7 10h9M7 14h6" />,

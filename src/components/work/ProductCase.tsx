@@ -1,5 +1,5 @@
 import { Icon } from '../Icon'
-import { Fragment, useEffect, useRef, type CSSProperties, type ReactNode } from 'react'
+import { Fragment, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import type { ProductCaseMediaData, ProductCaseMeta } from '../../data/productCases'
 
 /* =========================================================================
@@ -167,20 +167,33 @@ export function ProductCaseDecision({
 
 export function ProductCaseMedia({ media, className = '', priority = false }: { media: ProductCaseMediaData; className?: string; priority?: boolean }) {
   const ratio = media.ratio ?? 'wide'
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [playing, setPlaying] = useState(false)
+  const togglePlayback = () => {
+    const video = videoRef.current
+    if (!video) return
+    if (video.paused) video.play().catch(() => undefined)
+    else video.pause()
+  }
   return (
     <figure className={`pc-media pc-media-${ratio} pc-reveal ${className}`.trim()} role="group" aria-label={media.title}>
       <div className="pc-media-frame">
-        <div className="pc-media-grid" />
-        <div className="pc-media-corner" />
-        <div className="pc-media-watermark">M/</div>
-        <div className="pc-media-caption">
-          <span className="pc-media-title">{media.title}</span>
-          {media.caption && <span className="pc-media-caption-line">{media.caption}</span>}
-        </div>
-        <div className="pc-media-foot">
-          <span className="pc-label">MEDIA {pad(media.index)}</span>
-          <span className="pc-media-pending">REAL PRODUCT CAPTURE PENDING</span>
-        </div>
+        {media.source ? <>
+          <video ref={videoRef} src={media.source} controls playsInline preload={priority ? 'auto' : 'metadata'} onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onEnded={() => setPlaying(false)} />
+          {!playing && <button type="button" className="pc-video-play" onClick={togglePlayback} aria-label={`Play ${media.title}`}><Icon name="play" /></button>}
+        </> : <>
+          <div className="pc-media-grid" />
+          <div className="pc-media-corner" />
+          <div className="pc-media-watermark">M/</div>
+          <div className="pc-media-caption">
+            <span className="pc-media-title">{media.title}</span>
+            {media.caption && <span className="pc-media-caption-line">{media.caption}</span>}
+          </div>
+          <div className="pc-media-foot">
+            <span className="pc-label">MEDIA {pad(media.index)}</span>
+            <span className="pc-media-pending">REAL PRODUCT CAPTURE PENDING</span>
+          </div>
+        </>}
       </div>
       {media.note && <figcaption className="pc-media-note">{media.note}</figcaption>}
     </figure>
