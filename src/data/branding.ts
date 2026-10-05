@@ -55,12 +55,76 @@ export type BrandingIndexProject = {
 
 export const brandingIndex: BrandingIndexProject[] = [
   { id: 'b-side-b', index: '001', slug: 'side-b', title: 'SIDE B', category: 'BRANDING', descriptor: 'Brand Identity · Packaging · Art Direction', ratio: 'ultra-wide', caseStudy: 'live' },
-  { id: 'b-the-kim-couture', index: '002', slug: 'the-kim-couture', title: 'THE KIM COUTURE', category: 'BRANDING', descriptor: 'Brand Identity · Fashion', ratio: '3:4', caseStudy: 'preparing' },
-  { id: 'b-finlancer', index: '003', slug: 'finlancer', title: 'FINLANCER', category: 'BRANDING', descriptor: 'Brand / Visual Identity', ratio: '21:9', caseStudy: 'preparing' },
-  { id: 'b-pycon', index: '004', slug: 'pycon-nigeria-2024', title: 'PYCON NIGERIA 2024', category: 'BRANDING', descriptor: 'Conference Identity', ratio: '16:9', caseStudy: 'preparing' },
-  { id: 'b-nomi', index: '005', slug: 'nomi', title: 'NOMI', category: 'BRANDING', descriptor: 'Brand / Visual Identity', ratio: '1:1', caseStudy: 'preparing' },
-  { id: 'b-belsquared', index: '006', slug: 'belsquared', title: 'BELSQUARED', category: 'BRANDING', descriptor: 'Brand Identity · Packaging', ratio: '21:9', caseStudy: 'preparing' }
+  { id: 'b-the-kim-couture', index: '002', slug: 'the-kim-couture', title: 'THE KIM COUTURE', category: 'BRANDING', descriptor: 'Brand Identity · Fashion', ratio: '3:4', caseStudy: 'live' },
+  { id: 'b-finlancer', index: '003', slug: 'finlancer', title: 'FINLANCER', category: 'BRANDING', descriptor: 'Brand / Visual Identity', ratio: '21:9', caseStudy: 'live' },
+  { id: 'b-pycon', index: '004', slug: 'pycon-nigeria-2024', title: 'PYCON NIGERIA 2024', category: 'BRANDING', descriptor: 'Conference Identity', ratio: '16:9', caseStudy: 'live' },
+  { id: 'b-nomi', index: '005', slug: 'nomi', title: 'NOMI', category: 'BRANDING', descriptor: 'Brand / Visual Identity', ratio: '1:1', caseStudy: 'live' },
+  { id: 'b-belsquared', index: '006', slug: 'belsquared', title: 'BELSQUARED', category: 'BRANDING', descriptor: 'Brand Identity · Packaging', ratio: '21:9', caseStudy: 'live' }
 ]
+
+function galleryProject(config: {
+  slug: string
+  number: string
+  name: string
+  descriptor: string
+  tagline: string
+  intro: string
+  year: string
+  world: string
+  story: { title: string; statement?: string; copy: string }[]
+  next: BrandProject['next']
+}): BrandProject {
+  return {
+    slug: config.slug,
+    category: 'BRANDING',
+    number: config.number,
+    name: config.name,
+    tagline: config.tagline,
+    descriptor: config.descriptor,
+    intro: config.intro,
+    meta: [
+      { label: 'YEAR', value: config.year },
+      { label: 'SCOPE OF WORK', value: config.descriptor }
+    ],
+    hero: { index: 1, title: 'HERO IMAGE', ratio: 'ultra-wide' },
+    movements: [
+      ...config.story.map((section, index): BrandMovement => ({
+        number: String(index + 1).padStart(2, '0'),
+        title: section.title,
+        id: `${config.slug}-${section.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+        segments: [
+          ...(section.statement ? [{ kind: 'statement' as const, text: section.statement }] : []),
+          { kind: 'copy' as const, text: section.copy }
+        ]
+      })),
+      {
+      number: String(config.story.length + 1).padStart(2, '0'),
+      title: 'PROJECT GALLERY',
+      id: `${config.slug}-gallery`,
+      segments: [
+        { kind: 'media', media: { index: 2, title: 'PROJECT IMAGE 02', ratio: '16:9' } },
+        { kind: 'pair', left: { index: 3, title: 'PROJECT IMAGE 03', ratio: '1:1' }, right: { index: 4, title: 'PROJECT IMAGE 04', ratio: '1:1' } },
+        { kind: 'media', media: { index: 5, title: 'PROJECT IMAGE 05', ratio: '21:9' } },
+        { kind: 'grid', tiles: [
+          { index: 6, title: 'PROJECT IMAGE 06', ratio: '4:5' },
+          { index: 7, title: 'PROJECT IMAGE 07', ratio: '4:5' },
+          { index: 8, title: 'PROJECT IMAGE 08', ratio: '4:5' }
+        ] },
+        { kind: 'media', media: { index: 9, title: 'PROJECT IMAGE 09', ratio: 'ultra-wide' } },
+        { kind: 'grid', tiles: [
+          { index: 10, title: 'PROJECT IMAGE 10', ratio: '4:5' },
+          { index: 11, title: 'PROJECT IMAGE 11', ratio: '4:5' },
+          { index: 12, title: 'PROJECT IMAGE 12', ratio: '4:5' }
+        ] },
+        { kind: 'media', media: { index: 13, title: 'PROJECT IMAGE 13', ratio: '16:9' } },
+        { kind: 'pair', left: { index: 14, title: 'PROJECT IMAGE 14', ratio: '1:1' }, right: { index: 15, title: 'PROJECT IMAGE 15', ratio: '1:1' } },
+        { kind: 'media', media: { index: 16, title: 'PROJECT IMAGE 16', ratio: '21:9' } }
+      ]
+    }],
+    next: config.next,
+    world: config.world
+  }
+}
 
 export const brandProjects: BrandProject[] = [
   {
@@ -176,7 +240,37 @@ export const brandProjects: BrandProject[] = [
       },
       { number: '10', title: 'NEXT PROJECT', id: 'sideb-next', segments: [] }
     ],
-    next: { name: 'THE KIM COUTURE', slug: 'the-kim-couture', note: 'Brand Identity · Fashion', available: false },
+    next: { name: 'THE KIM COUTURE', slug: 'the-kim-couture', note: 'Brand Identity · Fashion' },
     world: 'sideb'
-  }
+  },
+  galleryProject({ slug: 'the-kim-couture', number: '002', name: 'THE KIM COUTURE', descriptor: 'Brand Identity · Fashion', tagline: 'MADE TO BE\nREMEMBERED.', intro: 'A fashion identity shaped through elegance, confidence, and a clear visual point of view.', year: '2024', world: 'kim', story: [
+    { title: 'Premise', copy: 'The identity needed to feel considered and expressive without competing with the clothes. The system creates a confident frame for each collection.' },
+    { title: 'Identity', statement: 'QUIET FORM.\nCLEAR PRESENCE.', copy: 'Typography, proportion, and restraint work together to give the brand a recognisable presence across large and small applications.' },
+    { title: 'Visual Language', copy: 'A controlled visual language keeps photography, campaign layouts, and product communication connected while leaving space for each garment to lead.' },
+    { title: 'Application', copy: 'The system extends across labels, packaging, campaign material, social content, and digital touchpoints as one coherent fashion identity.' }
+  ], next: { name: 'FINLANCER', slug: 'finlancer', note: 'Brand / Visual Identity' } }),
+  galleryProject({ slug: 'finlancer', number: '003', name: 'FINLANCER', descriptor: 'Brand / Visual Identity', tagline: 'FINANCE FOR\nINDEPENDENT WORK.', intro: 'A visual identity for a financial product built around the realities of independent work.', year: '2025', world: 'finlancer', story: [
+    { title: 'Premise', copy: 'Independent work can make money management feel fragmented. The brand needed to make financial organisation feel calm, capable, and easy to approach.' },
+    { title: 'Identity', statement: 'CLARITY FOR\nEVERY MOVE.', copy: 'The identity balances financial confidence with the flexibility and momentum associated with freelance work.' },
+    { title: 'Visual Language', copy: 'A structured system of type, colour, iconography, and interface-led composition turns complex financial information into a clear visual rhythm.' },
+    { title: 'Application', copy: 'The visual system is designed to move consistently across product screens, launch communication, social content, and supporting brand materials.' }
+  ], next: { name: 'PYCON NIGERIA 2024', slug: 'pycon-nigeria-2024', note: 'Conference Identity' } }),
+  galleryProject({ slug: 'pycon-nigeria-2024', number: '004', name: 'PYCON NIGERIA 2024', descriptor: 'Conference Identity', tagline: 'A COMMUNITY\nIN MOTION.', intro: 'A conference identity designed to bring the energy of Nigeria’s Python community into one coherent experience.', year: '2024', world: 'pycon', story: [
+    { title: 'Premise', copy: 'The conference brings different people, disciplines, and levels of experience into one community. Its identity needed to feel open, energetic, and unmistakably collective.' },
+    { title: 'Identity', statement: 'BUILT BY\nTHE COMMUNITY.', copy: 'The system uses a flexible visual structure that can hold technical information while still feeling celebratory and human.' },
+    { title: 'Visual Language', copy: 'Bold colour, modular composition, and expressive graphic elements create continuity across speakers, sessions, schedules, and event communication.' },
+    { title: 'Event World', copy: 'The identity scales across the website, stage environment, passes, signage, merchandise, social content, and post-event material.' }
+  ], next: { name: 'NOMI', slug: 'nomi', note: 'Brand / Visual Identity' } }),
+  galleryProject({ slug: 'nomi', number: '005', name: 'NOMI', descriptor: 'Brand / Visual Identity', tagline: 'LEARNING WITH\nA PERSONALITY.', intro: 'A warm visual identity for an adaptive learning product that responds to each learner.', year: '2025', world: 'nomi', story: [
+    { title: 'Premise', copy: 'Adaptive learning can feel abstract or mechanical. Nomi needed a brand that made intelligence feel supportive, understandable, and personal.' },
+    { title: 'Identity', statement: 'SMART ENOUGH\nTO FEEL HUMAN.', copy: 'The identity combines a clear learning system with a warm personality that can guide, encourage, explain, and celebrate progress.' },
+    { title: 'Visual Language', copy: 'Colour, rounded forms, character expression, illustration, and approachable typography give the product a consistent emotional language.' },
+    { title: 'Product World', copy: 'The brand extends through onboarding, subject discovery, assessed practice, progress, contextual tutoring, campaigns, and the marketing website.' }
+  ], next: { name: 'BELSQUARED', slug: 'belsquared', note: 'Brand Identity · Packaging' } }),
+  galleryProject({ slug: 'belsquared', number: '006', name: 'BELSQUARED', descriptor: 'Brand Identity · Packaging', tagline: 'EVERYDAY OBJECTS.\nCLEAR CHARACTER.', intro: 'A brand identity and packaging system built to feel direct, useful, and recognisable.', year: '2023', world: 'belsquared', story: [
+    { title: 'Premise', copy: 'The brand needed to bring order and personality to a broad consumer experience without becoming complicated or overly decorative.' },
+    { title: 'Identity', statement: 'SIMPLE SHAPES.\nSTRONG RECALL.', copy: 'A direct identity system uses clear geometry, typography, and repetition to build recognition across physical and digital touchpoints.' },
+    { title: 'Visual Language', copy: 'The visual system balances functional information with confident colour and composition, giving everyday applications a distinct point of view.' },
+    { title: 'Packaging', copy: 'The identity is designed to remain consistent across packaging formats, product communication, campaign assets, and the wider customer experience.' }
+  ], next: { name: 'SIDE B', slug: 'side-b', note: 'Brand Identity · Packaging · Art Direction' } })
 ]

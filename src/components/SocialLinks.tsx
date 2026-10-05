@@ -3,11 +3,7 @@ import { Icon, type IconName } from './Icon'
 
 const profiles: { label: string; icon: IconName; url?: string }[] = [
   { label: 'LinkedIn', icon: 'linkedin', url: contact.linkedin },
-  { label: 'Instagram', icon: 'instagram', url: contact.instagram },
-  { label: 'Behance', icon: 'behance', url: contact.behance },
-  { label: 'X', icon: 'x', url: contact.x },
-  { label: 'Substack', icon: 'substack', url: contact.substack },
-  { label: 'Dribbble', icon: 'dribbble', url: contact.dribbble }
+  { label: 'X', icon: 'x', url: contact.x }
 ]
 export function SocialLinks() {
   return <div className="social-links" aria-label="Social profiles">{profiles.map(profile => profile.url

@@ -6,6 +6,28 @@ import { brandProjects } from '../../data/branding'
 
 function pad(value: number) { return String(value).padStart(2, '0') }
 
+function standardGallery(segments: BrandSegment[]) {
+  const media: BrandMediaData[] = []
+  segments.forEach(segment => {
+    if (segment.kind === 'media') media.push(segment.media)
+    if (segment.kind === 'pair') media.push(segment.left, segment.right)
+    if (segment.kind === 'grid') media.push(...segment.tiles)
+  })
+  const ratios: BrandRatio[] = ['16:9', '1:1', '1:1', '21:9', '4:5', '4:5', '4:5', '21:9', '4:5', '4:5', '4:5', '16:9', '1:1', '1:1', '21:9']
+  const slots = media.slice(0, 15).map((item, index) => ({ ...item, ratio: ratios[index] }))
+  const arranged: BrandSegment[] = []
+  if (slots[0]) arranged.push({ kind: 'media', media: slots[0] })
+  if (slots[1] && slots[2]) arranged.push({ kind: 'pair', left: slots[1], right: slots[2] })
+  if (slots[3]) arranged.push({ kind: 'media', media: slots[3] })
+  if (slots[4] && slots[5] && slots[6]) arranged.push({ kind: 'grid', tiles: slots.slice(4, 7) })
+  if (slots[7]) arranged.push({ kind: 'media', media: slots[7] })
+  if (slots[8] && slots[9] && slots[10]) arranged.push({ kind: 'grid', tiles: slots.slice(8, 11) })
+  if (slots[11]) arranged.push({ kind: 'media', media: slots[11] })
+  if (slots[12] && slots[13]) arranged.push({ kind: 'pair', left: slots[12], right: slots[13] })
+  if (slots[14]) arranged.push({ kind: 'media', media: slots[14] })
+  return arranged
+}
+
 function Lines({ text }: { text: string }) {
   return <>{text.split('\n').map((line, index) => <Fragment key={index}>{index > 0 && <br />}{line}</Fragment>)}</>
 }
@@ -15,25 +37,18 @@ export function BrandMedia({ media, priority = false }: { media: BrandMediaData;
   const frame = media.source ? (
     <img src={media.source} alt={media.alt ?? ''} loading={priority ? 'eager' : 'lazy'} />
   ) : (
-    <div className="brand-media-frame" role="img" aria-label={`${pad(media.index)} / ${media.title}`}>
-      <span className="brand-media-label">{pad(media.index)} / {media.title}</span>
-      <span className="brand-media-swatches" aria-hidden="true"><i /><i /><i /><i /><i /><i /></span>
-    </div>
+    <div className="brand-media-frame" role="img" aria-label={`${pad(media.index)} / ${media.title}`} />
   )
-  return <figure className="brand-media brand-reveal" data-ratio={ratio}>{frame}{media.caption && <figcaption>{media.caption}</figcaption>}</figure>
+  return <figure className="brand-media brand-reveal" data-ratio={ratio}>{frame}</figure>
 }
 
-export function BrandVideo({ index, title, ratio = '9:16', caption, source, poster, alt }: { index: number; title: string; ratio?: BrandRatio; caption?: string; source?: string; poster?: string; alt?: string }) {
+export function BrandVideo({ index, title, ratio = '9:16', source, poster, alt }: { index: number; title: string; ratio?: BrandRatio; caption?: string; source?: string; poster?: string; alt?: string }) {
   const video = source ? (
     <video src={source} poster={poster} muted autoPlay loop playsInline aria-label={alt ?? `${pad(index)} / ${title}`} />
   ) : (
-    <div className="brand-media-frame" role="img" aria-label={`${pad(index)} / ${title}`}>
-      <span className="brand-media-label">{pad(index)} / {title}</span>
-      <span className="brand-media-kind">VIDEO SLOT</span>
-      <span className="brand-media-swatches" aria-hidden="true"><i /><i /><i /><i /><i /><i /></span>
-    </div>
+    <div className="brand-media-frame" role="img" aria-label={`${pad(index)} / ${title}`} />
   )
-  return <figure className="brand-media brand-reveal" data-ratio={ratio}>{video}{caption && <figcaption>{caption}</figcaption>}</figure>
+  return <figure className="brand-media brand-reveal" data-ratio={ratio}>{video}</figure>
 }
 
 export function BrandPair({ left, right }: { left: BrandMediaData; right: BrandMediaData }) {
@@ -88,13 +103,13 @@ function BrandHero({ project }: { project: BrandProject }) {
         <h1 className="brand-hero-title"><Lines text={project.tagline} /></h1>
         <p className="brand-descriptor">{project.descriptor}</p>
         <p className="brand-intro">{project.intro}</p>
-        <details className="brand-story-details">
+        {narrative.length > 0 && <details className="brand-story-details">
           <summary><span className="brand-expand-label">Expand info</span><span className="brand-collapse-label">Less info</span><Icon name="arrowRight" /></summary>
           <div className="brand-story-expanded">{narrative.map(movement => <section key={movement.id} aria-labelledby={`${movement.id}-story-title`}>
             <h2 id={`${movement.id}-story-title`}>{movement.title.toLowerCase()}</h2>
             {movement.segments.filter(segment => ['copy', 'statement', 'quote', 'label'].includes(segment.kind)).map((segment, index) => <BrandSegmentRenderer key={index} segment={segment} />)}
           </section>)}</div>
-        </details>
+        </details>}
       </div>
     </div>
   </header>
@@ -137,13 +152,13 @@ export function BrandCase({ project, onNext }: { project?: BrandProject; onNext:
       {fallback && <button className="brand-preparation-back" onClick={() => onNext(fallback.slug)}>← BACK TO {fallback.name}</button>}
     </section>
   }
+  const gallerySegments = standardGallery(project.movements.flatMap(movement => movement.segments
+    .filter(segment => ['media', 'pair', 'grid', 'video'].includes(segment.kind))
+    .filter(segment => !(segment.kind === 'media' && segment.media.index === project.hero.index && segment.media.title === project.hero.title))))
   return <article className={`brand-case brand-world-${project.world}`} ref={rootRef} data-world={project.world} id={project.slug}>
     <BrandHero project={project} />
     <div className="brand-gallery" aria-label={`${project.name} brand gallery`}>
-      {project.movements.flatMap(movement => movement.segments
-        .filter(segment => ['media', 'pair', 'grid', 'video'].includes(segment.kind))
-        .filter(segment => !(segment.kind === 'media' && segment.media.index === project.hero.index && segment.media.title === project.hero.title))
-        .map((segment, index) => <BrandSegmentRenderer key={`${movement.id}-${index}`} segment={segment} />))}
+      {gallerySegments.map((segment, index) => <BrandSegmentRenderer key={`${project.slug}-${index}`} segment={segment} />)}
     </div>
     <div className="brand-contact"><a href={`mailto:${contact.email}`}>Start a project <Icon name="arrowUpRight" /></a></div>
     <BrandNextProject next={project.next} onNext={onNext} />
