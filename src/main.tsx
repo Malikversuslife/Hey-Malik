@@ -397,9 +397,9 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
       {mode !== 'about' && <button className="canvas-more" onClick={() => changeMode('about')}>More about Malik : experience, process, principles <span aria-hidden="true">→</span></button>}
     </div>
     {activeLab && <div className="lab-preview-overlay" role="dialog" aria-modal="true" aria-labelledby="lab-preview-title" onMouseDown={event => { if (event.target === event.currentTarget) setActiveLab(null) }}>
-      <div className="lab-preview-panel">
+      <div className={`lab-preview-panel lab-preview-${activeLab.previewMode ?? 'mobile'}`}>
         <div className="lab-preview-head"><div><span>LIVE EXPERIMENT</span><h2 id="lab-preview-title">{activeLab.title}</h2></div><button type="button" onClick={() => setActiveLab(null)} aria-label={`Close ${activeLab.title} preview`}>CLOSE <span aria-hidden="true">×</span></button></div>
-        <div className="lab-preview-device"><iframe src={activeLab.liveUrl} title={`${activeLab.title} interactive mobile preview`} allow="geolocation" /></div>
+        <div className="lab-preview-device"><iframe src={activeLab.liveUrl} title={`${activeLab.title} interactive ${activeLab.previewMode ?? 'mobile'} preview`} allow="geolocation" /></div>
         <a href={activeLab.liveUrl} target="_blank" rel="noreferrer">OPEN FULL SITE <span aria-hidden="true">↗</span></a>
       </div>
     </div>}

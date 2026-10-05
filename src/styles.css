@@ -1086,8 +1086,10 @@ button:focus-visible,a:focus-visible,input:focus-visible { outline:3px solid rgb
 }
 
 /* Lab experiment card and in-page mobile preview */
+.work-gallery { align-items:start; }
+.lab-card { display:grid; grid-template-rows:auto auto minmax(78px,auto) auto; align-content:start; align-self:start; }
 .lab-card-meta { padding-top:14px; }
-.lab-card-description { display:block; max-width:560px; padding:7px 4px 0; color:var(--shell-muted); font:16px/1.45 'Rethink Sans',sans-serif; }
+.lab-card-description { display:block; align-self:start; max-width:560px; padding:7px 4px 0; color:var(--shell-muted); font:16px/1.45 'Rethink Sans',sans-serif; }
 .lab-card-tool { display:flex; gap:10px; align-items:center; padding:14px 4px 0; color:var(--shell-ink); font:14px/1 'Rethink Sans',sans-serif; }
 .lab-card-tool > span,.lab-card-tool > strong { display:inline-flex; align-items:center; min-height:30px; border-radius:999px; background:#f0f0f2; padding:7px 11px; }
 .lab-card-tool > span { color:#76767c; font-weight:500; }
@@ -1102,7 +1104,9 @@ button:focus-visible,a:focus-visible,input:focus-visible { outline:3px solid rgb
 .lab-preview-head button span { color:inherit; font-size:17px; line-height:.7; }
 .lab-preview-device { width:min(100%,390px); aspect-ratio:390/760; margin:0 auto; overflow:hidden; border:8px solid #17171a; border-radius:38px; background:#0b2949; box-shadow:0 20px 45px rgba(0,0,0,.22); }
 .lab-preview-device iframe { width:100%; height:100%; display:block; border:0; background:#fff; }
+.lab-preview-desktop { width:min(100%,1280px); }
+.lab-preview-desktop .lab-preview-device { width:100%; aspect-ratio:16/9; border-width:6px; border-radius:22px; background:#080b14; }
 .lab-preview-panel > a { display:flex; justify-content:center; align-items:center; gap:8px; width:max-content; margin:16px auto 0; color:#3a3a3f; font:11px 'IBM Plex Mono',monospace; }
 @keyframes lab-overlay-in { from { opacity:0; } to { opacity:1; } }
-@media (max-width:600px) { .lab-preview-overlay { padding:0; place-items:stretch; } .lab-preview-panel { width:100%; max-height:100dvh; border:0; border-radius:0; padding:14px; } .lab-preview-device { width:min(100%,390px); height:calc(100dvh - 128px); aspect-ratio:auto; border-width:6px; border-radius:32px; } .lab-preview-panel > a { display:none; } }
+@media (max-width:600px) { .lab-card { grid-template-rows:auto auto auto auto; } .lab-preview-overlay { padding:0; place-items:stretch; } .lab-preview-panel,.lab-preview-desktop { width:100%; max-height:100dvh; border:0; border-radius:0; padding:14px; } .lab-preview-device,.lab-preview-desktop .lab-preview-device { width:min(100%,390px); height:calc(100dvh - 128px); aspect-ratio:auto; border-width:6px; border-radius:32px; } .lab-preview-panel > a { display:none; } }
 @media (prefers-reduced-motion:reduce) { .lab-preview-overlay { animation:none; } }

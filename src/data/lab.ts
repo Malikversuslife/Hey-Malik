@@ -18,6 +18,7 @@ export type LabExperiment = {
   liveUrl?: string
   aiTool?: string
   badges?: string[]
+  previewMode?: 'mobile' | 'desktop'
   status: LabStatus
   Artifact?: ComponentType
 }
@@ -35,8 +36,8 @@ export const labExperiments: LabExperiment[] = [
       'The Figma plugin shortens the path from discovery to placement without flattening the character of the set.',
     ],
     tools: ['SVG ICON SYSTEM', 'SEARCH + FAVORITES', 'FIGMA PLUGIN'],
-    cover: null, media: null,
-    liveUrl: 'https://ad-astra-icons-library.vercel.app/', aiTool: 'OpenAI (Codex)', badges: ['Figma Plugin'], status: 'SHIPPED',
+    cover: '/ad-astra-lab.png', media: '/ad-astra-lab.png',
+    liveUrl: 'https://ad-astra-icons-library.vercel.app/', aiTool: 'OpenAI (Codex)', badges: ['Figma Plugin'], previewMode: 'desktop', status: 'SHIPPED',
   },
   {
     id: '001', slug: 'clear-road', title: 'CLEAR ROAD', year: '2026',
@@ -51,6 +52,6 @@ export const labExperiments: LabExperiment[] = [
     ],
     tools: ['INTERACTIVE MAP', 'GEOLOCATION', 'COMMUNITY REPORTING'],
     cover: '/clear-road-lab.png', media: '/clear-road-lab.png',
-    liveUrl: 'https://clear-road-zeta.vercel.app/', aiTool: 'OpenAI (Codex)', status: 'SHIPPED',
+    liveUrl: 'https://clear-road-zeta.vercel.app/', aiTool: 'OpenAI (Codex)', previewMode: 'mobile', status: 'SHIPPED',
   },
 ]
