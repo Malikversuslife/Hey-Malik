@@ -17,11 +17,27 @@ export type LabExperiment = {
   media: string | null
   liveUrl?: string
   aiTool?: string
+  badges?: string[]
   status: LabStatus
   Artifact?: ComponentType
 }
 
 export const labExperiments: LabExperiment[] = [
+  {
+    id: '002', slug: 'ad-astra', title: 'AD ASTRA', year: '2026',
+    category: 'ICON LIBRARY / FIGMA PLUGIN',
+    question: 'HOW MIGHT A SCULPTURAL ICON SYSTEM FEEL PREMIUM WITHOUT LOSING EDITABILITY?',
+    summary: 'Explore Ad Astra, a sculptural icon library of 106 editable SVG objects for premium digital products. Search, favorite, copy, and insert its chrome, graphite, and spectral icons directly in Figma with the Ad Astra plugin.',
+    experiment: 'Ad Astra brings a searchable library of sculptural SVG icons into one focused browsing experience, then extends the same collection into Figma for direct insertion and editing.',
+    learning: [
+      'A distinctive material language can remain usable when every object stays editable as SVG.',
+      'Search and favourites make a large visual library easier to revisit during active design work.',
+      'The Figma plugin shortens the path from discovery to placement without flattening the character of the set.',
+    ],
+    tools: ['SVG ICON SYSTEM', 'SEARCH + FAVORITES', 'FIGMA PLUGIN'],
+    cover: null, media: null,
+    liveUrl: 'https://ad-astra-icons-library.vercel.app/', aiTool: 'OpenAI (Codex)', badges: ['Figma Plugin'], status: 'SHIPPED',
+  },
   {
     id: '001', slug: 'clear-road', title: 'CLEAR ROAD', year: '2026',
     category: 'CIVIC TECH / INTERACTIVE MAP',

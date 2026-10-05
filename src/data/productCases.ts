@@ -56,16 +56,33 @@ export const productCaseMeta: Record<string, ProductCaseMeta> = {
     title: 'NOMI',
     descriptor: 'An adaptive learning companion where practice, progress, recommendations, and contextual AI work together to shape what the learner does next.',
     discipline: 'Product Design · AI',
-    role: 'Product Designer',
-    scope: 'Product Strategy · UX Architecture · AI Interaction Design · Adaptive-Learning Flows · Design System · Brand Experience',
+    role: 'Product Designer · Product Strategy · UX Architecture · Design System · Frontend Implementation',
+    scope: 'Product Strategy · UX Architecture · AI Product Design · Responsive Interaction Design · Authentication · Design System',
     platform: 'Responsive Web Application',
-    projectType: 'Product Concept',
-    intro: 'Nomi is an adaptive learning product designed around a simple idea: learning should respond to the learner, not force every learner through the same path.',
+    projectType: 'Functional Production Build',
+    prototypeLabel: 'Live Web Application',
+    prototypeUrl: 'https://nomi-alpha-bay.vercel.app',
+    intro: 'Nomi is an adaptive learning product built around a simple idea: learning should respond to the learner instead of moving everyone through the same fixed path.',
+    nextProject: 'nomi-website'
+  },
+  'nomi-website': {
+    slug: 'nomi-website',
+    index: '03',
+    title: 'NOMI WEBSITE',
+    descriptor: 'Turning an adaptive learning system into a clear, playful product story.',
+    discipline: 'Product Design · Brand Experience · Web Design',
+    role: 'Product Designer · UX Writer · Visual Designer · Frontend Implementation',
+    scope: 'Product Positioning · Information Architecture · UX Writing · Responsive Web Design · Brand Experience · Interactive Demonstration',
+    platform: 'Responsive Marketing Website',
+    projectType: 'Live Production Website',
+    prototypeLabel: 'Live Website',
+    prototypeUrl: 'https://nomi-alpha-bay.vercel.app',
+    intro: 'The Nomi marketing website turns a connected adaptive learning system into a product story that learners and parents can understand before creating an account.',
     nextProject: 'hanya'
   },
   hanya: {
     slug: 'hanya',
-    index: '03',
+    index: '04',
     title: 'HANYA',
     descriptor: 'AI-assisted healthcare navigation that helps people understand what kind of care to seek next.',
     discipline: 'Product Design · AI',
@@ -78,7 +95,7 @@ export const productCaseMeta: Record<string, ProductCaseMeta> = {
   },
   yousewire: {
     slug: 'yousewire',
-    index: '04',
+    index: '05',
     title: 'YOUSEWIRE',
     descriptor: 'A unified cross-border financial system designed for personal money management and business financial operations.',
     discipline: 'Product Design · Fintech',
@@ -94,6 +111,7 @@ export const productCaseMeta: Record<string, ProductCaseMeta> = {
 export const productCaseProjectMeta: Record<string, ProductCaseProjectMeta> = {
   prima: { slug: 'prima', index: '01', title: 'PRIMA', descriptor: 'AI · Fintech', discipline: 'Product Design · AI', note: 'AI-assisted verification OS for decentralized payments.' },
   nomi: { slug: 'nomi', index: '02', title: 'NOMI', descriptor: 'AI · Education', discipline: 'Product Design · AI', note: 'An adaptive learning companion that responds to how the learner learns.' },
-  hanya: { slug: 'hanya', index: '03', title: 'HANYA', descriptor: 'Healthcare · AI', discipline: 'Product Design · AI', note: 'AI-assisted healthcare navigation built around guidance, safety and human judgement.' },
-  yousewire: { slug: 'yousewire', index: '04', title: 'YOUSEWIRE', descriptor: 'Fintech', discipline: 'Product Design · Fintech', note: 'A cross-border financial system for personal and business money.' }
+  'nomi-website': { slug: 'nomi-website', index: '03', title: 'NOMI WEBSITE', descriptor: 'Brand Experience · Web Design', discipline: 'Product Design · Web Design', note: 'A clear, playful front door for Nomi\'s adaptive learning system.' },
+  hanya: { slug: 'hanya', index: '04', title: 'HANYA', descriptor: 'Healthcare · AI', discipline: 'Product Design · AI', note: 'AI-assisted healthcare navigation built around guidance, safety and human judgement.' },
+  yousewire: { slug: 'yousewire', index: '05', title: 'YOUSEWIRE', descriptor: 'Fintech', discipline: 'Product Design · Fintech', note: 'A cross-border financial system for personal and business money.' }
 }

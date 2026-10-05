@@ -11,6 +11,7 @@ import { contact } from './data/contact'
 import { CaseMedia, CaseMediaPair } from './components/work/CaseMedia'
 import { PrimaProductCase } from './components/work/PrimaProductCase'
 import { NomiProductCase } from './components/work/NomiProductCase'
+import { NomiWebsiteCase } from './components/work/NomiWebsiteCase'
 import { HanyaProductCase } from './components/work/HanyaProductCase'
 import { YousewireProductCase } from './components/work/YousewireProductCase'
 import { BrandCase } from './components/brand/BrandCase'
@@ -382,7 +383,7 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
             <span className="tile-visual" aria-hidden="true">{experiment.cover ? <img src={experiment.cover} alt="" /> : <span className="tile-pending">Image coming soon</span>}</span>
             <span className="tile-meta lab-card-meta"><span className="tile-name">{experiment.title}</span></span>
             <span className="lab-card-description">{experiment.summary}</span>
-            <span className="lab-card-tool"><span>Tool</span><strong><img src="/openai-logo.svg" alt="" aria-hidden="true" />{experiment.aiTool}</strong></span>
+            <span className="lab-card-tool"><span>Tool</span>{experiment.badges?.map(badge => <span key={badge}>{badge}</span>)}<strong><img src="/openai-logo.svg" alt="" aria-hidden="true" />{experiment.aiTool}</strong></span>
           </button>)}
         </div> : <div className="empty-panel">
           <div className="empty-well" aria-hidden="true"><span className="tile-pending">Experiments coming soon</span></div>
@@ -397,7 +398,7 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
     </div>
     {activeLab && <div className="lab-preview-overlay" role="dialog" aria-modal="true" aria-labelledby="lab-preview-title" onMouseDown={event => { if (event.target === event.currentTarget) setActiveLab(null) }}>
       <div className="lab-preview-panel">
-        <div className="lab-preview-head"><div><span>LIVE EXPERIMENT</span><h2 id="lab-preview-title">{activeLab.title}</h2></div><button type="button" onClick={() => setActiveLab(null)} aria-label="Close Clear Road preview">CLOSE <span aria-hidden="true">×</span></button></div>
+        <div className="lab-preview-head"><div><span>LIVE EXPERIMENT</span><h2 id="lab-preview-title">{activeLab.title}</h2></div><button type="button" onClick={() => setActiveLab(null)} aria-label={`Close ${activeLab.title} preview`}>CLOSE <span aria-hidden="true">×</span></button></div>
         <div className="lab-preview-device"><iframe src={activeLab.liveUrl} title={`${activeLab.title} interactive mobile preview`} allow="geolocation" /></div>
         <a href={activeLab.liveUrl} target="_blank" rel="noreferrer">OPEN FULL SITE <span aria-hidden="true">↗</span></a>
       </div>
@@ -438,6 +439,7 @@ function WorkIndex({ onProjectOpen }: { onProjectOpen: (slug: string) => void })
 function WorkPreparation({ project, onBack, onNext }: { project?: WorkProject; onBack: () => void; onNext: (slug: string) => void }) {
   if (project?.slug === 'prima') return <PrimaProductCase onNext={onNext} />
   if (project?.slug === 'nomi') return <NomiProductCase onNext={onNext} />
+  if (project?.slug === 'nomi-website') return <NomiWebsiteCase onNext={onNext} />
   if (project?.slug === 'hanya') return <HanyaProductCase onNext={onNext} />
   if (project?.slug === 'yousewire') return <YousewireProductCase onNext={onNext} />
   return <section className="work-preparation" id="top"><div className="section-label">M/ WORK <span>CASE STUDY</span></div><h1>{project?.name ?? 'PROJECT'}<br /><em>IN PREPARATION.</em></h1><p>This case study is being prepared.</p><button onClick={onBack}>← BACK TO WORK</button></section>
