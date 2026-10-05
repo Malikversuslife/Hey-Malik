@@ -1110,3 +1110,89 @@ button:focus-visible,a:focus-visible,input:focus-visible { outline:3px solid rgb
 @keyframes lab-overlay-in { from { opacity:0; } to { opacity:1; } }
 @media (max-width:600px) { .lab-card { grid-template-rows:auto auto auto auto; } .lab-preview-overlay { padding:0; place-items:stretch; } .lab-preview-panel,.lab-preview-desktop { width:100%; max-height:100dvh; border:0; border-radius:0; padding:14px; } .lab-preview-device,.lab-preview-desktop .lab-preview-device { width:min(100%,390px); height:calc(100dvh - 128px); aspect-ratio:auto; border-width:6px; border-radius:32px; } .lab-preview-panel > a { display:none; } }
 @media (prefers-reduced-motion:reduce) { .lab-preview-overlay { animation:none; } }
+
+/* Apple system consistency sweep: shared type, controls, surfaces and rhythm. */
+:root {
+  --ui-mono:"SFMono-Regular",ui-monospace,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  --ui-control:44px;
+  --ui-body:16px;
+  --ui-leading:1.55;
+}
+
+/* One typographic family across every live portfolio surface. */
+:where(.home-shell,.new-case,.about-editorial,.askpanel,.lab-preview-panel) *,
+:where(.home-shell,.new-case,.about-editorial,.askpanel,.lab-preview-panel) *::before,
+:where(.home-shell,.new-case,.about-editorial,.askpanel,.lab-preview-panel) *::after {
+  font-family:var(--ui-font)!important;
+}
+:where(.home-shell,.new-case,.about-editorial,.askpanel,.lab-preview-panel) :is(.pc-label,.pc-index,.pc-eyebrow,.pc-meta-row dt,.pc-note-label,.pc-media-caption-line,.pc-media-pending,.pc-system-state,.pc-chip-state,.pc-compare-label,.pc-scenario-kind,.pc-paths ol,.pc-disclosure .pc-label,.brand-label,.brand-meta dt,.case-act-label,.case-metadata dt,.case-progress,.about-kicker,.about-process-list span,.about-tool>span,.lab-preview-head>div>span) {
+  font-family:var(--ui-mono)!important;
+}
+
+/* Readable minimums and a consistent hierarchy. */
+.pc-label,.pc-index,.pc-eyebrow,.pc-meta-row dt,.pc-note-label,.pc-media-caption-line,.pc-media-pending { font-size:12px; letter-spacing:.08em; }
+.pc-meta-row dd { font-family:var(--ui-font); font-size:15px; line-height:1.45; }
+.pc-hero-title { font-family:var(--ui-font); font-weight:650; letter-spacing:-.045em; }
+.pc-hero-descriptor,.pc-intro,.pc-statement,.pc-copy,.pc-pull,.pc-quote p,.pc-note-copy,.pc-decision-statement,.pc-media-title,.pc-media-note,.pc-case-list li,.pc-nomi-loop b,.pc-nomi-loop p { font-family:var(--ui-font); }
+.pc-copy,.pc-case-list li { font-size:17px; line-height:1.62; }
+.pc-media-note { font-size:14px; line-height:1.55; }
+.pc-system-state,.pc-chip-state { font-size:11px; letter-spacing:.08em; }
+
+/* Shared Apple-like surfaces: quiet separation, generous radius, subtle depth. */
+.pc-media-frame,.pc-system-list,.pc-note,.pc-decision,.pc-compare-col,.pc-paths-col,.pc-disclosure,.pc-sticky { border-color:var(--ui-line); border-radius:20px; }
+.pc-note,.pc-decision,.pc-compare-col,.pc-paths-col,.pc-disclosure { box-shadow:0 1px 0 rgba(255,255,255,.8) inset; }
+.pc-video-play { width:56px; height:56px; border-color:rgba(255,255,255,.46); background:rgba(29,29,31,.78); box-shadow:0 12px 30px rgba(0,0,0,.22); -webkit-backdrop-filter:saturate(160%) blur(18px); backdrop-filter:saturate(160%) blur(18px); }
+.pc-disclosure-link,.brand-contact a,.about-contact-actions a { min-height:var(--ui-control); border-radius:999px; }
+
+/* Home and Lab cards share the same visual top edge and content rhythm. */
+.work-gallery { align-items:start; }
+.work-tile { align-self:start; }
+.tile-visual,.home-shell .project-stack-media { border-radius:20px; }
+.lab-card { grid-template-rows:auto auto minmax(78px,auto) auto; }
+.lab-card-description { font-size:16px; line-height:1.5; }
+.lab-card-tool { flex-wrap:wrap; gap:8px; }
+.lab-card-tool>span,.lab-card-tool>strong { min-height:32px; padding:7px 11px; font-size:13px; }
+
+/* About uses the same reading scale and surface construction as the rest. */
+.about-editorial h1,.about-editorial h2,.about-editorial h3,.about-editorial h4 { color:var(--ui-ink); letter-spacing:-.025em; }
+.about-section>p { font-size:16px; line-height:1.62; }
+.about-section>.about-lead { font-size:20px; line-height:1.45; }
+.about-contents a { min-height:32px; display:flex; align-items:center; font-size:13px; }
+.about-evolution span,.about-process-list span,.about-tool>span,.about-career-meta { font-size:11px; }
+.about-evolution strong,.about-process-list strong { font-size:13px; }
+.about-evolution small,.about-process-list p,.about-card p,.about-tool p,.about-career li { font-size:14px; line-height:1.55; }
+.about-card,.about-tool { min-height:132px; padding:20px; border-radius:18px; background:rgba(255,255,255,.72); }
+.about-card h4,.about-tool h4 { font-size:15px; }
+.about-profile-card { border-radius:20px; }
+.about-profile-art { border-radius:15px; }
+.about-profile-card>strong { font-size:13px; }
+.about-profile-card>span,.about-profile-card>small { font-size:12px; }
+.about-testimonial-card { padding:22px 24px; border-radius:20px; background:rgba(255,255,255,.78); }
+.about-testimonial-card::before { font-family:Georgia,"Times New Roman",serif!important; }
+.about-testimonial-card h4 { font-size:15px; }
+.about-testimonial-card blockquote { font-family:var(--ui-font)!important; font-size:15px; line-height:1.55; }
+.about-testimonial-card footer { font-size:13px; }
+.about-testimonial-card footer small { font-size:12px; }
+
+/* Chat controls follow the same sizing, contrast and motion rules. */
+.askpanel-head { min-height:62px; }
+.askpanel-new,.askpanel-close,.askpanel-action,.askpanel-chip { min-height:var(--ui-control); }
+.askpanel-close { width:var(--ui-control); }
+.askpanel-answer,.askpanel-user { font-size:16px; line-height:1.55; }
+.askpanel-action,.askpanel-chip { padding:10px 14px; font-size:14px; }
+.askpanel-composer form { min-height:52px; }
+.askpanel-send { width:42px; height:42px; }
+
+/* Consistent overlay geometry for both mobile and desktop experiments. */
+.lab-preview-panel { border-color:rgba(255,255,255,.7); border-radius:28px; background:rgba(250,250,252,.92); box-shadow:0 30px 90px rgba(0,0,0,.30); }
+.lab-preview-head h2 { font-size:22px; letter-spacing:-.025em; }
+.lab-preview-head button { min-height:38px; border-radius:999px; background:rgba(118,118,128,.12); }
+.lab-preview-device { border-color:#1d1d1f; box-shadow:0 20px 50px rgba(0,0,0,.20); }
+
+@media(max-width:700px) {
+  .pc-label,.pc-index,.pc-eyebrow,.pc-meta-row dt,.pc-note-label,.pc-media-caption-line,.pc-media-pending { font-size:11px; }
+  .pc-copy,.pc-case-list li { font-size:16px; }
+  .about-card,.about-tool { min-height:0; padding:17px; }
+  .about-section>p { font-size:16px; }
+  .about-contents a { min-height:36px; }
+}

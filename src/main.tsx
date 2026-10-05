@@ -6,6 +6,7 @@ import { createRoot } from 'react-dom/client'
 import { createPortal } from 'react-dom'
 import { labExperiments, type LabExperiment } from './data/lab'
 import { workProjects, type WorkProject } from './data/work'
+import { productCaseMeta } from './data/productCases'
 import { brandProjects, brandingIndex } from './data/branding'
 import { contact } from './data/contact'
 import { CaseMedia, CaseMediaPair } from './components/work/CaseMedia'
@@ -158,6 +159,79 @@ const askAnswers: Record<string, AskAnswer> = {
   NOMI_BRAND: { text: 'Nomi is also represented as a brand and visual-identity project in Malik’s branding portfolio. Its full branding case study is still being prepared; the published Nomi product case study covers the adaptive learning experience.', actions: [{ label: 'View branding index ↗', page: 'home', view: 'branding' }, { label: 'Open Nomi product case ↗', page: 'workCaseStudy', slug: 'nomi' }], followUps: askFollowUps.NOMI_BRAND },
   BELSQUARED_BRAND: { text: 'Belsquared is a brand-identity and packaging project in Malik’s branding portfolio. Its full branding case study is still being prepared.', actions: [{ label: 'View branding index ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.BELSQUARED_BRAND }
 }
+
+const normaliseAskText = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
+
+const projectAskAnswer = (project: WorkProject): AskAnswer => {
+  const meta = productCaseMeta[project.slug]
+  const details = meta
+    ? `\n\nROLE : ${meta.role}\nPLATFORM : ${meta.platform}\nPROJECT TYPE : ${meta.projectType}\nSCOPE : ${meta.scope}`
+    : ''
+  return {
+    text: `${project.name}\n${project.summary ?? meta?.intro ?? project.category ?? 'Product design project.'}${details}`,
+    actions: [{ label: `Open ${project.name} case study ↗`, page: 'workCaseStudy', slug: project.slug }],
+    followUps: ['What product work has Malik done?', "What's in the Lab?", 'What does Malik do?']
+  }
+}
+
+const labAskAnswer = (experiment: LabExperiment): AskAnswer => ({
+  text: `${experiment.title}\n${experiment.summary}\n\n${experiment.experiment}\n\nTOOLS : ${[...experiment.tools, ...(experiment.badges ?? []), experiment.aiTool].filter(Boolean).join(' · ')}\nSTATUS : ${experiment.status}`,
+  actions: [
+    { label: 'View in the Lab ↗', page: 'home', view: 'lab' },
+    ...(experiment.liveUrl ? [{ label: `Open ${experiment.title} ↗`, href: experiment.liveUrl } as AskAction] : [])
+  ],
+  followUps: ["What's in the Lab?", 'What product work has Malik done?', 'How does Malik use AI?']
+})
+
+const brandingAskAnswer = (project: typeof brandingIndex[number]): AskAnswer => {
+  const full = brandProjects.find(item => item.slug === project.slug)
+  return {
+    text: `${project.title}\n${full?.intro ?? `${project.descriptor}. This project is part of Malik’s branding portfolio.`}\n\nDISCIPLINE : ${project.descriptor}\nSTATUS : ${project.caseStudy === 'live' ? 'Published case study' : 'Case study in preparation'}`,
+    actions: project.caseStudy === 'live'
+      ? [{ label: `Open ${project.title} case study ↗`, page: 'brandingCaseStudy', slug: project.slug }]
+      : [{ label: 'View branding work ↗', page: 'home', view: 'branding' }],
+    followUps: ['What branding projects are in the portfolio?', 'What branding does Malik do?', 'What product work has Malik done?']
+  }
+}
+
+const workIndexAskAnswer = (): AskAnswer => ({
+  text: `PRODUCT WORK\n${workProjects.map(project => `${project.name} : ${project.summary ?? project.category ?? project.status}`).join('\n')}`,
+  actions: [{ label: 'View product work ↗', page: 'home', view: 'product' }],
+  followUps: workProjects.slice(0, 3).map(project => `What is ${project.name}?`)
+})
+
+const labIndexAskAnswer = (): AskAnswer => ({
+  text: `The Lab is where Malik publishes focused experiments built to answer specific product and interaction questions.\n\n${labExperiments.map(experiment => `${experiment.title} : ${experiment.summary}`).join('\n\n')}`,
+  actions: [{ label: 'Open the Lab ↗', page: 'home', view: 'lab' }],
+  followUps: labExperiments.slice(0, 3).map(experiment => `What is ${experiment.title}?`)
+})
+
+const resolvePortfolioAnswer = (value: string, intent?: string): AskAnswer | undefined => {
+  const normalised = normaliseAskText(value)
+  const isGeneralProjectQuestion = (name: string, slug: string) => {
+    const projectName = normaliseAskText(name)
+    const projectSlug = normaliseAskText(slug)
+    return normalised === projectName || normalised === projectSlug || normalised.includes(`what is ${projectName}`) || normalised.includes(`tell me about ${projectName}`) || normalised.includes(`${projectName} case study`) || !intent
+  }
+  const products = [...workProjects].sort((a, b) => b.name.length - a.name.length)
+  const product = products.find(item => (normalised.includes(normaliseAskText(item.name)) || normalised.includes(normaliseAskText(item.slug))) && isGeneralProjectQuestion(item.name, item.slug))
+  if (product) return projectAskAnswer(product)
+
+  const experiment = labExperiments.find(item => (normalised.includes(normaliseAskText(item.title)) || normalised.includes(normaliseAskText(item.slug))) && isGeneralProjectQuestion(item.title, item.slug))
+  if (experiment) return labAskAnswer(experiment)
+
+  const brand = [...brandingIndex].sort((a, b) => b.title.length - a.title.length).find(item => (normalised.includes(normaliseAskText(item.title)) || normalised.includes(normaliseAskText(item.slug))) && isGeneralProjectQuestion(item.title, item.slug))
+  if (brand) return brandingAskAnswer(brand)
+
+  if (intent === 'WORK') return workIndexAskAnswer()
+  if (intent === 'LAB') return labIndexAskAnswer()
+  if (intent === 'BRANDING_WORK') return {
+    text: `BRANDING WORK\n${brandingIndex.map(item => `${item.title} : ${item.descriptor}`).join('\n')}`,
+    actions: [{ label: 'View branding work ↗', page: 'home', view: 'branding' }],
+    followUps: brandingIndex.slice(0, 3).map(item => `Tell me about ${item.title}.`)
+  }
+  return undefined
+}
 const ASK_SUGGESTIONS = ['What does Malik do?', 'What branding projects are in the portfolio?', 'What is SIDE B?', 'How does Malik think about AI?']
 const HOME_VIEWS: Record<string, HomeMode> = { work: 'product', about: 'about', lab: 'lab' }
 const normalizeLegacyTopLevel = () => {
@@ -224,7 +298,7 @@ function App() {
     setAskInterpreting(true)
     window.setTimeout(() => {
       setAskInterpreting(false)
-      const answer = match ? askAnswers[match.classification.intent] ?? askFallback : askFallback
+      const answer = resolvePortfolioAnswer(value, match?.classification.intent) ?? (match ? askAnswers[match.classification.intent] ?? askFallback : askFallback)
       setAskMessages(previous => [...previous, { id: ++askMsgId.current, role: 'assistant', text: answer.text, actions: answer.actions, followUps: answer.followUps }])
     }, 480)
   }
