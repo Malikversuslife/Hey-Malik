@@ -12,7 +12,6 @@ import { contact } from './data/contact'
 import { CaseMedia, CaseMediaPair } from './components/work/CaseMedia'
 import { PrimaProductCase } from './components/work/PrimaProductCase'
 import { NomiProductCase } from './components/work/NomiProductCase'
-import { NomiWebsiteCase } from './components/work/NomiWebsiteCase'
 import { HanyaProductCase } from './components/work/HanyaProductCase'
 import { YousewireProductCase } from './components/work/YousewireProductCase'
 import { BrandCase } from './components/brand/BrandCase'
@@ -27,6 +26,8 @@ type Page = 'home' | 'about' | 'work' | 'workCaseStudy' | 'brandingCaseStudy' | 
 type PortfolioResponse = { terms: string[]; mode: ResponseMode; targets: string[]; route?: Page; routeTarget?: string; classification: { intent: string; evidence: string; representation: string } }
 
 const responses: PortfolioResponse[] = [
+  { terms: ['finlancer website', 'finlancer web design', 'finlancer product website', 'finlancer mobile website'], mode: 'connect', targets: ['product-anchor'], route: 'home', routeTarget: 'product-anchor', classification: { intent: 'FINLANCER_WEBSITE', evidence: 'LIVE WEBSITE', representation: 'CONNECT' } },
+  { terms: ['nomi website', 'nomi marketing website', 'nomi web design'], mode: 'connect', targets: ['product-anchor'], route: 'home', routeTarget: 'product-anchor', classification: { intent: 'NOMI_WEBSITE', evidence: 'LIVE WEBSITE', representation: 'CONNECT' } },
   { terms: ['what branding does malik do', 'malik branding', 'brand design', 'branding practice', 'branding experience', 'visual identity', 'brand identity', 'packaging design', 'art direction'], mode: 'connect', targets: ['branding-anchor'], route: 'home', routeTarget: 'branding-anchor', classification: { intent: 'BRANDING', evidence: 'BRANDING INDEX', representation: 'CONNECT' } },
   { terms: ['branding work', 'branding projects', 'brand projects', 'show me branding', 'show me brand work', 'what brands has malik designed', 'what branding has malik done'], mode: 'focus', targets: ['branding-anchor'], route: 'home', routeTarget: 'branding-anchor', classification: { intent: 'BRANDING_WORK', evidence: 'BRANDING INDEX', representation: 'FOCUS' } },
   { terms: ['what is side b', 'tell me about side b', 'side b case study', 'side b branding', 'side b identity', 'side b packaging', 'old stuff new socks'], mode: 'connect', targets: ['sideb-premise'], route: 'brandingCaseStudy', routeTarget: 'sideb-premise', classification: { intent: 'SIDE_B', evidence: 'BRAND CASE 001', representation: 'CONNECT' } },
@@ -150,6 +151,8 @@ const askAnswers: Record<string, AskAnswer> = {
   NOMI: { text: 'Nomi is an adaptive learning product designed around a simple idea: learning should respond to the learner, not force every learner through the same path.\n\nPractice, progress, recommendations, and contextual AI work together to shape what the learner does next.', actions: [{ label: 'Open Nomi case study ↗', page: 'workCaseStudy', slug: 'nomi' }], followUps: askFollowUps.NOMI },
   HANYA: { text: 'An AI-assisted healthcare navigator that helps people understand what kind of care to seek next, without pretending to diagnose them.\n\nSafety means steering people toward appropriate care : guidance, not diagnosis.', actions: [{ label: 'Open Hanya case study ↗', page: 'workCaseStudy', slug: 'hanya' }], followUps: askFollowUps.HANYA },
   YOUSEWIRE: { text: 'A cross-border financial platform designed to help individuals and businesses hold, move, receive, convert, and manage money across currencies and payment networks.', actions: [{ label: 'Open Yousewire case study ↗', page: 'workCaseStudy', slug: 'yousewire' }], followUps: askFollowUps.YOUSEWIRE },
+  FINLANCER_WEBSITE: { text: 'The Finlancer website turns a mobile financial operating system for freelancers into a clear, connected story about income, invoices, tax planning, and goals. The redesign retained the product’s energy while improving comprehension, responsive consistency, and mobile stability.', actions: [{ label: 'Visit Finlancer website', href: 'https://finlancer-virid.vercel.app/' }], followUps: askFollowUps.NOMI },
+  NOMI_WEBSITE: { text: 'The Nomi website turns an adaptive learning system into a clear, playful product story. It helps learners and parents understand how practice, progress, recommendations, and contextual AI work together before they enter the product.', actions: [{ label: 'Visit Nomi website', href: 'https://nomi-alpha-bay.vercel.app' }], followUps: askFollowUps.NOMI },
   BRANDING: { text: 'Malik has worked independently in brand design since 2018, alongside his product practice. His branding work covers identity systems, visual direction, packaging, print, campaign design, and digital applications.\n\nThe same systems thinking carries across both disciplines: establish a clear idea, build a visual language around it, and make it hold together across every touchpoint.', actions: [{ label: 'View branding work ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.BRANDING },
   BRANDING_WORK: { text: 'The branding portfolio includes SIDE B, The Kim Couture, Finlancer, PyCon Nigeria 2024, Nomi, and Belsquared.\n\nEvery project opens into its own image-led case-study gallery, ready for the project files.', actions: [{ label: 'View branding work ↗', page: 'home', view: 'branding' }, { label: 'Open SIDE B case study ↗', page: 'brandingCaseStudy', slug: 'side-b' }], followUps: askFollowUps.BRANDING_WORK },
   SIDE_B: { text: 'SIDE B is a 2026 sock-label identity built around the idea “Old stuff. New socks.” Malik designed the brand identity, packaging, and art direction.\n\nThe system treats an ordinary object as a cultural artefact and carries one voice through the logo, colour, type, illustration, photography, product, packaging, campaign, social content, and digital store experience.', actions: [{ label: 'Open SIDE B case study ↗', page: 'brandingCaseStudy', slug: 'side-b' }], followUps: askFollowUps.SIDE_B },
@@ -446,7 +449,7 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
       </div>
       {mode === 'product' ? <section className="home-panel" key="product" id="panel-product" role="tabpanel" aria-labelledby="tab-product">
         <h2 className="visually-hidden">Product design</h2>
-        <ProjectStack entries={workProjects.map(project => ({ id: project.slug, index: project.index, title: project.name, descriptor: productLine[project.slug] ?? project.category?.replace(/ \/ /g, ' · ') ?? project.status, live: true, slug: project.slug, label: `P/ ${project.index}`, cover: project.cover }))} onOpen={onProjectOpen} note="Real product capture to be added to each project as it is produced." anchor="product-anchor" />
+        <ProjectStack entries={workProjects.map(project => ({ id: project.slug, index: project.index, title: project.name, descriptor: productLine[project.slug] ?? project.category?.replace(/ \/ /g, ' · ') ?? project.status, live: true, slug: project.slug, label: `P/ ${project.index}`, cover: project.cover, externalUrl: project.externalUrl }))} onOpen={onProjectOpen} note="Real product capture to be added to each project as it is produced." anchor="product-anchor" />
       </section> : mode === 'branding' ? <section className="home-panel" key="branding" id="panel-branding" role="tabpanel" aria-labelledby="tab-branding">
         <h2 className="visually-hidden">Branding</h2>
         <ProjectStack entries={brandingIndex.map(project => ({ id: project.id, index: project.index, title: project.title, descriptor: project.descriptor, live: true, slug: project.slug, label: `B/ ${project.index}`, cover: project.cover }))} onOpen={onBrandProjectOpen} anchor="branding-anchor" />
@@ -480,10 +483,15 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
   </div>
 }
 
-type ProjectStackEntry = { id: string; index: string; title: string; descriptor: string; live: boolean; slug: string; label: string; cover?: string | null }
+type ProjectStackEntry = { id: string; index: string; title: string; descriptor: string; live: boolean; slug: string; label: string; cover?: string | null; externalUrl?: string }
 function ProjectStack({ entries, onOpen, note, anchor }: { entries: ProjectStackEntry[]; onOpen: (slug: string) => void; note?: string; anchor: string }) {
   return <div className="project-stack" id={anchor}>
-    {entries.map(entry => entry.live
+    {entries.map(entry => entry.externalUrl
+      ? <a key={entry.id} className="project-stack-project is-live" href={entry.externalUrl} target="_blank" rel="noreferrer" aria-label={`${entry.title} : visit live website`}>
+          <ProjectStackMedia label={entry.label} source={entry.cover} />
+          <span className="project-stack-meta"><span className="project-stack-title">{entry.title}</span><span className="project-stack-desc">{entry.descriptor}</span></span>
+        </a>
+      : entry.live
       ? <button key={entry.id} type="button" className="project-stack-project is-live" onClick={() => onOpen(entry.slug)} aria-label={`${entry.title} : open case study`}>
           <ProjectStackMedia label={entry.label} source={entry.cover} />
           <span className="project-stack-meta"><span className="project-stack-title">{entry.title}</span><span className="project-stack-desc">{entry.descriptor}</span></span>
@@ -513,7 +521,6 @@ function WorkIndex({ onProjectOpen }: { onProjectOpen: (slug: string) => void })
 function WorkPreparation({ project, onBack, onNext }: { project?: WorkProject; onBack: () => void; onNext: (slug: string) => void }) {
   if (project?.slug === 'prima') return <PrimaProductCase onNext={onNext} />
   if (project?.slug === 'nomi') return <NomiProductCase onNext={onNext} />
-  if (project?.slug === 'nomi-website') return <NomiWebsiteCase onNext={onNext} />
   if (project?.slug === 'hanya') return <HanyaProductCase onNext={onNext} />
   if (project?.slug === 'yousewire') return <YousewireProductCase onNext={onNext} />
   return <section className="work-preparation" id="top"><div className="section-label">M/ WORK <span>CASE STUDY</span></div><h1>{project?.name ?? 'PROJECT'}<br /><em>IN PREPARATION.</em></h1><p>This case study is being prepared.</p><button onClick={onBack}>← BACK TO WORK</button></section>
