@@ -394,7 +394,7 @@ main.page-workCaseStudy, main.page-labExperiment { padding-top:0; background:#f4
 .project-stack-project.is-live { cursor:pointer; }
 .project-stack-project.is-future { cursor:default; }
 .project-stack-media { position:relative; display:flex; align-items:flex-start; justify-content:space-between; width:100%; aspect-ratio:16/10; overflow:hidden; background:var(--home-media); border:1px solid var(--home-line); border-radius:var(--home-radius-img); }
-.project-stack-media > video { position:absolute; inset:0; width:100%; height:100%; display:block; object-fit:cover; pointer-events:none; }
+.project-stack-media > video, .project-stack-media > img { position:absolute; inset:0; width:100%; height:100%; display:block; object-fit:cover; pointer-events:none; }
 .project-stack-media::before { content:''; position:absolute; inset:0; background:repeating-linear-gradient(0deg, transparent 0 38px, rgba(33,30,24,.05) 38px 39px),repeating-linear-gradient(90deg, transparent 0 38px, rgba(33,30,24,.05) 38px 39px); }
 .project-stack-media-label { position:relative; z-index:1; padding:13px 0 0 15px; font:10px 'IBM Plex Mono',monospace; letter-spacing:.14em; color:var(--home-faint); }
 .project-stack-media-note { position:relative; z-index:1; align-self:flex-end; padding:0 15px 14px 24px; font:10px 'IBM Plex Mono',monospace; letter-spacing:.12em; color:var(--home-faint); }
@@ -837,11 +837,15 @@ main.page-brandingCaseStudy, .new-case-brand { background:#fff; color:#191919; }
 .new-case-brand .brand-story-expanded .brand-quote p { font:400 22px/1.4 Georgia,serif; }
 .new-case-brand .brand-story-expanded .brand-quote footer { margin-top:8px; }
 .new-case-brand .brand-segment-label { margin:16px 0; }
-.brand-gallery { display:flex; flex-direction:column; gap:10px; }
-.new-case-brand .brand-gallery .brand-media { margin:0; min-width:0; }
+.brand-gallery { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; align-items:start; }
+.new-case-brand .brand-gallery > .brand-media { width:100%; margin:0; min-width:0; }
+.new-case-brand .brand-gallery > .brand-media[data-ratio='16:9'],
+.new-case-brand .brand-gallery > .brand-media[data-ratio='21:9'],
+.new-case-brand .brand-gallery > .brand-media[data-ratio='ultra-wide'] { grid-column:1 / -1; }
 .new-case-brand .brand-media-frame { border:0; border-radius:12px; padding:24px; }
 .new-case-brand .brand-media-frame::before { display:none; }
 .new-case-brand .brand-media img, .new-case-brand .brand-media video { display:block; width:100%; height:auto; border-radius:12px; }
+.new-case-brand .brand-gallery .brand-media > img { aspect-ratio:auto; object-fit:contain; }
 .new-case-brand .brand-pair, .new-case-brand .brand-grid { gap:10px; align-items:start; }
 .new-case-brand .brand-media figcaption { margin:10px 0 4px; font:400 12px/1.5 'Rethink Sans',sans-serif; letter-spacing:0; color:#777; }
 .new-case-brand .brand-reveal { opacity:1; transform:none; }
@@ -947,7 +951,8 @@ main.page-brandingCaseStudy, .new-case-brand { background:#fff; color:#191919; }
   .new-case-brand .brand-meta { display:grid; grid-template-columns:1fr 1fr; gap:20px; width:100%; }
   .new-case-brand .brand-meta > div { min-width:0; }
   .new-case-brand .brand-pair, .new-case-brand .brand-grid { grid-template-columns:1fr; gap:16px; }
-  .brand-gallery { gap:16px; }
+  .brand-gallery { grid-template-columns:1fr; gap:16px; }
+  .new-case-brand .brand-gallery > .brand-media { grid-column:auto; }
   .brand-contact { padding-top:48px; }
   .brand-contact a { padding:18px; }
 }

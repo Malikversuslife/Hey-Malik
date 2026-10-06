@@ -12,6 +12,7 @@ export function ProjectStackMedia({
   source?: string | null
 }) {
   const videoRef = useRef<HTMLVideoElement>(null)
+  const isVideo = !!source && /\.(mp4|webm|mov)(?:[?#]|$)/i.test(source)
 
   useEffect(() => {
     const video = videoRef.current
@@ -26,7 +27,11 @@ export function ProjectStackMedia({
 
   return (
     <span className={`project-stack-media${className ? ` ${className}` : ''}`} aria-hidden="true">
-      {source ? <video ref={videoRef} src={source} muted loop playsInline preload="metadata" /> : <><span className="project-stack-media-label">{label}</span><span className="project-stack-media-note">{note}</span></>}
+      {source
+        ? isVideo
+          ? <video ref={videoRef} src={source} muted loop playsInline preload="metadata" />
+          : <img src={source} alt="" loading="lazy" />
+        : <><span className="project-stack-media-label">{label}</span><span className="project-stack-media-note">{note}</span></>}
     </span>
   )
 }

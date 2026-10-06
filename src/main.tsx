@@ -449,7 +449,7 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
         <ProjectStack entries={workProjects.map(project => ({ id: project.slug, index: project.index, title: project.name, descriptor: productLine[project.slug] ?? project.category?.replace(/ \/ /g, ' · ') ?? project.status, live: true, slug: project.slug, label: `P/ ${project.index}`, cover: project.cover }))} onOpen={onProjectOpen} note="Real product capture to be added to each project as it is produced." anchor="product-anchor" />
       </section> : mode === 'branding' ? <section className="home-panel" key="branding" id="panel-branding" role="tabpanel" aria-labelledby="tab-branding">
         <h2 className="visually-hidden">Branding</h2>
-        <ProjectStack entries={brandingIndex.map(project => ({ id: project.id, index: project.index, title: project.title, descriptor: project.descriptor, live: true, slug: project.slug, label: `B/ ${project.index}` }))} onOpen={onBrandProjectOpen} anchor="branding-anchor" />
+        <ProjectStack entries={brandingIndex.map(project => ({ id: project.id, index: project.index, title: project.title, descriptor: project.descriptor, live: true, slug: project.slug, label: `B/ ${project.index}`, cover: project.cover }))} onOpen={onBrandProjectOpen} anchor="branding-anchor" />
       </section> : mode === 'lab' ? <section className="home-panel" key="lab" id="panel-lab" role="tabpanel" aria-labelledby="tab-lab">
         <h2 className="visually-hidden">Lab</h2>
         {labExperiments.length ? <div className="work-gallery">
@@ -611,3 +611,4 @@ function GlobalFooter() { return <footer className="global-footer"><span>M/ CONT
 
 function Contact() { return <section className="contact section" id="contact"><div className="section-label">M/ CONTACT <span>05</span></div><h2>HAVE A<br />COMPLICATED<br />PROBLEM?</h2><em>Good.</em><a className="talk" href={`mailto:${contact.email}`} aria-label={`Email Malik at ${contact.email}`}>LET'S TALK <span>↗</span></a><div className="contact-links"><a href={`mailto:${contact.email}`} aria-label={`Email Malik at ${contact.email}`}><Icon name="mail" /> EMAIL</a><SocialLinks /></div><div className="contact-meta"><span>{contact.email}</span><span>LAGOS, NG</span><span>GLOBAL / REMOTE</span><span>AVAILABLE FOR SELECTED COLLABORATIONS</span></div></section> }
 createRoot(document.getElementById('root')!).render(<App />)
+

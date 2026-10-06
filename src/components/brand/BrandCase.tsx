@@ -7,25 +7,13 @@ import { brandProjects } from '../../data/branding'
 function pad(value: number) { return String(value).padStart(2, '0') }
 
 function standardGallery(segments: BrandSegment[]) {
-  const media: BrandMediaData[] = []
+  const items: BrandSegment[] = []
   segments.forEach(segment => {
-    if (segment.kind === 'media') media.push(segment.media)
-    if (segment.kind === 'pair') media.push(segment.left, segment.right)
-    if (segment.kind === 'grid') media.push(...segment.tiles)
+    if (segment.kind === 'media' || segment.kind === 'video') items.push(segment)
+    if (segment.kind === 'pair') items.push({ kind: 'media', media: segment.left }, { kind: 'media', media: segment.right })
+    if (segment.kind === 'grid') items.push(...segment.tiles.map(media => ({ kind: 'media' as const, media })))
   })
-  const ratios: BrandRatio[] = ['16:9', '1:1', '1:1', '21:9', '4:5', '4:5', '4:5', '21:9', '4:5', '4:5', '4:5', '16:9', '1:1', '1:1', '21:9']
-  const slots = media.slice(0, 15).map((item, index) => ({ ...item, ratio: ratios[index] }))
-  const arranged: BrandSegment[] = []
-  if (slots[0]) arranged.push({ kind: 'media', media: slots[0] })
-  if (slots[1] && slots[2]) arranged.push({ kind: 'pair', left: slots[1], right: slots[2] })
-  if (slots[3]) arranged.push({ kind: 'media', media: slots[3] })
-  if (slots[4] && slots[5] && slots[6]) arranged.push({ kind: 'grid', tiles: slots.slice(4, 7) })
-  if (slots[7]) arranged.push({ kind: 'media', media: slots[7] })
-  if (slots[8] && slots[9] && slots[10]) arranged.push({ kind: 'grid', tiles: slots.slice(8, 11) })
-  if (slots[11]) arranged.push({ kind: 'media', media: slots[11] })
-  if (slots[12] && slots[13]) arranged.push({ kind: 'pair', left: slots[12], right: slots[13] })
-  if (slots[14]) arranged.push({ kind: 'media', media: slots[14] })
-  return arranged
+  return items.slice(0, 19)
 }
 
 function Lines({ text }: { text: string }) {
