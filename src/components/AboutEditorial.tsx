@@ -176,7 +176,7 @@ export function AboutEditorial({ experienceRecords }: { experienceRecords: Exper
     </div>
 
     <aside className="about-profile-card" aria-label="Malik profile">
-      <div className="about-profile-art" aria-hidden="true"><span>M<span>/</span></span><i>DESIGNING ACROSS<br />PRODUCT + BRAND</i></div>
+      <div className="about-profile-art"><img src="/malik-portrait.jpg" alt="Portrait of Temitayo Lawal Malik" /></div>
       <strong>Temitayo Lawal Malik</strong>
       <span>Product &amp; Brand Designer</span>
       <small>Available for work</small>

@@ -172,6 +172,7 @@ main:has(> .home-shell) { padding-top:0; }
 .rail-actions .rail-link:last-child { background:var(--shell-ink); color:#f9f6ef; }
 .rail-actions .rail-link:last-child:hover { background:var(--shell-muted); }
 .rail-portrait { position:relative; display:flex; align-items:center; justify-content:center; aspect-ratio:4/5; width:min(100%,220px); max-height:min(44vh,340px); border:0; border-radius:24px; background:var(--home-media); color:var(--shell-faint); overflow:hidden; }
+.rail-portrait img { width:100%; height:100%; display:block; object-fit:cover; object-position:50% 38%; }
 .rail-portrait small { font-family:'Rethink Sans',sans-serif; font-size:13px; }
 .home-canvas { min-width:0; overflow-y:auto; overflow-x:hidden; background:var(--home-surface); border:0; border-radius:var(--home-radius-lg); padding:0 clamp(20px,2.6vw,44px) clamp(32px,4.5vh,52px); }
 .canvas-head { position:sticky; top:0; z-index:2; display:flex; align-items:center; justify-content:flex-start; gap:28px; padding:22px 0 18px; background:var(--home-surface); }
@@ -915,6 +916,8 @@ main.page-brandingCaseStudy, .new-case-brand { background:#fff; color:#191919; }
 .about-contact-actions a:hover { transform:translateY(-2px); }
 .about-profile-card { grid-column:3; grid-row:1; position:sticky; top:112px; padding:5px; border:1px solid var(--about-line); border-radius:7px; background:#fff; box-shadow:0 5px 18px rgba(20,30,20,.04); }
 .about-profile-art { display:flex; flex-direction:column; justify-content:space-between; height:145px; padding:14px; border-radius:4px; background:linear-gradient(145deg,#e7ede6,#f7f9f5 58%,#dce8d7); }
+.about-profile-art:has(img) { padding:0; overflow:hidden; }
+.about-profile-art img { width:100%; height:100%; display:block; object-fit:cover; object-position:50% 36%; }
 .about-profile-art > span { font:600 32px Georgia,serif; color:#202522; }
 .about-profile-art > span span { color:var(--about-accent); }
 .about-profile-art i { font:600 8px/1.45 'IBM Plex Mono',monospace; letter-spacing:.08em; font-style:normal; }
@@ -1469,4 +1472,42 @@ body::before {
   body::before { background:none; }
   .home-panel,.rail-mark span,.home-rail .rail-status i::after,.mode-tabs .portfolio-icon,.askmalik-float::after,.askpanel-thinking::after,.new-case-body,.pc-hero-opening>* { animation:none!important; }
   .project-stack-media img,.tile-visual img { transform:none!important; }
+}
+
+/* Split project browser: fixed profile, cinematic scrolling cards, floating mode island. */
+@media (min-width:901px) {
+  .home-shell:not(.home-mode-about) { grid-template-columns:minmax(280px,31vw) minmax(0,1fr); gap:0; padding:0; }
+  .home-shell:not(.home-mode-about) .home-rail { border:0; border-right:1px solid var(--home-line); border-radius:0; box-shadow:none; padding:clamp(30px,4.2vw,68px) clamp(24px,3.2vw,52px); }
+  .home-shell:not(.home-mode-about) .home-canvas { scroll-snap-type:y proximity; scroll-padding-top:88px; border:0; border-radius:0; box-shadow:none; padding:0 0 44px; }
+  .home-shell:not(.home-mode-about) .canvas-head { position:sticky; top:16px; z-index:20; width:max-content; max-width:100%; margin:0 auto; padding:0; border:0; background:transparent; }
+  .home-shell:not(.home-mode-about) .mode-tabs { flex-wrap:nowrap; gap:2px; padding:5px; border:1px solid rgba(204,220,239,.18); border-radius:999px; background:rgba(20,23,30,.78); box-shadow:0 16px 42px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.06); backdrop-filter:blur(22px) saturate(145%); }
+  .home-shell:not(.home-mode-about) .mode-tabs button { min-height:40px; padding:9px 15px; white-space:nowrap; }
+  .home-shell:not(.home-mode-about) .home-panel { padding-top:18px; }
+  .home-shell:not(.home-mode-about) .project-stack { max-width:none; gap:clamp(28px,4.5vh,52px); }
+  .home-shell:not(.home-mode-about) .project-stack-project,.home-shell:not(.home-mode-about) .work-tile { scroll-snap-align:start; scroll-margin-top:88px; }
+  .home-shell:not(.home-mode-about) .project-stack-media,.home-shell:not(.home-mode-about) .tile-standard .tile-visual { min-height:min(68vh,720px); aspect-ratio:16 / 10; border-left:0; border-right:0; border-radius:0; }
+  .home-shell:not(.home-mode-about) .project-stack-meta { margin-top:14px; padding:0 clamp(18px,2.1vw,34px); }
+  .home-shell:not(.home-mode-about) .project-stack-title,.home-shell:not(.home-mode-about) .tile-name { font-size:clamp(20px,2vw,30px); }
+  .home-shell:not(.home-mode-about) .project-stack-desc { font-size:14px; }
+  .home-shell:not(.home-mode-about) .work-gallery { display:flex; flex-direction:column; gap:clamp(30px,5vh,56px); margin-top:0; }
+  .home-shell:not(.home-mode-about) .lab-card { width:100%; }
+  .home-shell:not(.home-mode-about) .lab-card-description { min-height:0; max-width:62ch; padding-inline:clamp(18px,2.1vw,34px); }
+  .home-shell:not(.home-mode-about) .lab-card-tool { padding-inline:clamp(18px,2.1vw,34px); }
+  .home-shell:not(.home-mode-about) .canvas-more { width:calc(100% - clamp(36px,4.2vw,68px)); margin:clamp(42px,7vh,76px) auto 0; }
+}
+
+@media (max-width:900px) {
+  .home-shell:not(.home-mode-about) { padding:0; }
+  .home-shell:not(.home-mode-about) .home-rail { padding:34px 20px 38px; }
+  .home-shell:not(.home-mode-about) .home-canvas { padding:0 0 38px; }
+  .home-shell:not(.home-mode-about) .canvas-head { position:sticky; top:10px; z-index:20; width:max-content; max-width:100%; margin:0 auto; padding:0; border:0; background:transparent; }
+  .home-shell:not(.home-mode-about) .mode-tabs { width:auto; padding:4px; border:1px solid rgba(204,220,239,.18); background:rgba(20,23,30,.84); box-shadow:0 12px 34px rgba(0,0,0,.38); backdrop-filter:blur(20px) saturate(140%); }
+  .home-shell:not(.home-mode-about) .mode-tabs button { flex:0 1 auto; padding:9px 11px; }
+  .home-shell:not(.home-mode-about) .home-panel { padding-top:18px; }
+  .home-shell:not(.home-mode-about) .project-stack { gap:38px; }
+  .home-shell:not(.home-mode-about) .project-stack-media,.home-shell:not(.home-mode-about) .tile-standard .tile-visual { aspect-ratio:4 / 3; border-left:0; border-right:0; border-radius:0; }
+  .home-shell:not(.home-mode-about) .work-gallery { display:flex; flex-direction:column; gap:40px; margin-top:0; }
+  .home-shell:not(.home-mode-about) .lab-card { width:100%; }
+  .home-shell:not(.home-mode-about) .project-stack-meta,.home-shell:not(.home-mode-about) .lab-card-description,.home-shell:not(.home-mode-about) .lab-card-tool { padding-inline:16px; }
+  .home-shell:not(.home-mode-about) .canvas-more { width:calc(100% - 32px); margin-inline:auto; }
 }

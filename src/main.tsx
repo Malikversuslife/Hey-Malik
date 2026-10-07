@@ -424,10 +424,10 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
     changeMode(order[next])
   }
   const productLine: Record<string, string> = { prima: 'AI · Fintech', nomi: 'AI · Education', hanya: 'Healthcare · AI', yousewire: 'Fintech' }
-  return <div className="home-shell">
+  return <div className={`home-shell home-mode-${mode}`}>
     <aside className="home-rail" aria-label="Malik profile and site navigation">
       <div className="rail-mark" aria-hidden="true">M<span>/</span></div>
-      <div className="rail-portrait" role="img" aria-label="Portrait of Temitayo Lawal Malik : image to be added"><Icon name="user" /><small aria-hidden="true">Portrait coming soon</small></div>
+      <div className="rail-portrait"><img src="/malik-portrait.jpg" alt="Portrait of Temitayo Lawal Malik" /></div>
       <h1 className="rail-name">Temitayo Lawal Malik</h1>
       <p className="rail-role">Product &amp; Brand Designer</p>
       <p className="rail-intro">I design digital products and visual identities, from early ideas and systems to prototypes and shipped experiences.</p>
