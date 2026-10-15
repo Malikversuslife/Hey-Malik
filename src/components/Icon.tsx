@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-export type IconName = 'arrowUpRight' | 'arrowRight' | 'arrowLeft' | 'play' | 'mail' | 'file' | 'chat' | 'close' | 'send' | 'product' | 'brand' | 'lab' | 'user' | 'linkedin' | 'instagram' | 'behance' | 'x' | 'substack' | 'dribbble'
+export type IconName = 'arrowUpRight' | 'arrowRight' | 'arrowLeft' | 'play' | 'mail' | 'file' | 'chat' | 'close' | 'send' | 'product' | 'brand' | 'lab' | 'sandbox' | 'user' | 'linkedin' | 'instagram' | 'behance' | 'x' | 'substack' | 'dribbble'
 const shapes: Record<IconName, ReactNode> = {
   arrowUpRight: <path d="M6 18 18 6M6 6h12v12" />,
   arrowRight: <path d="M4 12h16m-6-6 6 6-6 6" />,
@@ -14,6 +14,7 @@ const shapes: Record<IconName, ReactNode> = {
   product: <><rect x="3" y="4" width="18" height="16" rx="3" /><path d="M3 9h18M9 9v11" /></>,
   brand: <><path d="m12 3 9 9-9 9-9-9zM12 3v18M3 12h18" /></>,
   lab: <path d="M9 3h6M10 3v7l-6 9a1 1 0 0 0 1 2h14a1 1 0 0 0 1-2l-6-9V3M8 15h8" />,
+  sandbox: <><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9z" /><path d="m4 7.5 8 4.5 8-4.5M12 12v9M8.5 5l8 4.5" /></>,
   user: <><circle cx="12" cy="8" r="4" /><path d="M4 21v-2a8 8 0 0 1 16 0v2" /></>,
   linkedin: <><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M7 10v7M11 17v-7m0 3a3 3 0 0 1 6 0v4" /><circle cx="7" cy="7" r=".8" fill="currentColor" stroke="none" /></>,
   instagram: <><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" /></>,

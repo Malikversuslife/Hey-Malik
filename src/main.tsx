@@ -21,7 +21,7 @@ import { ProjectStackMedia } from './components/ProjectStackMedia'
 import './styles.css'
 
 type ResponseMode = 'focus' | 'recompose' | 'connect' | 'divide' | 'sequence'
-type HomeMode = 'product' | 'branding' | 'lab' | 'about'
+type HomeMode = 'product' | 'branding' | 'lab' | 'sandbox' | 'about'
 type Page = 'home' | 'about' | 'work' | 'workCaseStudy' | 'brandingCaseStudy' | 'lab' | 'labExperiment'
 type PortfolioResponse = { terms: string[]; mode: ResponseMode; targets: string[]; route?: Page; routeTarget?: string; classification: { intent: string; evidence: string; representation: string } }
 
@@ -58,6 +58,7 @@ const responses: PortfolioResponse[] = [
   { terms: ['what is nomi', 'tell me about nomi', 'nomi', 'adaptive learning', 'learning companion', 'nomi adaptation', 'nomi adaptive loop'], mode: 'connect', targets: ['nomi-loop'], route: 'workCaseStudy', routeTarget: 'nomi-loop', classification: { intent: 'NOMI', evidence: 'CASE 004', representation: 'CONNECT' } },
   { terms: ['what has malik worked on', 'show me malik work', 'show me his work', 'what products has malik designed', 'what product work has malik done', 'show me his product work'], mode: 'focus', targets: ['work'], route: 'work', classification: { intent: 'WORK', evidence: 'WORK INDEX', representation: 'FOCUS' } },
   { terms: ['what is the lab', "what's in the lab", 'whats in the lab', 'malik experimenting', 'malik is experimenting', 'his experiments', 'show me his experiments', 'the lab', 'ai experiments', 'what does malik build with ai', 'what do you build with ai'], mode: 'focus', targets: ['lab'], route: 'lab', classification: { intent: 'LAB', evidence: 'LAB', representation: 'FOCUS' } },
+  { terms: ['what is the sandbox', "what's in the sandbox", 'whats in the sandbox', 'design explorations', 'visual explorations', 'aesthetic designs', 'show me the sandbox'], mode: 'focus', targets: ['sandbox-anchor'], route: 'home', routeTarget: 'sandbox-anchor', classification: { intent: 'SANDBOX', evidence: 'SANDBOX', representation: 'FOCUS' } },
   { terms: ['how did malik get into product design', 'how did you get into product design', 'how did malik’s practice evolve', "how did malik's practice evolve", 'how did your practice evolve', 'background'], mode: 'sequence', targets: ['about-background'], route: 'about', routeTarget: 'about-background', classification: { intent: 'BACKGROUND', evidence: 'ABOUT', representation: 'SEQUENCE' } },
   { terms: ['how does malik work', 'how do you work', 'what tools does malik use', 'what tools do you use'], mode: 'connect', targets: ['about-working-system'], route: 'about', routeTarget: 'about-working-system', classification: { intent: 'WORKING SYSTEM', evidence: 'ABOUT', representation: 'CONNECT' } },
   { terms: ['what does malik care about', 'what do you care about'], mode: 'connect', targets: ['about-principles'], route: 'about', routeTarget: 'about-principles', classification: { intent: 'PRINCIPLES', evidence: 'ABOUT', representation: 'CONNECT' } },
@@ -112,6 +113,7 @@ const askFollowUps: Record<string, string[]> = {
   EVOLUTION: ['What does Malik do?', 'Where has Malik worked?', 'What has Malik worked on?'],
   WORK: ['What is Prima?', 'What is SIDE B?', 'How does Malik think about AI?'],
   LAB: ['What has Malik worked on?', 'How does Malik think about AI?', 'What does Malik do?'],
+  SANDBOX: ["What's in the Lab?", 'What branding projects are in the portfolio?', 'What does Malik do?'],
   CONTACT: ['What does Malik do?', "What's in the Lab?", 'What has Malik worked on?'],
   BACKGROUND: ['Where has Malik worked?', 'What does Malik do?', 'What has Malik worked on?'],
   PRINCIPLES: ['How does Malik think about AI?', 'What is Prima?', 'What did Malik learn?'],
@@ -130,7 +132,7 @@ const askFollowUps: Record<string, string[]> = {
   NOMI_BRAND: ['What is SIDE B?', 'What branding projects are in the portfolio?', 'What branding does Malik do?'],
   BELSQUARED_BRAND: ['What is SIDE B?', 'What branding projects are in the portfolio?', 'What branding does Malik do?']
 }
-const askFallback: AskAnswer = { text: "I can answer from what's documented on this site: Malik's role, branding practice, product and branding work, thinking on AI, tools, the Lab, experience, and the published case studies.", followUps: ['What branding projects are in the portfolio?', 'What has Malik worked on?', 'How does Malik think about AI?'] }
+const askFallback: AskAnswer = { text: "I can answer from what's documented on this site: Malik's role, branding practice, product and branding work, thinking on AI, tools, the Lab, the Sandbox, experience, and the published case studies.", followUps: ['What branding projects are in the portfolio?', 'What has Malik worked on?', 'How does Malik think about AI?'] }
 const askAnswers: Record<string, AskAnswer> = {
   ROLE: { text: "I'm a Product & Brand Designer.\n\nOn the product side, I work across product thinking, UX, interaction, visual systems, prototyping, design systems, and increasingly AI product design.\n\nOn the brand side, I build identities and visual languages across art direction, packaging, campaigns, print, and digital touchpoints.\n\nBoth parts of the practice are connected by the same goal: turning an idea into a clear, coherent system people can understand and experience.", actions: [{ label: 'View product work ↗', page: 'home', view: 'product' }, { label: 'View branding work ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.ROLE },
   PROFILE: { text: "I'm a Product & Brand Designer with a practice that has expanded from visual identity into digital products, complex systems, prototyping, and AI product design.\n\nI still work actively across both disciplines. Brand work lets me shape meaning, expression, and consistency across touchpoints. Product work lets me shape behaviour, usability, and the systems behind an experience.\n\nVisual thinker · Product designer · Brand designer · Systems oriented · Design + build", actions: [{ label: 'View product work ↗', page: 'home', view: 'product' }, { label: 'View branding work ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.PROFILE },
@@ -144,6 +146,7 @@ const askAnswers: Record<string, AskAnswer> = {
   EXPERIENCE: { text: 'OCT 2025–PRESENT · PRODUCT DESIGN & VISUAL/BRAND DESIGN LEAD · EMERJ LLC\nJUL 2024–JUN 2026 · DESIGN MENTOR + TEAM LEAD · HNG TECH\nFEB 2023–FEB 2025 · FOUNDING PRODUCT DESIGNER & VISUAL/BRAND DESIGNER · BELSQUARED INC.', actions: [{ label: 'Read the full story ↗', page: 'about' }], followUps: askFollowUps.EXPERIENCE },
   WORK: { text: 'PRODUCT WORK\nPRIMA : AI-assisted verification for decentralized payments.\nNOMI : Adaptive learning and contextual AI.\nHANYA : AI-assisted healthcare navigation.\nYOUSEWIRE : Cross-border personal and business finance.\n\nBRANDING WORK\nSIDE B : Brand identity, packaging, and art direction.\nTHE KIM COUTURE : Fashion identity.\nFINLANCER and NOMI : Brand and visual identity.\nPYCON NIGERIA 2024 : Conference identity.\nBELSQUARED : Brand identity and packaging.', actions: [{ label: 'View product work ↗', page: 'home', view: 'product' }, { label: 'View branding work ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.WORK },
   LAB: { text: 'The Lab is a collection of small experiments I use to explore how AI changes the way we design, build and interact with software.\n\nExperiments are currently in progress : new things will appear here as they are built.', actions: [{ label: 'Open the Lab ↗', page: 'lab' }], followUps: askFollowUps.LAB },
+  SANDBOX: { text: 'The Sandbox is Malik’s space for aesthetic design explorations: visual studies, compositions, interface fragments, and ideas made to explore a feeling without requiring a full product or case study.', actions: [{ label: 'Open the Sandbox ↗', page: 'home', view: 'sandbox' }], followUps: askFollowUps.SANDBOX },
   CONTACT: { text: 'EMAIL : heymalik05@gmail.com\nLINKEDIN : linkedin.com/in/temitayo-l-74984b16a\n\nAvailable for selected collaborations.', actions: [{ label: 'Email Malik ↗', href: 'mailto:heymalik05@gmail.com' }, { label: 'LinkedIn ↗', href: 'https://www.linkedin.com/in/temitayo-l-74984b16a/' }], followUps: askFollowUps.CONTACT },
   EVOLUTION: { text: '2018–PRESENT · INDEPENDENT BRAND DESIGNER\n2022 · INDEPENDENT DESIGN CONSULTANT\n2023 · FOUNDING PRODUCT DESIGNER & VISUAL/BRAND DESIGNER · BELSQUARED\n2023 · PRODUCT DESIGNER & VISUAL/BRAND DESIGNER · PYTHON NIGERIA\nJUL 2024–JUN 2026 · DESIGN MENTOR + TEAM LEAD · HNG TECH\n2025 · PRODUCT DESIGN & VISUAL/BRAND DESIGN LEAD · EMERJ LLC\n2026 · AI PRODUCT DESIGN : intelligent products + systems', followUps: askFollowUps.EVOLUTION },
   OFFLINE: { text: "That isn't documented on the site yet. Try asking about the work, the Lab, or how Malik thinks about AI.", followUps: askFollowUps.OFFLINE },
@@ -160,7 +163,7 @@ const askAnswers: Record<string, AskAnswer> = {
   FINLANCER: { text: 'Finlancer is a brand and visual-identity project in Malik’s branding portfolio. Its full case study is still being prepared.', actions: [{ label: 'View branding index ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.FINLANCER },
   PYCON_BRAND: { text: 'PyCon Nigeria 2024 is a conference-identity project in Malik’s branding portfolio. Malik’s wider portfolio also documents his product-design work for PyCon Nigeria’s 2024 and 2025 digital experiences. The full branding case study is still being prepared.', actions: [{ label: 'View branding index ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.PYCON_BRAND },
   NOMI_BRAND: { text: 'Nomi is also represented as a brand and visual-identity project in Malik’s branding portfolio. Its full branding case study is still being prepared; the published Nomi product case study covers the adaptive learning experience.', actions: [{ label: 'View branding index ↗', page: 'home', view: 'branding' }, { label: 'Open Nomi product case ↗', page: 'workCaseStudy', slug: 'nomi' }], followUps: askFollowUps.NOMI_BRAND },
-  BELSQUARED_BRAND: { text: 'Belsquared is a brand-identity and packaging project in Malik’s branding portfolio. Its full branding case study is still being prepared.', actions: [{ label: 'View branding index ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.BELSQUARED_BRAND }
+  BELSQUARED_BRAND: { text: 'Belsquared is a 2023 brand identity and packaging project built around authentic African snacking and the idea “A little crunch. A lot of happy.”\n\nThe published case study covers the identity, typography, colour system, three-flavour packaging family, lifestyle imagery, social stories, outdoor campaign, shipping touchpoints, and animated product presentation.', actions: [{ label: 'Open Belsquared case study ↗', page: 'brandingCaseStudy', slug: 'belsquared' }], followUps: askFollowUps.BELSQUARED_BRAND }
 }
 
 const normaliseAskText = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
@@ -228,6 +231,7 @@ const resolvePortfolioAnswer = (value: string, intent?: string): AskAnswer | und
 
   if (intent === 'WORK') return workIndexAskAnswer()
   if (intent === 'LAB') return labIndexAskAnswer()
+  if (intent === 'SANDBOX') return askAnswers.SANDBOX
   if (intent === 'BRANDING_WORK') return {
     text: `BRANDING WORK\n${brandingIndex.map(item => `${item.title} : ${item.descriptor}`).join('\n')}`,
     actions: [{ label: 'View branding work ↗', page: 'home', view: 'branding' }],
@@ -373,7 +377,7 @@ function App() {
 function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug: string) => void; onBrandProjectOpen: (slug: string) => void }) {
   const [mode, setMode] = useState<HomeMode>(() => {
     const view = new URLSearchParams(window.location.search).get('view')
-    return view === 'branding' || view === 'lab' || view === 'about' ? view : 'product'
+    return view === 'branding' || view === 'lab' || view === 'sandbox' || view === 'about' ? view : 'product'
   })
   const [activeLab, setActiveLab] = useState<LabExperiment | null>(null)
   const canvasRef = useRef<HTMLDivElement>(null)
@@ -418,7 +422,7 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
   const moveTab = (event: React.KeyboardEvent) => {
     if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return
     event.preventDefault()
-    const order = ['product', 'branding', 'lab', 'about'] as const
+    const order = ['product', 'branding', 'lab', 'sandbox', 'about'] as const
     const at = order.indexOf(mode)
     const next = event.key === 'ArrowRight' ? (at + 1) % order.length : (at - 1 + order.length) % order.length
     changeMode(order[next])
@@ -444,6 +448,7 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
           <button role="tab" id="tab-product" aria-selected={mode === 'product'} aria-controls="panel-product" className={mode === 'product' ? 'is-active' : ''} onClick={() => changeMode('product')} onKeyDown={moveTab}><Icon name="product" />Product design</button>
           <button role="tab" id="tab-branding" aria-selected={mode === 'branding'} aria-controls="panel-branding" className={mode === 'branding' ? 'is-active' : ''} onClick={() => changeMode('branding')} onKeyDown={moveTab}><Icon name="brand" />Branding</button>
           <button role="tab" id="tab-lab" aria-selected={mode === 'lab'} aria-controls="panel-lab" className={mode === 'lab' ? 'is-active' : ''} onClick={() => changeMode('lab')} onKeyDown={moveTab}><Icon name="lab" />Lab</button>
+          <button role="tab" id="tab-sandbox" aria-selected={mode === 'sandbox'} aria-controls="panel-sandbox" className={mode === 'sandbox' ? 'is-active' : ''} onClick={() => changeMode('sandbox')} onKeyDown={moveTab}><Icon name="sandbox" />Sandbox</button>
           <button role="tab" id="tab-about" aria-selected={mode === 'about'} aria-controls="panel-about" className={mode === 'about' ? 'is-active' : ''} onClick={() => changeMode('about')} onKeyDown={moveTab}><Icon name="user" />About</button>
         </div>
       </div>
@@ -458,7 +463,7 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
         {labExperiments.length ? <div className="work-gallery">
           {labExperiments.map(experiment => <button key={experiment.slug} className="work-tile tile-standard lab-card" onClick={() => setActiveLab(experiment)} aria-label={`${experiment.title} : open interactive preview`}>
             <span className="tile-visual" aria-hidden="true">{experiment.cover ? <img src={experiment.cover} alt="" /> : <span className="tile-pending">Image coming soon</span>}</span>
-            <span className="tile-meta lab-card-meta"><span className="tile-name">{experiment.title}</span></span>
+            <span className="tile-meta lab-card-meta"><span className="tile-name">{displayProjectTitle(experiment.title)}</span></span>
             <span className="lab-card-description">{experiment.summary}</span>
             <span className="lab-card-tool"><span>Tool</span>{experiment.badges?.map(badge => <span key={badge}>{badge}</span>)}<strong><img src="/openai-logo.svg" alt="" aria-hidden="true" />{experiment.aiTool}</strong></span>
           </button>)}
@@ -467,6 +472,10 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
           <p className="empty-title">Experiments in progress.</p>
           <p className="empty-note">New things will appear here as I build them.</p>
         </div>}
+      </section> : mode === 'sandbox' ? <section className="home-panel sandbox-panel" key="sandbox" id="panel-sandbox" role="tabpanel" aria-labelledby="tab-sandbox">
+        <h2 className="visually-hidden">Sandbox</h2>
+        <div className="sandbox-intro" id="sandbox-anchor"><span>DESIGN EXPLORATIONS</span><h3>A place for ideas<br />that deserve to exist.</h3><p>Visual studies, interface fragments, compositions, and aesthetic experiments. No case study required.</p></div>
+        <div className="empty-panel sandbox-empty"><div className="empty-well" aria-hidden="true"><span className="tile-pending">Explorations coming soon</span></div><p className="empty-title">The canvas is open.</p><p className="empty-note">New visual experiments will appear here as they are made.</p></div>
       </section> : <section className="home-panel" key="about" id="panel-about" role="tabpanel" aria-labelledby="tab-about">
         <h2 className="visually-hidden">About Malik</h2>
         <AboutEditorial experienceRecords={experienceRecords} />
@@ -484,21 +493,22 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
 }
 
 type ProjectStackEntry = { id: string; index: string; title: string; descriptor: string; live: boolean; slug: string; label: string; cover?: string | null; externalUrl?: string }
+const displayProjectTitle = (title: string) => title.toLocaleLowerCase().replace(/(^|[\s/-])\p{L}/gu, letter => letter.toLocaleUpperCase())
 function ProjectStack({ entries, onOpen, note, anchor }: { entries: ProjectStackEntry[]; onOpen: (slug: string) => void; note?: string; anchor: string }) {
   return <div className="project-stack" id={anchor}>
     {entries.map(entry => entry.externalUrl
       ? <a key={entry.id} className="project-stack-project is-live" href={entry.externalUrl} target="_blank" rel="noreferrer" aria-label={`${entry.title} : visit live website`}>
           <ProjectStackMedia label={entry.label} source={entry.cover} />
-          <span className="project-stack-meta"><span className="project-stack-title">{entry.title}</span><span className="project-stack-desc">{entry.descriptor}</span></span>
+          <span className="project-stack-meta"><span className="project-stack-title">{displayProjectTitle(entry.title)}</span><span className="project-stack-desc">{entry.descriptor}</span></span>
         </a>
       : entry.live
       ? <button key={entry.id} type="button" className="project-stack-project is-live" onClick={() => onOpen(entry.slug)} aria-label={`${entry.title} : open case study`}>
           <ProjectStackMedia label={entry.label} source={entry.cover} />
-          <span className="project-stack-meta"><span className="project-stack-title">{entry.title}</span><span className="project-stack-desc">{entry.descriptor}</span></span>
+          <span className="project-stack-meta"><span className="project-stack-title">{displayProjectTitle(entry.title)}</span><span className="project-stack-desc">{entry.descriptor}</span></span>
         </button>
       : <div key={entry.id} className="project-stack-project is-future">
           <ProjectStackMedia label={entry.label} note="Case study in preparation" />
-          <span className="project-stack-meta"><span className="project-stack-title">{entry.title}</span><span className="project-stack-desc">{entry.descriptor}</span></span>
+          <span className="project-stack-meta"><span className="project-stack-title">{displayProjectTitle(entry.title)}</span><span className="project-stack-desc">{entry.descriptor}</span></span>
         </div>)}
     {note && <p className="project-stack-note">{note}</p>}
   </div>

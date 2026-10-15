@@ -174,7 +174,7 @@ main:has(> .home-shell) { padding-top:0; }
 .rail-portrait { position:relative; display:flex; align-items:center; justify-content:center; aspect-ratio:4/5; width:min(100%,220px); max-height:min(44vh,340px); border:0; border-radius:24px; background:var(--home-media); color:var(--shell-faint); overflow:hidden; }
 .rail-portrait img { width:100%; height:100%; display:block; object-fit:cover; object-position:50% 38%; }
 .rail-portrait small { font-family:'Rethink Sans',sans-serif; font-size:13px; }
-.home-canvas { min-width:0; overflow-y:auto; overflow-x:hidden; background:var(--home-surface); border:0; border-radius:var(--home-radius-lg); padding:0 clamp(20px,2.6vw,44px) clamp(32px,4.5vh,52px); }
+.home-canvas { min-width:0; overflow-y:auto; overflow-x:hidden; scroll-behavior:smooth; overscroll-behavior-y:contain; -webkit-overflow-scrolling:touch; background:var(--home-surface); border:0; border-radius:var(--home-radius-lg); padding:0 clamp(20px,2.6vw,44px) clamp(32px,4.5vh,52px); }
 .canvas-head { position:sticky; top:0; z-index:2; display:flex; align-items:center; justify-content:flex-start; gap:28px; padding:22px 0 18px; background:var(--home-surface); }
 .mode-tabs { display:flex; gap:26px; }
 .mode-tabs button { border:0; border-bottom:2px solid transparent; background:none; padding:4px 0 8px; font-family:'Rethink Sans',sans-serif; font-weight:500; font-size:14.5px; letter-spacing:-.01em; color:var(--shell-faint); }
@@ -1420,7 +1420,105 @@ body::before {
 .mode-tabs button:nth-child(1).is-active { background:#3275e9; box-shadow:0 8px 24px rgba(50,117,233,.34); }
 .mode-tabs button:nth-child(2).is-active { background:#ff674d; box-shadow:0 8px 24px rgba(255,103,77,.28); }
 .mode-tabs button:nth-child(3).is-active { background:#8453ff; box-shadow:0 8px 24px rgba(132,83,255,.3); }
-.mode-tabs button:nth-child(4).is-active { background:#19a978; box-shadow:0 8px 24px rgba(25,169,120,.26); }
+.mode-tabs button:nth-child(4).is-active { background:#f5a524; color:#080808; box-shadow:0 8px 24px rgba(245,165,36,.28); }
+.mode-tabs button:nth-child(5).is-active { background:#19a978; box-shadow:0 8px 24px rgba(25,169,120,.26); }
+.sandbox-intro { padding:clamp(58px,8vw,112px) clamp(20px,4vw,64px) clamp(48px,7vw,96px); border-bottom:1px solid var(--home-line); }
+.sandbox-intro > span { color:#f5a524; font-size:11px; font-weight:700; letter-spacing:.14em; }
+.sandbox-intro h3 { max-width:900px; margin:24px 0 0; color:#fff; font-size:clamp(3rem,7vw,7.8rem); line-height:.84; letter-spacing:-.075em; }
+.sandbox-intro p { max-width:610px; margin:clamp(30px,5vw,64px) 0 0 auto; color:var(--home-muted); font-size:clamp(17px,1.8vw,24px); line-height:1.4; }
+.sandbox-empty { padding-inline:clamp(18px,2.1vw,34px); }
+@media (max-width:700px) {
+  .home-shell:not(.home-mode-about) .mode-tabs button { padding-inline:8px; font-size:11px; }
+  .sandbox-intro { padding-inline:20px; }
+  .sandbox-intro h3 { font-size:clamp(2.8rem,15vw,4.4rem); }
+  .sandbox-intro p { margin-left:0; }
+}
+
+/* Desktop media uses each source's natural proportions and carries its copy as an overlay. */
+@media (min-width:901px) {
+  .home-shell:not(.home-mode-about) .project-stack-project,
+  .home-shell:not(.home-mode-about) .lab-card { position:relative; overflow:hidden; }
+  .home-shell:not(.home-mode-about) .lab-card { display:block; }
+
+  .home-shell:not(.home-mode-about) .project-stack-media:has(> img),
+  .home-shell:not(.home-mode-about) .project-stack-media:has(> video),
+  .home-shell:not(.home-mode-about) .tile-visual:has(> img),
+  .home-shell:not(.home-mode-about) .tile-visual:has(> video) {
+    min-height:0;
+    aspect-ratio:auto;
+  }
+  .home-shell:not(.home-mode-about) .project-stack-media > img,
+  .home-shell:not(.home-mode-about) .project-stack-media > video,
+  .home-shell:not(.home-mode-about) .tile-visual > img,
+  .home-shell:not(.home-mode-about) .tile-visual > video {
+    position:relative;
+    inset:auto;
+    width:100%;
+    height:auto;
+    object-fit:contain;
+    filter:blur(1.25px) brightness(.72);
+    transform:scale(1.006);
+  }
+  .home-shell:not(.home-mode-about) .project-stack-media::before,
+  .home-shell:not(.home-mode-about) .tile-visual::before {
+    content:'';
+    position:absolute;
+    z-index:2;
+    inset:0;
+    display:block;
+    background:linear-gradient(180deg,rgba(2,5,10,.08) 30%,rgba(2,5,10,.82) 100%);
+    pointer-events:none;
+  }
+  .home-shell:not(.home-mode-about) .project-stack-meta {
+    position:absolute;
+    z-index:3;
+    right:0;
+    bottom:0;
+    left:0;
+    margin:0;
+    padding:clamp(72px,10vw,150px) clamp(24px,3.2vw,52px) clamp(24px,3.2vw,48px);
+    color:#fff;
+    pointer-events:none;
+  }
+  .home-shell:not(.home-mode-about) .project-stack-title { color:#fff; font-size:clamp(28px,3.5vw,52px); }
+  .home-shell:not(.home-mode-about) .project-stack-desc { color:rgba(255,255,255,.76); font-size:clamp(14px,1.25vw,18px); }
+
+  .home-shell:not(.home-mode-about) .lab-card-meta,
+  .home-shell:not(.home-mode-about) .lab-card-description,
+  .home-shell:not(.home-mode-about) .lab-card-tool { position:absolute; z-index:3; right:clamp(24px,3.2vw,52px); left:clamp(24px,3.2vw,52px); color:#fff; pointer-events:none; }
+  .home-shell:not(.home-mode-about) .lab-card-meta { bottom:clamp(150px,14vw,205px); padding:0; }
+  .home-shell:not(.home-mode-about) .lab-card-description { bottom:clamp(76px,7.5vw,112px); max-width:62ch; padding:0; color:rgba(255,255,255,.78); }
+  .home-shell:not(.home-mode-about) .lab-card-tool { bottom:clamp(22px,2.5vw,38px); padding:0; }
+  .home-shell:not(.home-mode-about) .lab-card .tile-name { color:#fff; font-size:clamp(28px,3.5vw,52px); }
+  .home-shell:not(.home-mode-about) .lab-card-tool > span,
+  .home-shell:not(.home-mode-about) .lab-card-tool > strong { border:1px solid rgba(255,255,255,.18); background:rgba(15,18,25,.52); color:rgba(255,255,255,.82); backdrop-filter:blur(12px); }
+  .home-shell:not(.home-mode-about) .lab-card-tool img { filter:invert(1); opacity:.8; }
+
+}
+
+/* Real files define their own frame height, so every image, GIF and video stays fully visible. */
+.new-case-brand .brand-hero .brand-media:has(> img),
+.new-case-brand .brand-hero .brand-media:has(> video),
+.new-case-brand .brand-gallery .brand-media:has(> img),
+.new-case-brand .brand-gallery .brand-media:has(> video),
+.new-case-brand .brand-hero .brand-media > img,
+.new-case-brand .brand-gallery .brand-media > img,
+.new-case-brand .brand-media > video,
+.pc-media-frame:has(> video) {
+  min-height:0;
+  aspect-ratio:auto;
+}
+.new-case-brand .brand-hero .brand-media > img,
+.new-case-brand .brand-gallery .brand-media > img,
+.new-case-brand .brand-media > video,
+.pc-media-frame > video {
+  position:relative;
+  inset:auto;
+  display:block;
+  width:100%;
+  height:auto;
+  object-fit:contain;
+}
 
 /* Project-specific ambient colour appears only during interaction. */
 .project-stack-project,.work-tile { --project-glow:50,117,233; position:relative; }
@@ -1508,6 +1606,99 @@ body::before {
   .home-shell:not(.home-mode-about) .project-stack-media,.home-shell:not(.home-mode-about) .tile-standard .tile-visual { aspect-ratio:4 / 3; border-left:0; border-right:0; border-radius:0; }
   .home-shell:not(.home-mode-about) .work-gallery { display:flex; flex-direction:column; gap:40px; margin-top:0; }
   .home-shell:not(.home-mode-about) .lab-card { width:100%; }
-  .home-shell:not(.home-mode-about) .project-stack-meta,.home-shell:not(.home-mode-about) .lab-card-description,.home-shell:not(.home-mode-about) .lab-card-tool { padding-inline:16px; }
+  .home-shell:not(.home-mode-about) .project-stack-meta,.home-shell:not(.home-mode-about) .lab-card-meta,.home-shell:not(.home-mode-about) .lab-card-description,.home-shell:not(.home-mode-about) .lab-card-tool { padding-inline:16px; }
   .home-shell:not(.home-mode-about) .canvas-more { width:calc(100% - 32px); margin-inline:auto; }
+}
+
+@media (min-width:901px) {
+  .home-shell:not(.home-mode-about) .project-stack-media > img,
+  .home-shell:not(.home-mode-about) .project-stack-media > video,
+  .home-shell:not(.home-mode-about) .tile-visual > img,
+  .home-shell:not(.home-mode-about) .tile-visual > video {
+    filter:none;
+    transform:none;
+    transition:filter .45s ease,transform .65s cubic-bezier(.2,.75,.2,1);
+  }
+  .home-shell:not(.home-mode-about) .project-stack-media::before,
+  .home-shell:not(.home-mode-about) .tile-visual::before {
+    opacity:0;
+    transition:opacity .4s ease;
+  }
+  .home-shell:not(.home-mode-about) .project-stack-meta,
+  .home-shell:not(.home-mode-about) .lab-card-meta,
+  .home-shell:not(.home-mode-about) .lab-card-description,
+  .home-shell:not(.home-mode-about) .lab-card-tool {
+    opacity:0;
+    transform:translateY(10px);
+    transition:opacity .32s ease,transform .42s cubic-bezier(.2,.75,.2,1);
+  }
+  .home-shell:not(.home-mode-about) .project-stack-meta {
+    margin:0;
+    padding:clamp(90px,11vw,170px) clamp(30px,4vw,60px) clamp(30px,4vw,56px);
+  }
+  .home-shell:not(.home-mode-about) .lab-card-meta,
+  .home-shell:not(.home-mode-about) .lab-card-description,
+  .home-shell:not(.home-mode-about) .lab-card-tool {
+    right:clamp(30px,4vw,60px);
+    left:clamp(30px,4vw,60px);
+    width:auto;
+    margin:0;
+    padding:0;
+  }
+  .home-shell:not(.home-mode-about) .lab-card-meta {
+    display:block;
+    bottom:clamp(158px,15vw,218px);
+  }
+  .home-shell:not(.home-mode-about) .lab-card-description { bottom:clamp(78px,8vw,120px); }
+  .home-shell:not(.home-mode-about) .lab-card-tool { bottom:clamp(26px,3vw,42px); }
+  .home-shell:not(.home-mode-about) .lab-card .tile-name { display:block; transform:none; }
+
+  .home-shell:not(.home-mode-about) .project-stack-project:hover .project-stack-media > img,
+  .home-shell:not(.home-mode-about) .project-stack-project:hover .project-stack-media > video,
+  .home-shell:not(.home-mode-about) .project-stack-project:focus-visible .project-stack-media > img,
+  .home-shell:not(.home-mode-about) .project-stack-project:focus-visible .project-stack-media > video,
+  .home-shell:not(.home-mode-about) .lab-card:hover .tile-visual > img,
+  .home-shell:not(.home-mode-about) .lab-card:hover .tile-visual > video,
+  .home-shell:not(.home-mode-about) .lab-card:focus-visible .tile-visual > img,
+  .home-shell:not(.home-mode-about) .lab-card:focus-visible .tile-visual > video {
+    filter:blur(1.25px) brightness(.7);
+    transform:scale(1.015);
+  }
+  .home-shell:not(.home-mode-about) .project-stack-project:hover .project-stack-media::before,
+  .home-shell:not(.home-mode-about) .project-stack-project:focus-visible .project-stack-media::before,
+  .home-shell:not(.home-mode-about) .lab-card:hover .tile-visual::before,
+  .home-shell:not(.home-mode-about) .lab-card:focus-visible .tile-visual::before,
+  .home-shell:not(.home-mode-about) .project-stack-project:hover .project-stack-meta,
+  .home-shell:not(.home-mode-about) .project-stack-project:focus-visible .project-stack-meta,
+  .home-shell:not(.home-mode-about) .lab-card:hover .lab-card-meta,
+  .home-shell:not(.home-mode-about) .lab-card:hover .lab-card-description,
+  .home-shell:not(.home-mode-about) .lab-card:hover .lab-card-tool,
+  .home-shell:not(.home-mode-about) .lab-card:focus-visible .lab-card-meta,
+  .home-shell:not(.home-mode-about) .lab-card:focus-visible .lab-card-description,
+  .home-shell:not(.home-mode-about) .lab-card:focus-visible .lab-card-tool {
+    opacity:1;
+    transform:none;
+  }
+  .home-shell:not(.home-mode-about) .project-stack-project:hover .project-stack-title,
+  .home-shell:not(.home-mode-about) .project-stack-project:focus-visible .project-stack-title,
+  .home-shell:not(.home-mode-about) .lab-card:hover .tile-name,
+  .home-shell:not(.home-mode-about) .lab-card:focus-visible .tile-name { color:#fff; transform:none; }
+  .home-shell:not(.home-mode-about) .project-stack-title,
+  .home-shell:not(.home-mode-about) .lab-card .tile-name {
+    color:#fff;
+    font-size:clamp(28px,3vw,42px);
+    font-weight:650;
+    line-height:1.02;
+    letter-spacing:-.035em;
+    text-transform:none;
+  }
+  .home-shell:not(.home-mode-about) .project-stack-desc,
+  .home-shell:not(.home-mode-about) .lab-card-description {
+    color:rgba(255,255,255,.78);
+    font-size:clamp(15px,1.25vw,18px);
+    font-weight:400;
+    line-height:1.45;
+    letter-spacing:-.005em;
+    text-transform:none;
+  }
 }

@@ -59,7 +59,7 @@ export const brandingIndex: BrandingIndexProject[] = [
   { id: 'b-the-kim-couture', index: '002', slug: 'the-kim-couture', title: 'THE KIM COUTURE', category: 'BRANDING', descriptor: 'Brand Identity · Fashion', ratio: '3:4', caseStudy: 'live', cover: '/Kim%20Branding%20files/Kim%20Thubnail.png' },
   { id: 'b-finlancer', index: '003', slug: 'finlancer', title: 'FINLANCER', category: 'BRANDING', descriptor: 'Brand / Visual Identity', ratio: '21:9', caseStudy: 'live' },
   { id: 'b-nomi', index: '005', slug: 'nomi', title: 'NOMI', category: 'BRANDING', descriptor: 'Brand / Visual Identity', ratio: '1:1', caseStudy: 'live', cover: '/Nomi%20Branding%20Files/Thimbnail.gif' },
-  { id: 'b-belsquared', index: '006', slug: 'belsquared', title: 'BELSQUARED', category: 'BRANDING', descriptor: 'Brand Identity · Packaging', ratio: '21:9', caseStudy: 'live' }
+  { id: 'b-belsquared', index: '006', slug: 'belsquared', title: 'BELSQUARED', category: 'BRANDING', descriptor: 'Brand Identity · Packaging', ratio: '16:9', caseStudy: 'live', cover: '/Belsquared%20Branding%20Files/04-three-flavour-packaging-family.png' }
 ]
 
 function galleryProject(config: {
@@ -231,7 +231,25 @@ export const brandProjects: BrandProject[] = [
       { title: 'Visual Language', copy: 'Colour, rounded forms, character expression, illustration, and approachable typography give the product a consistent emotional language.' },
       { title: 'Product World', copy: 'The brand extends through onboarding, subject discovery, assessed practice, progress, contextual tutoring, campaigns, and the marketing website.' }
     ], next: { name: 'BELSQUARED', slug: 'belsquared', note: 'Brand Identity · Packaging' } }),
-  galleryProject({ slug: 'belsquared', number: '006', name: 'BELSQUARED', descriptor: 'Brand Identity · Packaging', tagline: 'EVERYDAY OBJECTS.\nCLEAR CHARACTER.', intro: 'A brand identity and packaging system built to feel direct, useful, and recognisable.', year: '2023', world: 'belsquared', story: [
+  galleryProject({ slug: 'belsquared', number: '006', name: 'BELSQUARED', descriptor: 'Brand Identity · Packaging', tagline: 'A LITTLE CRUNCH.\nA LOT OF HAPPY.', intro: 'A joyful identity and packaging system that brings authentic African snacking into everyday moments.', year: '2023', world: 'belsquared',
+    hero: { index: 1, title: 'THREE-FLAVOUR PACKAGING FAMILY', ratio: 'ultra-wide', source: '/Belsquared%20Branding%20Files/04-three-flavour-packaging-family.png' },
+    gallery: [
+      { index: 2, title: 'TYPOGRAPHY AND COLOUR SYSTEM', ratio: '16:9', source: '/Belsquared%20Branding%20Files/02-typography-and-colour-system.png' },
+      { index: 3, title: 'SIGNATURE FLAVOUR HERO', ratio: '16:9', source: '/Belsquared%20Branding%20Files/03-signature-flavour-hero.png' },
+      { index: 4, title: 'THREE-FLAVOUR PACKAGING FAMILY', ratio: '16:9', source: '/Belsquared%20Branding%20Files/04-three-flavour-packaging-family.png' },
+      { index: 5, title: 'PACKAGING PATTERN', ratio: '16:9', source: '/Belsquared%20Branding%20Files/05-packaging-pattern.png' },
+      { index: 6, title: 'SIGNATURE POUCH ANIMATION', ratio: '16:9', source: '/Belsquared%20Branding%20Files/06-signature-pouch-animation.gif' },
+      { index: 7, title: 'A LITTLE CRUNCH CAMPAIGN', ratio: '16:9', source: '/Belsquared%20Branding%20Files/07-a-little-crunch-campaign.png' },
+      { index: 8, title: 'COCONUT AND CINNAMON LIFESTYLE', ratio: '16:9', source: '/Belsquared%20Branding%20Files/08-coconut-cinnamon-lifestyle.png' },
+      { index: 9, title: 'SOCIAL STORY SYSTEM', ratio: '16:9', source: '/Belsquared%20Branding%20Files/09-social-story-system.png' },
+      { index: 10, title: 'OUTDOOR CAMPAIGN WALL', ratio: '16:9', source: '/Belsquared%20Branding%20Files/10-outdoor-campaign-wall.png' },
+      { index: 11, title: 'CONSUMER AND SHIPPING TOUCHPOINTS', ratio: '16:9', source: '/Belsquared%20Branding%20Files/11-consumer-and-shipping-touchpoints.png' },
+      { index: 12, title: 'PICNIC LIFESTYLE', ratio: '16:9', source: '/Belsquared%20Branding%20Files/12-picnic-lifestyle.png' },
+      { index: 13, title: 'COCONUT BILLBOARD', ratio: '16:9', source: '/Belsquared%20Branding%20Files/13-coconut-billboard.png' },
+      { index: 14, title: 'PACKAGING AND LIFESTYLE', ratio: '16:9', source: '/Belsquared%20Branding%20Files/14-packaging-and-lifestyle.png' },
+      { index: 15, title: 'CRUNCH PRODUCT COMPOSITION', ratio: '16:9', source: '/Belsquared%20Branding%20Files/15-crunch-product-composition.png' },
+      { index: 16, title: 'LOGO ON GINGHAM', ratio: '16:9', source: '/Belsquared%20Branding%20Files/16-logo-on-gingham.png' }
+    ], story: [
     { title: 'Premise', copy: 'The brand needed to bring order and personality to a broad consumer experience without becoming complicated or overly decorative.' },
     { title: 'Identity', statement: 'SIMPLE SHAPES.\nSTRONG RECALL.', copy: 'A direct identity system uses clear geometry, typography, and repetition to build recognition across physical and digital touchpoints.' },
     { title: 'Visual Language', copy: 'The visual system balances functional information with confident colour and composition, giving everyday applications a distinct point of view.' },
