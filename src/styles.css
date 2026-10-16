@@ -503,7 +503,7 @@ main.page-workCaseStudy, main.page-labExperiment { padding-top:0; background:#f4
 .pc-pair .pc-media { margin-top:0; }
 .pc-media { margin:clamp(26px,3.2vw,40px) 0 0; width:100%; }
 .pc-media-frame { position:relative; width:100%; aspect-ratio:16/9; overflow:hidden; background:var(--pc-frame); border:1px solid var(--pc-frame-line); border-radius:var(--pc-radius); }
-.pc-media-frame > video { width:100%; height:100%; display:block; object-fit:cover; background:#111; }
+.pc-media-frame > video,.pc-media-frame > img { width:100%; height:100%; display:block; object-fit:cover; background:#111; }
 .pc-video-play { position:absolute; z-index:3; top:50%; left:50%; display:grid; width:58px; height:58px; place-items:center; transform:translate(-50%,-50%); border:1px solid rgba(255,255,255,.55); border-radius:50%; background:rgba(17,17,19,.78); color:#fff; backdrop-filter:blur(10px); box-shadow:0 14px 35px rgba(0,0,0,.24); transition:transform .25s ease,background .25s ease; }
 .pc-video-play:hover { transform:translate(-50%,-50%) scale(1.05); background:rgba(17,17,19,.9); }
 .pc-video-play .portfolio-icon { width:22px; height:22px; margin-left:2px; }
@@ -946,6 +946,7 @@ main.page-brandingCaseStudy, .new-case-brand { background:#fff; color:#191919; }
 .about-testimonial-pending p { position:relative; margin:0; font:400 23px/1.2 'Instrument Serif',serif; color:#48554b; }
 @media(max-width:1050px) { .about-editorial-main { grid-template-columns:100px minmax(0,1fr); } .about-story { grid-column:2; } .about-contents { grid-column:1; } .about-profile-card { display:none; } }
 @media(max-width:950px) { .about-editorial { padding-top:2px; } .about-editorial-main { display:flex; flex-direction:column; gap:0; } .about-profile-card { display:block; position:static; order:-2; align-self:flex-start; width:min(100%,260px); margin:22px 0 28px; } .about-contents { position:static; order:-1; align-self:stretch; display:flex; flex-direction:row; justify-content:flex-start; flex-wrap:wrap; gap:9px 15px; padding:0 0 18px; border-bottom:1px solid var(--about-line); text-align:left; } .about-story { width:100%; } .about-section:first-child { padding-top:29px; } }
+@media(max-width:760px) { .about-contents { display:none; } .about-section:first-child { padding-top:18px; } }
 @media(max-width:560px) { .about-card-grid,.about-tool-grid { grid-template-columns:1fr; } .about-card,.about-tool { min-height:0; padding:13px; } .about-evolution > div { grid-template-columns:24px 1fr; } .about-evolution small { grid-column:2; } .about-process-list > div { grid-template-columns:22px 65px 1fr; } .about-section > p { font-size:13px; } .about-testimonial-card { flex-basis:min(85vw,340px); padding:20px; } .about-testimonial-card blockquote { font-size:15px; } .about-testimonials-rail { animation-duration:120s; } }
 @media(prefers-reduced-motion:reduce) { .about-testimonials-track { overflow-x:auto; mask-image:none; scrollbar-width:thin; } .about-testimonials-rail { animation:none; } .about-testimonials-set[aria-hidden="true"] { display:none; } }
 @media(max-width:700px) {
@@ -1422,6 +1423,9 @@ body::before {
 .mode-tabs button:nth-child(3).is-active { background:#8453ff; box-shadow:0 8px 24px rgba(132,83,255,.3); }
 .mode-tabs button:nth-child(4).is-active { background:#f5a524; color:#080808; box-shadow:0 8px 24px rgba(245,165,36,.28); }
 .mode-tabs button:nth-child(5).is-active { background:#19a978; box-shadow:0 8px 24px rgba(25,169,120,.26); }
+.rail-about { margin-top:12px; }
+.rail-about.is-active { background:#19a978; color:#fff; box-shadow:0 8px 24px rgba(25,169,120,.22); }
+.rail-about.is-active:hover { background:#15936a; }
 .sandbox-intro { padding:clamp(58px,8vw,112px) clamp(20px,4vw,64px) clamp(48px,7vw,96px); border-bottom:1px solid var(--home-line); }
 .sandbox-intro > span { color:#f5a524; font-size:11px; font-weight:700; letter-spacing:.14em; }
 .sandbox-intro h3 { max-width:900px; margin:24px 0 0; color:#fff; font-size:clamp(3rem,7vw,7.8rem); line-height:.84; letter-spacing:-.075em; }
@@ -1504,6 +1508,7 @@ body::before {
 .new-case-brand .brand-hero .brand-media > img,
 .new-case-brand .brand-gallery .brand-media > img,
 .new-case-brand .brand-media > video,
+.pc-media-frame:has(> img),
 .pc-media-frame:has(> video) {
   min-height:0;
   aspect-ratio:auto;
@@ -1511,6 +1516,7 @@ body::before {
 .new-case-brand .brand-hero .brand-media > img,
 .new-case-brand .brand-gallery .brand-media > img,
 .new-case-brand .brand-media > video,
+.pc-media-frame > img,
 .pc-media-frame > video {
   position:relative;
   inset:auto;
@@ -1608,6 +1614,57 @@ body::before {
   .home-shell:not(.home-mode-about) .lab-card { width:100%; }
   .home-shell:not(.home-mode-about) .project-stack-meta,.home-shell:not(.home-mode-about) .lab-card-meta,.home-shell:not(.home-mode-about) .lab-card-description,.home-shell:not(.home-mode-about) .lab-card-tool { padding-inline:16px; }
   .home-shell:not(.home-mode-about) .canvas-more { width:calc(100% - 32px); margin-inline:auto; }
+
+  .home-shell:not(.home-mode-about) .project-stack-media:has(> img),
+  .home-shell:not(.home-mode-about) .project-stack-media:has(> video),
+  .home-shell:not(.home-mode-about) .tile-visual:has(> img),
+  .home-shell:not(.home-mode-about) .tile-visual:has(> video) {
+    min-height:0;
+    aspect-ratio:auto;
+  }
+  .home-shell:not(.home-mode-about) .project-stack-media > img,
+  .home-shell:not(.home-mode-about) .project-stack-media > video,
+  .home-shell:not(.home-mode-about) .tile-visual > img,
+  .home-shell:not(.home-mode-about) .tile-visual > video {
+    position:relative;
+    inset:auto;
+    display:block;
+    width:100%;
+    height:auto;
+    object-fit:contain;
+  }
+}
+
+@media (max-width:760px) {
+  .home-shell:not(.home-mode-about) .canvas-head,
+  .home-mode-about .canvas-head {
+    width:calc(100% - 24px);
+    max-width:none;
+    margin-inline:auto;
+    padding:10px 0;
+    justify-content:center;
+  }
+  .home-shell:has(#panel-about) .canvas-head {
+    margin-inline:auto;
+    padding-inline:0;
+    justify-content:center;
+  }
+  .home-shell .mode-tabs {
+    width:100%;
+    max-width:100%;
+    margin-inline:auto;
+    gap:3px;
+    padding:5px;
+    border-radius:999px;
+  }
+  .home-shell .mode-tabs button {
+    flex:1 1 0;
+    min-width:0;
+    padding:11px 4px;
+    border-radius:999px;
+    font-size:10px;
+    line-height:1;
+  }
 }
 
 @media (min-width:901px) {
@@ -1701,4 +1758,16 @@ body::before {
     letter-spacing:-.005em;
     text-transform:none;
   }
+}
+
+/* Case-study file cards use square edges across every media format. */
+.new-case-brand .brand-media,
+.new-case-brand .brand-media-frame,
+.new-case-brand .brand-media > img,
+.new-case-brand .brand-media > video,
+.product-case .pc-media-frame,
+.product-case .pc-media-frame > video,
+.product-case .pc-media-grid,
+.case-media-placeholder {
+  border-radius:0 !important;
 }

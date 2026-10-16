@@ -14,6 +14,7 @@ import { PrimaProductCase } from './components/work/PrimaProductCase'
 import { NomiProductCase } from './components/work/NomiProductCase'
 import { HanyaProductCase } from './components/work/HanyaProductCase'
 import { YousewireProductCase } from './components/work/YousewireProductCase'
+import { AnansiProductCase } from './components/work/AnansiProductCase'
 import { BrandCase } from './components/brand/BrandCase'
 import { markInAppNavigation } from './components/CaseBackButton'
 import { NewCaseShell } from './components/NewCaseShell'
@@ -26,6 +27,7 @@ type Page = 'home' | 'about' | 'work' | 'workCaseStudy' | 'brandingCaseStudy' | 
 type PortfolioResponse = { terms: string[]; mode: ResponseMode; targets: string[]; route?: Page; routeTarget?: string; classification: { intent: string; evidence: string; representation: string } }
 
 const responses: PortfolioResponse[] = [
+  { terms: ['anansi', 'anansi gallery', 'anansi case study', 'virtual gallery', 'immersive gallery', 'art discovery', '3d gallery'], mode: 'connect', targets: ['anansi-opportunity'], route: 'workCaseStudy', routeTarget: 'anansi-opportunity', classification: { intent: 'ANANSI_GALLERY', evidence: 'PRODUCT CASE 007', representation: 'CONNECT' } },
   { terms: ['finlancer website', 'finlancer web design', 'finlancer product website', 'finlancer mobile website'], mode: 'connect', targets: ['product-anchor'], route: 'home', routeTarget: 'product-anchor', classification: { intent: 'FINLANCER_WEBSITE', evidence: 'LIVE WEBSITE', representation: 'CONNECT' } },
   { terms: ['nomi website', 'nomi marketing website', 'nomi web design'], mode: 'connect', targets: ['product-anchor'], route: 'home', routeTarget: 'product-anchor', classification: { intent: 'NOMI_WEBSITE', evidence: 'LIVE WEBSITE', representation: 'CONNECT' } },
   { terms: ['what branding does malik do', 'malik branding', 'brand design', 'branding practice', 'branding experience', 'visual identity', 'brand identity', 'packaging design', 'art direction'], mode: 'connect', targets: ['branding-anchor'], route: 'home', routeTarget: 'branding-anchor', classification: { intent: 'BRANDING', evidence: 'BRANDING INDEX', representation: 'CONNECT' } },
@@ -123,6 +125,7 @@ const askFollowUps: Record<string, string[]> = {
   NOMI: ['What is Hanya?', "What's in the Lab?", 'What does Malik care about?'],
   HANYA: ['What is Yousewire?', "What's in the Lab?", 'What has Malik worked on?'],
   YOUSEWIRE: ['What is Prima?', "What's in the Lab?", 'What does Malik care about?'],
+  ANANSI_GALLERY: ['What is Prima?', "What's in the Lab?", 'What has Malik worked on?'],
   BRANDING: ['What branding projects are in the portfolio?', 'What is SIDE B?', 'How did Malik get into product design?'],
   BRANDING_WORK: ['What is SIDE B?', 'What branding does Malik do?', 'Tell me about The Kim Couture.'],
   SIDE_B: ['What branding does Malik do?', 'What branding projects are in the portfolio?', 'Tell me about The Kim Couture.'],
@@ -144,7 +147,7 @@ const askAnswers: Record<string, AskAnswer> = {
   PRINCIPLES: { text: "TRUST & EXPLAINABILITY : making enough of a system visible for people to make informed decisions.\nSYSTEMS THINKING : looking for relationships, constraints and the effects that exist beyond one screen.\nHUMAN-CENTERED AI : exploring intelligence that supports judgement rather than quietly replacing it.", followUps: askFollowUps.PRINCIPLES },
   BACKGROUND: { text: "I didn't really leave visual design behind. I kept adding new questions to it.\n\nVisual / Brand design → Product design → Product systems → Design leadership → Design + build → AI product design", followUps: askFollowUps.BACKGROUND },
   EXPERIENCE: { text: 'OCT 2025–PRESENT · PRODUCT DESIGN & VISUAL/BRAND DESIGN LEAD · EMERJ LLC\nJUL 2024–JUN 2026 · DESIGN MENTOR + TEAM LEAD · HNG TECH\nFEB 2023–FEB 2025 · FOUNDING PRODUCT DESIGNER & VISUAL/BRAND DESIGNER · BELSQUARED INC.', actions: [{ label: 'Read the full story ↗', page: 'about' }], followUps: askFollowUps.EXPERIENCE },
-  WORK: { text: 'PRODUCT WORK\nPRIMA : AI-assisted verification for decentralized payments.\nNOMI : Adaptive learning and contextual AI.\nHANYA : AI-assisted healthcare navigation.\nYOUSEWIRE : Cross-border personal and business finance.\n\nBRANDING WORK\nSIDE B : Brand identity, packaging, and art direction.\nTHE KIM COUTURE : Fashion identity.\nFINLANCER and NOMI : Brand and visual identity.\nPYCON NIGERIA 2024 : Conference identity.\nBELSQUARED : Brand identity and packaging.', actions: [{ label: 'View product work ↗', page: 'home', view: 'product' }, { label: 'View branding work ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.WORK },
+  WORK: { text: 'PRODUCT WORK\nPRIMA : AI-assisted verification for decentralized payments.\nNOMI : Adaptive learning and contextual AI.\nHANYA : AI-assisted healthcare navigation.\nYOUSEWIRE : Cross-border personal and business finance.\nANANSI GALLERY : Immersive art discovery across a public website and browser-based 3D gallery.\n\nBRANDING WORK\nSIDE B : Brand identity, packaging, and art direction.\nTHE KIM COUTURE : Fashion identity.\nFINLANCER and NOMI : Brand and visual identity.\nPYCON NIGERIA 2024 : Conference identity.\nBELSQUARED : Brand identity and packaging.', actions: [{ label: 'View product work ↗', page: 'home', view: 'product' }, { label: 'View branding work ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.WORK },
   LAB: { text: 'The Lab is a collection of small experiments I use to explore how AI changes the way we design, build and interact with software.\n\nExperiments are currently in progress : new things will appear here as they are built.', actions: [{ label: 'Open the Lab ↗', page: 'lab' }], followUps: askFollowUps.LAB },
   SANDBOX: { text: 'The Sandbox is Malik’s space for aesthetic design explorations: visual studies, compositions, interface fragments, and ideas made to explore a feeling without requiring a full product or case study.', actions: [{ label: 'Open the Sandbox ↗', page: 'home', view: 'sandbox' }], followUps: askFollowUps.SANDBOX },
   CONTACT: { text: 'EMAIL : heymalik05@gmail.com\nLINKEDIN : linkedin.com/in/temitayo-l-74984b16a\n\nAvailable for selected collaborations.', actions: [{ label: 'Email Malik ↗', href: 'mailto:heymalik05@gmail.com' }, { label: 'LinkedIn ↗', href: 'https://www.linkedin.com/in/temitayo-l-74984b16a/' }], followUps: askFollowUps.CONTACT },
@@ -154,6 +157,7 @@ const askAnswers: Record<string, AskAnswer> = {
   NOMI: { text: 'Nomi is an adaptive learning product designed around a simple idea: learning should respond to the learner, not force every learner through the same path.\n\nPractice, progress, recommendations, and contextual AI work together to shape what the learner does next.', actions: [{ label: 'Open Nomi case study ↗', page: 'workCaseStudy', slug: 'nomi' }], followUps: askFollowUps.NOMI },
   HANYA: { text: 'An AI-assisted healthcare navigator that helps people understand what kind of care to seek next, without pretending to diagnose them.\n\nSafety means steering people toward appropriate care : guidance, not diagnosis.', actions: [{ label: 'Open Hanya case study ↗', page: 'workCaseStudy', slug: 'hanya' }], followUps: askFollowUps.HANYA },
   YOUSEWIRE: { text: 'A cross-border financial platform designed to help individuals and businesses hold, move, receive, convert, and manage money across currencies and payment networks.', actions: [{ label: 'Open Yousewire case study ↗', page: 'workCaseStudy', slug: 'yousewire' }], followUps: askFollowUps.YOUSEWIRE },
+  ANANSI_GALLERY: { text: 'Anansi Gallery is an immersive art-discovery experience that connects a public catalogue with an explorable browser-based 3D gallery. Guests can encounter artworks spatially, read their stories, save favourites, and create keepsakes from a visit.\n\nThe published case study clearly separates the working frontend demonstration from social, messaging, and durable server features that would require a production backend.', actions: [{ label: 'Open Anansi Gallery case study ↗', page: 'workCaseStudy', slug: 'anansi-gallery' }, { label: 'Visit Anansi Gallery ↗', href: 'https://anansi-gallery.vercel.app/catalogue.html#home' }], followUps: askFollowUps.ANANSI_GALLERY },
   FINLANCER_WEBSITE: { text: 'The Finlancer website turns a mobile financial operating system for freelancers into a clear, connected story about income, invoices, tax planning, and goals. The redesign retained the product’s energy while improving comprehension, responsive consistency, and mobile stability.', actions: [{ label: 'Visit Finlancer website', href: 'https://finlancer-virid.vercel.app/' }], followUps: askFollowUps.NOMI },
   NOMI_WEBSITE: { text: 'The Nomi website turns an adaptive learning system into a clear, playful product story. It helps learners and parents understand how practice, progress, recommendations, and contextual AI work together before they enter the product.', actions: [{ label: 'Visit Nomi website', href: 'https://nomi-alpha-bay.vercel.app' }], followUps: askFollowUps.NOMI },
   BRANDING: { text: 'Malik has worked independently in brand design since 2018, alongside his product practice. His branding work covers identity systems, visual direction, packaging, print, campaign design, and digital applications.\n\nThe same systems thinking carries across both disciplines: establish a clear idea, build a visual language around it, and make it hold together across every touchpoint.', actions: [{ label: 'View branding work ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.BRANDING },
@@ -422,12 +426,12 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
   const moveTab = (event: React.KeyboardEvent) => {
     if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return
     event.preventDefault()
-    const order = ['product', 'branding', 'lab', 'sandbox', 'about'] as const
-    const at = order.indexOf(mode)
+    const order = ['product', 'branding', 'lab', 'sandbox'] as const
+    const at = mode === 'about' ? 0 : order.indexOf(mode)
     const next = event.key === 'ArrowRight' ? (at + 1) % order.length : (at - 1 + order.length) % order.length
     changeMode(order[next])
   }
-  const productLine: Record<string, string> = { prima: 'AI · Fintech', nomi: 'AI · Education', hanya: 'Healthcare · AI', yousewire: 'Fintech' }
+  const productLine: Record<string, string> = { prima: 'AI · Fintech', nomi: 'AI · Education', hanya: 'Healthcare · AI', yousewire: 'Fintech', 'anansi-gallery': 'Immersive Web · Art' }
   return <div className={`home-shell home-mode-${mode}`}>
     <aside className="home-rail" aria-label="Malik profile and site navigation">
       <div className="rail-mark" aria-hidden="true">M<span>/</span></div>
@@ -440,6 +444,7 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
         <button className="rail-link rail-placeholder" type="button" disabled title="Résumé to be added" aria-label="View résumé : résumé coming soon"><Icon name="file" />View résumé</button>
         <a className="rail-link" href={`mailto:${contact.email}`}><Icon name="mail" />Contact me</a>
       </div>
+      <button id="rail-about" type="button" className={`rail-link rail-about${mode === 'about' ? ' is-active' : ''}`} aria-pressed={mode === 'about'} onClick={() => changeMode('about')}><Icon name="user" />About</button>
       <div className="rail-social"><SocialLinks /></div>
     </aside>
     <div className="home-canvas" role="region" aria-label="Portfolio canvas" tabIndex={0} ref={canvasRef} onScroll={onCanvasScroll}>
@@ -449,7 +454,6 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
           <button role="tab" id="tab-branding" aria-selected={mode === 'branding'} aria-controls="panel-branding" className={mode === 'branding' ? 'is-active' : ''} onClick={() => changeMode('branding')} onKeyDown={moveTab}><Icon name="brand" />Branding</button>
           <button role="tab" id="tab-lab" aria-selected={mode === 'lab'} aria-controls="panel-lab" className={mode === 'lab' ? 'is-active' : ''} onClick={() => changeMode('lab')} onKeyDown={moveTab}><Icon name="lab" />Lab</button>
           <button role="tab" id="tab-sandbox" aria-selected={mode === 'sandbox'} aria-controls="panel-sandbox" className={mode === 'sandbox' ? 'is-active' : ''} onClick={() => changeMode('sandbox')} onKeyDown={moveTab}><Icon name="sandbox" />Sandbox</button>
-          <button role="tab" id="tab-about" aria-selected={mode === 'about'} aria-controls="panel-about" className={mode === 'about' ? 'is-active' : ''} onClick={() => changeMode('about')} onKeyDown={moveTab}><Icon name="user" />About</button>
         </div>
       </div>
       {mode === 'product' ? <section className="home-panel" key="product" id="panel-product" role="tabpanel" aria-labelledby="tab-product">
@@ -476,7 +480,7 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
         <h2 className="visually-hidden">Sandbox</h2>
         <div className="sandbox-intro" id="sandbox-anchor"><span>DESIGN EXPLORATIONS</span><h3>A place for ideas<br />that deserve to exist.</h3><p>Visual studies, interface fragments, compositions, and aesthetic experiments. No case study required.</p></div>
         <div className="empty-panel sandbox-empty"><div className="empty-well" aria-hidden="true"><span className="tile-pending">Explorations coming soon</span></div><p className="empty-title">The canvas is open.</p><p className="empty-note">New visual experiments will appear here as they are made.</p></div>
-      </section> : <section className="home-panel" key="about" id="panel-about" role="tabpanel" aria-labelledby="tab-about">
+      </section> : <section className="home-panel" key="about" id="panel-about" role="tabpanel" aria-labelledby="rail-about">
         <h2 className="visually-hidden">About Malik</h2>
         <AboutEditorial experienceRecords={experienceRecords} />
       </section>}
@@ -529,6 +533,7 @@ function About() {
 function WorkIndex({ onProjectOpen }: { onProjectOpen: (slug: string) => void }) { return <section className="work-page" id="work"><div className="section-label">M/ WORK <span>INDEX</span></div><h1>SELECTED<br />PRODUCT<br />WORK.</h1><p className="work-intro">A selection of products, systems and experiences I've designed across AI, fintech and digital platforms.</p><div className="work-index">{workProjects.map(project => <article key={project.slug}><button onClick={() => onProjectOpen(project.slug)} aria-label={`Open ${project.name} ${project.hasCaseStudy ? 'case study' : 'case study preparation'}`}><span>{project.index} /</span><div className="work-media" aria-hidden="true">MEDIA / IN PREPARATION</div><h2>{project.name}</h2><small>{project.status}</small></button></article>)}</div></section> }
 
 function WorkPreparation({ project, onBack, onNext }: { project?: WorkProject; onBack: () => void; onNext: (slug: string) => void }) {
+  if (project?.slug === 'anansi-gallery') return <AnansiProductCase onNext={onNext} />
   if (project?.slug === 'prima') return <PrimaProductCase onNext={onNext} />
   if (project?.slug === 'nomi') return <NomiProductCase onNext={onNext} />
   if (project?.slug === 'hanya') return <HanyaProductCase onNext={onNext} />

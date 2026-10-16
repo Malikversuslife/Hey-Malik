@@ -89,6 +89,21 @@ export const productCaseMeta: Record<string, ProductCaseMeta> = {
     platform: 'Responsive Web Application',
     projectType: 'Live Product',
     intro: 'A cross-border financial platform designed to help individuals and businesses hold, move, receive, convert, and manage money across currencies and payment networks.',
+    nextProject: 'anansi-gallery'
+  },
+  'anansi-gallery': {
+    slug: 'anansi-gallery',
+    index: '07',
+    title: 'ANANSI GALLERY',
+    descriptor: 'An immersive art-discovery experience that brings a public website, an explorable gallery, and personal expression into one journey.',
+    discipline: 'Product Design · Immersive Web',
+    role: 'Product Designer · Experience Designer · Frontend Implementation',
+    scope: 'Product Strategy · UX Architecture · 3D Experience · Responsive Design · Frontend Implementation',
+    platform: 'Public Website + Browser-based 3D Gallery',
+    projectType: 'Deployed Interactive Frontend Demonstration',
+    prototypeLabel: 'Live Gallery Experience',
+    prototypeUrl: 'https://anansi-gallery.vercel.app/catalogue.html#home',
+    intro: 'Anansi asks what visiting art online could feel like if it were less like browsing a catalogue and more like entering a place.',
     nextProject: 'prima'
   }
 }
@@ -97,5 +112,6 @@ export const productCaseProjectMeta: Record<string, ProductCaseProjectMeta> = {
   prima: { slug: 'prima', index: '01', title: 'PRIMA', descriptor: 'AI · Fintech', discipline: 'Product Design · AI', note: 'AI-assisted verification OS for decentralized payments.' },
   nomi: { slug: 'nomi', index: '02', title: 'NOMI', descriptor: 'AI · Education', discipline: 'Product Design · AI', note: 'An adaptive learning companion that responds to how the learner learns.' },
   hanya: { slug: 'hanya', index: '04', title: 'HANYA', descriptor: 'Healthcare · AI', discipline: 'Product Design · AI', note: 'AI-assisted healthcare navigation built around guidance, safety and human judgement.' },
-  yousewire: { slug: 'yousewire', index: '05', title: 'YOUSEWIRE', descriptor: 'Fintech', discipline: 'Product Design · Fintech', note: 'A cross-border financial system for personal and business money.' }
+  yousewire: { slug: 'yousewire', index: '05', title: 'YOUSEWIRE', descriptor: 'Fintech', discipline: 'Product Design · Fintech', note: 'A cross-border financial system for personal and business money.' },
+  'anansi-gallery': { slug: 'anansi-gallery', index: '07', title: 'ANANSI GALLERY', descriptor: 'Immersive Web · Art', discipline: 'Product Design · Immersive Web', note: 'A browser-based art journey built around atmosphere, access, and personal expression.' }
 }
