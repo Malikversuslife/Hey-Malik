@@ -268,12 +268,14 @@ function App() {
   const [route, setRoute] = useState(routeFromPath)
   const page = route.page
   const [askOpen, setAskOpen] = useState(false)
+  const [askClosing, setAskClosing] = useState(false)
   const [askInput, setAskInput] = useState('')
   const [askInterpreting, setAskInterpreting] = useState(false)
   const [askMessages, setAskMessages] = useState<AskMessage[]>([])
   const askInputRef = useRef<HTMLInputElement>(null)
   const askBodyRef = useRef<HTMLDivElement>(null)
   const askReturnEl = useRef<HTMLElement | null>(null)
+  const askCloseTimer = useRef<number | null>(null)
   const askMsgId = useRef(0)
   const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
   const navigate = (next: Page, target?: string, slug?: string, view?: HomeMode) => {
@@ -290,14 +292,29 @@ function App() {
     }, 30)
   }
   const openAsk = (focus = true) => {
+    if (askCloseTimer.current !== null) window.clearTimeout(askCloseTimer.current)
+    askCloseTimer.current = null
     askReturnEl.current = document.activeElement as HTMLElement | null
+    setAskClosing(false)
     setAskOpen(true)
     if (focus) window.setTimeout(() => askInputRef.current?.focus(), 140)
   }
   const closeAsk = () => {
-    setAskOpen(false)
     const returnTo = askReturnEl.current
-    window.setTimeout(() => returnTo?.focus(), 0)
+    if (reducedMotion()) {
+      setAskOpen(false)
+      setAskClosing(false)
+      window.setTimeout(() => returnTo?.focus(), 0)
+      return
+    }
+    if (askClosing) return
+    setAskClosing(true)
+    askCloseTimer.current = window.setTimeout(() => {
+      setAskOpen(false)
+      setAskClosing(false)
+      askCloseTimer.current = null
+      returnTo?.focus()
+    }, 700)
   }
   const resetAsk = () => { setAskMessages([]); setAskInterpreting(false); setAskInput('') }
   const askQuestion = (raw: string) => {
@@ -333,6 +350,9 @@ function App() {
     const focusTimer = window.setTimeout(() => askInputRef.current?.focus(), 140)
     return () => window.clearTimeout(focusTimer)
   }, [askOpen])
+  useEffect(() => () => {
+    if (askCloseTimer.current !== null) window.clearTimeout(askCloseTimer.current)
+  }, [])
   useEffect(() => {
     const body = askBodyRef.current
     if (body) body.scrollTop = body.scrollHeight
@@ -348,8 +368,8 @@ function App() {
     {page === 'workCaseStudy' && <NewCaseShell key={`product-${route.slug}`} kind="product" crumbs={[{ label: breadcrumbMark, onClick: caseBack('product'), mark: true }, { label: 'PRODUCT DESIGN', onClick: caseBack('product') }, { label: workProjects.find(project => project.slug === route.slug)?.name ?? 'CASE STUDY', current: true }]} onBack={caseBack('product')} onAsk={() => openAsk()}><WorkPreparation project={workProjects.find(project => project.slug === route.slug)} onBack={caseBack('product')} onNext={slug => navigate('workCaseStudy', undefined, slug)} /></NewCaseShell>}
     {page === 'brandingCaseStudy' && <NewCaseShell key={`brand-${route.slug}`} kind="brand" crumbs={[{ label: breadcrumbMark, onClick: caseBack('branding'), mark: true }, { label: 'BRANDING', onClick: caseBack('branding') }, { label: brandProjects.find(project => project.slug === route.slug)?.name ?? 'CASE STUDY', current: true }]} onBack={caseBack('branding')} onAsk={() => openAsk()}><BrandCase project={brandProjects.find(project => project.slug === route.slug)} onNext={slug => navigate('brandingCaseStudy', undefined, slug)} /></NewCaseShell>}
     {page === 'labExperiment' && <NewCaseShell key={`lab-${route.slug}`} kind="lab" crumbs={[{ label: breadcrumbMark, onClick: caseBack('lab'), mark: true }, { label: 'LAB', onClick: caseBack('lab') }, { label: labExperiments.find(experiment => experiment.slug === route.slug)?.title ?? 'EXPERIMENT', current: true }]} onBack={caseBack('lab')} onAsk={() => openAsk()}><LabExperimentPage experiment={labExperiments.find(experiment => experiment.slug === route.slug)} onBack={caseBack('lab')} /></NewCaseShell>}
-    {page === 'home' && !askOpen && <button className="askmalik-float" onClick={() => openAsk()} aria-haspopup="dialog"><Icon name="chat" />Ask Malik</button>}
-    {askOpen && createPortal(<section className="askpanel" role="dialog" aria-modal="true" aria-label="Ask Malik">
+    {!askOpen && <button className="askmalik-float" onClick={() => openAsk()} aria-haspopup="dialog"><Icon name="chat" />Ask Malik</button>}
+    {askOpen && createPortal(<div className={`ask-vacuum-stage ${askClosing ? 'is-collapsing' : 'is-erupting'}`}><section className={`askpanel ${askClosing ? 'is-vacuuming' : 'is-materializing'}`} role="dialog" aria-modal="true" aria-label="Ask Malik" aria-hidden={askClosing || undefined}>
     <header className="askpanel-head">
       <span className="askpanel-title"><Icon name="chat" />Ask Malik</span>
       {askMessages.length > 0 && <button className="askpanel-new" type="button" onClick={resetAsk}>New conversation</button>}
@@ -374,7 +394,7 @@ function App() {
         <button type="submit" className="askpanel-send" aria-label="Ask" disabled={askInterpreting || !askInput.trim()}><Icon name="send" /></button>
       </form>
     </footer>
-  </section>, document.body)}
+  </section></div>, document.body)}
   </main>
 }
 
@@ -384,21 +404,87 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
     return view === 'branding' || view === 'lab' || view === 'sandbox' || view === 'about' ? view : 'product'
   })
   const [activeLab, setActiveLab] = useState<LabExperiment | null>(null)
+  const [transitionPhase, setTransitionPhase] = useState<'idle' | 'folding' | 'revealing'>('idle')
+  const [slashMuted, setSlashMuted] = useState(() => localStorage.getItem('m:slash-muted') === 'true')
   const canvasRef = useRef<HTMLDivElement>(null)
+  const transitionTimers = useRef<number[]>([])
   const lastScrollRef = useRef(0)
   const calm = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const playSlash = () => {
+    if (slashMuted || calm()) return
+    try {
+      const AudioCtx = window.AudioContext || (window as typeof window & { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+      const context = new AudioCtx()
+      const now = context.currentTime
+      const master = context.createGain()
+      master.gain.setValueAtTime(.0001, now)
+      master.gain.exponentialRampToValueAtTime(.22, now + .018)
+      master.gain.exponentialRampToValueAtTime(.0001, now + .52)
+      master.connect(context.destination)
+      const blade = context.createOscillator()
+      const bladeGain = context.createGain()
+      blade.type = 'sine'
+      blade.frequency.setValueAtTime(1850, now)
+      blade.frequency.exponentialRampToValueAtTime(520, now + .34)
+      bladeGain.gain.setValueAtTime(.18, now)
+      bladeGain.gain.exponentialRampToValueAtTime(.0001, now + .42)
+      blade.connect(bladeGain).connect(master)
+      const buffer = context.createBuffer(1, Math.ceil(context.sampleRate * .48), context.sampleRate)
+      const data = buffer.getChannelData(0)
+      for (let index = 0; index < data.length; index += 1) data[index] = (Math.random() * 2 - 1) * Math.pow(1 - index / data.length, 2)
+      const wind = context.createBufferSource()
+      const filter = context.createBiquadFilter()
+      const windGain = context.createGain()
+      wind.buffer = buffer
+      filter.type = 'bandpass'; filter.frequency.setValueAtTime(1350, now); filter.Q.value = .65
+      windGain.gain.setValueAtTime(.55, now); windGain.gain.exponentialRampToValueAtTime(.0001, now + .48)
+      wind.connect(filter).connect(windGain).connect(master)
+      blade.start(now); blade.stop(now + .45); wind.start(now); wind.stop(now + .49)
+      window.setTimeout(() => void context.close(), 650)
+    } catch { /* audio is an enhancement */ }
+  }
+  const startSlash = () => { playSlash(); setTransitionPhase('folding') }
+  const toggleSlashSound = () => setSlashMuted(previous => { const next = !previous; localStorage.setItem('m:slash-muted', String(next)); return next })
   const scrollKey = (key: HomeMode) => `m:portfolio:home-scroll:${key}`
   const changeMode = (next: HomeMode) => {
-    if (next === mode) return
+    if (next === mode || transitionPhase !== 'idle') return
     try { sessionStorage.setItem(scrollKey(mode), String(lastScrollRef.current)) } catch { /* storage unavailable */ }
-    window.history.pushState(null, '', `/?view=${next}`)
-    setMode(next)
-    canvasRef.current?.scrollTo({ top: 0 })
+    if (calm()) {
+      window.history.pushState(null, '', `/?view=${next}`)
+      setMode(next)
+      canvasRef.current?.scrollTo({ top: 0 })
+      return
+    }
+    startSlash()
+    transitionTimers.current.push(window.setTimeout(() => {
+      window.history.pushState(null, '', `/?view=${next}`)
+      setMode(next)
+      canvasRef.current?.scrollTo({ top: 0 })
+      setTransitionPhase('revealing')
+    }, 800))
+    transitionTimers.current.push(window.setTimeout(() => setTransitionPhase('idle'), 1520))
+  }
+  const foldToProject = (open: () => void) => {
+    if (transitionPhase !== 'idle') return
+    if (calm()) { open(); return }
+    startSlash()
+    transitionTimers.current.push(window.setTimeout(open, 800))
+  }
+  const foldWithinPortfolio = (open: () => void) => {
+    if (transitionPhase !== 'idle') return
+    if (calm()) { open(); return }
+    startSlash()
+    transitionTimers.current.push(window.setTimeout(() => {
+      open()
+      setTransitionPhase('revealing')
+    }, 800))
+    transitionTimers.current.push(window.setTimeout(() => setTransitionPhase('idle'), 1520))
   }
   const onCanvasScroll = () => { lastScrollRef.current = canvasRef.current?.scrollTop ?? 0 }
   useEffect(() => {
     return () => { try { sessionStorage.setItem(scrollKey(mode), String(lastScrollRef.current)) } catch { /* storage unavailable */ } }
   }, [mode])
+  useEffect(() => () => transitionTimers.current.forEach(timer => window.clearTimeout(timer)), [])
   useEffect(() => {
     if (!activeLab) return
     const close = (event: KeyboardEvent) => { if (event.key === 'Escape') setActiveLab(null) }
@@ -432,7 +518,16 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
     changeMode(order[next])
   }
   const productLine: Record<string, string> = { prima: 'AI · Fintech', nomi: 'AI · Education', hanya: 'Healthcare · AI', yousewire: 'Fintech', 'anansi-gallery': 'Immersive Web · Art' }
-  return <div className={`home-shell home-mode-${mode}`}>
+  const modeIntro: Record<HomeMode, { eyebrow: string; line: string; accent: string; note: string }> = {
+    product: { eyebrow: 'PRODUCT DESIGN', line: 'Products for', accent: 'complicated realities.', note: 'systems, behaviour + useful intelligence' },
+    branding: { eyebrow: 'BRAND DESIGN', line: 'Ideas made', accent: 'impossible to miss.', note: 'identity, packaging + visual worlds' },
+    lab: { eyebrow: 'MALIK’S LAB', line: 'Small builds.', accent: 'Big questions.', note: 'experiments made to learn in public' },
+    sandbox: { eyebrow: 'DESIGN EXPLORATIONS', line: 'Good ideas need', accent: 'room to play.', note: 'visual studies without a brief' },
+    about: { eyebrow: 'ABOUT MALIK', line: 'Designing technology', accent: 'with more humanity.', note: 'product, brand + the space between' }
+  }
+  const intro = modeIntro[mode]
+  return <div className={`home-shell home-mode-${mode} page-transition-${transitionPhase}`} aria-busy={transitionPhase !== 'idle'}>
+    <div className="transition-seam" aria-hidden="true"><i /><span className="transition-mark">M/</span><span className="slash-trail" /><svg className="transition-sword" viewBox="0 0 420 100" focusable="false"><path className="sword-blade" d="M18 50 300 31l48 19-48 19z"/><path className="sword-shine" d="M31 49 300 38l23 10-292 5z"/><path className="sword-guard" d="M298 23h15v54h-15z"/><path className="sword-grip" d="M313 37h90v26h-90z"/><path className="sword-wrap" d="m325 38 13 24m10-24 13 24m10-24 13 24"/></svg></div>
     <aside className="home-rail" aria-label="Malik profile and site navigation">
       <div className="rail-mark" aria-hidden="true">M<span>/</span></div>
       <div className="rail-portrait"><img src="/malik-portrait.jpg" alt="Portrait of Temitayo Lawal Malik" /></div>
@@ -441,11 +536,13 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
       <p className="rail-intro">I design digital products and visual identities, from early ideas and systems to prototypes and shipped experiences.</p>
       <p className="rail-status"><i aria-hidden="true" />Available for work</p>
       <div className="rail-actions">
-        <button className="rail-link rail-placeholder" type="button" disabled title="Résumé to be added" aria-label="View résumé : résumé coming soon"><Icon name="file" />View résumé</button>
+        <button id="rail-about" type="button" className={`rail-link rail-about${mode === 'about' ? ' is-active' : ''}`} aria-pressed={mode === 'about'} onClick={() => changeMode('about')}><Icon name="user" />About</button>
         <a className="rail-link" href={`mailto:${contact.email}`}><Icon name="mail" />Contact me</a>
       </div>
-      <button id="rail-about" type="button" className={`rail-link rail-about${mode === 'about' ? ' is-active' : ''}`} aria-pressed={mode === 'about'} onClick={() => changeMode('about')}><Icon name="user" />About</button>
-      <div className="rail-social"><SocialLinks /></div>
+      <div className="rail-social">
+        <SocialLinks />
+        <button className="rail-social-resume" type="button" disabled title="Résumé to be added" aria-label="View résumé : résumé coming soon"><Icon name="file" />View résumé</button>
+      </div>
     </aside>
     <div className="home-canvas" role="region" aria-label="Portfolio canvas" tabIndex={0} ref={canvasRef} onScroll={onCanvasScroll}>
       <div className="canvas-head">
@@ -455,17 +552,23 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
           <button role="tab" id="tab-lab" aria-selected={mode === 'lab'} aria-controls="panel-lab" className={mode === 'lab' ? 'is-active' : ''} onClick={() => changeMode('lab')} onKeyDown={moveTab}><Icon name="lab" />Lab</button>
           <button role="tab" id="tab-sandbox" aria-selected={mode === 'sandbox'} aria-controls="panel-sandbox" className={mode === 'sandbox' ? 'is-active' : ''} onClick={() => changeMode('sandbox')} onKeyDown={moveTab}><Icon name="sandbox" />Sandbox</button>
         </div>
+        <button className="slash-sound-toggle" type="button" onClick={toggleSlashSound} aria-pressed={slashMuted} aria-label={`${slashMuted ? 'Enable' : 'Mute'} navigation slash sound`}><span aria-hidden="true">{slashMuted ? '◌' : '◉'}</span>SFX {slashMuted ? 'OFF' : 'ON'}</button>
       </div>
+      <header className="canvas-intro" aria-labelledby="canvas-intro-title">
+        <span>{intro.eyebrow}</span>
+        <h2 id="canvas-intro-title">{intro.line}<br /><em>{intro.accent}</em></h2>
+        <p>{intro.note}</p>
+      </header>
       {mode === 'product' ? <section className="home-panel" key="product" id="panel-product" role="tabpanel" aria-labelledby="tab-product">
         <h2 className="visually-hidden">Product design</h2>
-        <ProjectStack entries={workProjects.map(project => ({ id: project.slug, index: project.index, title: project.name, descriptor: productLine[project.slug] ?? project.category?.replace(/ \/ /g, ' · ') ?? project.status, live: true, slug: project.slug, label: `P/ ${project.index}`, cover: project.cover, externalUrl: project.externalUrl }))} onOpen={onProjectOpen} note="Real product capture to be added to each project as it is produced." anchor="product-anchor" />
+        <ProjectStack entries={workProjects.map(project => ({ id: project.slug, index: project.index, title: project.name, descriptor: productLine[project.slug] ?? project.category?.replace(/ \/ /g, ' · ') ?? project.status, live: true, slug: project.slug, label: `P/ ${project.index}`, cover: project.cover, externalUrl: project.externalUrl }))} onOpen={slug => foldToProject(() => onProjectOpen(slug))} note="Real product capture to be added to each project as it is produced." anchor="product-anchor" />
       </section> : mode === 'branding' ? <section className="home-panel" key="branding" id="panel-branding" role="tabpanel" aria-labelledby="tab-branding">
         <h2 className="visually-hidden">Branding</h2>
-        <ProjectStack entries={brandingIndex.map(project => ({ id: project.id, index: project.index, title: project.title, descriptor: project.descriptor, live: true, slug: project.slug, label: `B/ ${project.index}`, cover: project.cover }))} onOpen={onBrandProjectOpen} anchor="branding-anchor" />
+        <ProjectStack entries={brandingIndex.map(project => ({ id: project.id, index: project.index, title: project.title, descriptor: project.descriptor, live: true, slug: project.slug, label: `B/ ${project.index}`, cover: project.cover }))} onOpen={slug => foldToProject(() => onBrandProjectOpen(slug))} anchor="branding-anchor" />
       </section> : mode === 'lab' ? <section className="home-panel" key="lab" id="panel-lab" role="tabpanel" aria-labelledby="tab-lab">
         <h2 className="visually-hidden">Lab</h2>
         {labExperiments.length ? <div className="work-gallery">
-          {labExperiments.map(experiment => <button key={experiment.slug} className="work-tile tile-standard lab-card" onClick={() => setActiveLab(experiment)} aria-label={`${experiment.title} : open interactive preview`}>
+          {labExperiments.map(experiment => <button key={experiment.slug} className="work-tile tile-standard lab-card" onClick={() => foldWithinPortfolio(() => setActiveLab(experiment))} aria-label={`${experiment.title} : open interactive preview`}>
             <span className="tile-visual" aria-hidden="true">{experiment.cover ? <img src={experiment.cover} alt="" /> : <span className="tile-pending">Image coming soon</span>}</span>
             <span className="tile-meta lab-card-meta"><span className="tile-name">{displayProjectTitle(experiment.title)}</span></span>
             <span className="lab-card-description">{experiment.summary}</span>
@@ -484,7 +587,10 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
         <h2 className="visually-hidden">About Malik</h2>
         <AboutEditorial experienceRecords={experienceRecords} />
       </section>}
-      {mode !== 'about' && <button className="canvas-more" onClick={() => changeMode('about')}>More about Malik : experience, process, principles <span aria-hidden="true">→</span></button>}
+      {mode !== 'about' && <button className="canvas-more" onClick={() => changeMode('about')}>
+        <span className="canvas-more-copy"><small>BEYOND THE PROJECTS</small><strong>Meet the person<br />behind the pixels.</strong><em>Experience · process · principles</em></span>
+        <span className="canvas-more-action">More about Malik <b aria-hidden="true">↗</b></span>
+      </button>}
     </div>
     {activeLab && <div className="lab-preview-overlay" role="dialog" aria-modal="true" aria-labelledby="lab-preview-title" onMouseDown={event => { if (event.target === event.currentTarget) setActiveLab(null) }}>
       <div className={`lab-preview-panel lab-preview-${activeLab.previewMode ?? 'mobile'}`}>
