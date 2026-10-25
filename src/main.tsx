@@ -19,6 +19,7 @@ import { BrandCase } from './components/brand/BrandCase'
 import { markInAppNavigation } from './components/CaseBackButton'
 import { NewCaseShell } from './components/NewCaseShell'
 import { ProjectStackMedia } from './components/ProjectStackMedia'
+import { ToolCarousel } from './components/ToolCarousel'
 import './styles.css'
 
 type ResponseMode = 'focus' | 'recompose' | 'connect' | 'divide' | 'sequence'
@@ -264,9 +265,36 @@ const routeFromPath = () => {
 
 const breadcrumbMark = <>M<span className="case-chrome-slash" aria-hidden="true">/</span></>
 
+type EntryPhase = 'showing' | 'exiting' | 'done'
+
+function PortfolioEntry({ phase }: { phase: Exclude<EntryPhase, 'done'> }) {
+  return <div className={`portfolio-entry portfolio-entry-${phase}`} aria-hidden="true">
+    <div className="portfolio-entry-curtain portfolio-entry-curtain-left" />
+    <div className="portfolio-entry-curtain portfolio-entry-curtain-right" />
+    <div className="portfolio-entry-polaroids">
+      {Array.from({ length: 12 }, (_, index) => <div className="entry-polaroid" key={index}>
+        <span className="entry-polaroid-photo" />
+        <small>DESIGN {String(index + 1).padStart(2, '0')}</small>
+      </div>)}
+    </div>
+    <div className="portfolio-entry-title">
+      <div className="entry-type-cycle" aria-label="Hey Malik">
+        <span>Hey Malik</span><span>Hey Malik</span><span>Hey Malik</span><span>Hey Malik</span><span>Hey Malik</span>
+      </div>
+      <p>Product &amp; Brand Designer</p>
+    </div>
+    <span className="portfolio-entry-seam" />
+  </div>
+}
+
 function App() {
   const [route, setRoute] = useState(routeFromPath)
   const page = route.page
+  const [entryPhase, setEntryPhase] = useState<EntryPhase>(() => {
+    if (route.page !== 'home' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return 'done'
+    if (new URLSearchParams(window.location.search).get('intro') === '1') return 'showing'
+    try { return sessionStorage.getItem('m:portfolio-entry-seen') === 'true' ? 'done' : 'showing' } catch { return 'showing' }
+  })
   const [askOpen, setAskOpen] = useState(false)
   const [askClosing, setAskClosing] = useState(false)
   const [askInput, setAskInput] = useState('')
@@ -357,13 +385,23 @@ function App() {
     const body = askBodyRef.current
     if (body) body.scrollTop = body.scrollHeight
   }, [askMessages, askInterpreting])
+  useEffect(() => {
+    if (entryPhase !== 'showing') return
+    const splitTimer = window.setTimeout(() => setEntryPhase('exiting'), 2650)
+    const finishTimer = window.setTimeout(() => {
+      setEntryPhase('done')
+      try { sessionStorage.setItem('m:portfolio-entry-seen', 'true') } catch { /* storage unavailable */ }
+    }, 3550)
+    return () => { window.clearTimeout(splitTimer); window.clearTimeout(finishTimer) }
+  }, [entryPhase])
   const handleIntelligentMove = (event: React.PointerEvent<HTMLSpanElement>) => {
     if (reducedMotion() || event.pointerType !== 'mouse') return
     const speed = Math.min(1, (Math.abs(event.movementX) + Math.abs(event.movementY)) / 26)
     event.currentTarget.style.setProperty('--tilt', `${(event.clientX % 15 - 7) * speed * .16}deg`); event.currentTarget.style.setProperty('--stretch', `${1 + speed * .035}`)
   }
   const caseBack = (view: HomeMode) => () => navigate('home', undefined, undefined, view)
-  return <main className={`${page !== 'home' ? `page-${page}` : ''}`}>
+  return <main className={`${page !== 'home' ? `page-${page}` : ''}${page === 'home' && entryPhase !== 'done' ? ` portfolio-entry-${entryPhase}-main` : ''}`}>
+    {page === 'home' && entryPhase !== 'done' && <PortfolioEntry phase={entryPhase} />}
     {page === 'home' && <HomeShell key={new URLSearchParams(window.location.search).get('view') ?? 'product'} onProjectOpen={slug => navigate('workCaseStudy', undefined, slug)} onBrandProjectOpen={slug => navigate('brandingCaseStudy', undefined, slug)} />}{false && <><section className="hero" id="hero"><div className="hero-title" aria-label="I design intelligent products for human decisions"><span>I DESIGN</span><span className="intelligent" onPointerMove={handleIntelligentMove}>INTELLIGENT</span><span>PRODUCTS</span><span>FOR HUMAN <em>decisions.</em></span></div><div className="role-response"><div>PRODUCT DESIGNER</div><span>AI / UX / SYSTEMS</span><p>I work where product thinking, interaction and implementation meet.</p></div><div className="hero-meta"><span>PRODUCT DESIGNER<br />AI / UX / SYSTEMS</span><span>LAGOS, NG<br />GLOBAL / REMOTE</span></div><button className="ask-entry" onClick={() => openAsk()}><b>●</b> ASK ME SOMETHING</button><p className="annotation">because someone still has to make one.</p></section><SelectedWork onProjectOpen={slug => navigate('workCaseStudy', undefined, slug)} onAllWork={() => navigate('work')} /><HomeSections submit={submit} /></>}
     {page === 'workCaseStudy' && <NewCaseShell key={`product-${route.slug}`} kind="product" crumbs={[{ label: breadcrumbMark, onClick: caseBack('product'), mark: true }, { label: 'PRODUCT DESIGN', onClick: caseBack('product') }, { label: workProjects.find(project => project.slug === route.slug)?.name ?? 'CASE STUDY', current: true }]} onBack={caseBack('product')} onAsk={() => openAsk()}><WorkPreparation project={workProjects.find(project => project.slug === route.slug)} onBack={caseBack('product')} onNext={slug => navigate('workCaseStudy', undefined, slug)} /></NewCaseShell>}
     {page === 'brandingCaseStudy' && <NewCaseShell key={`brand-${route.slug}`} kind="brand" crumbs={[{ label: breadcrumbMark, onClick: caseBack('branding'), mark: true }, { label: 'BRANDING', onClick: caseBack('branding') }, { label: brandProjects.find(project => project.slug === route.slug)?.name ?? 'CASE STUDY', current: true }]} onBack={caseBack('branding')} onAsk={() => openAsk()}><BrandCase project={brandProjects.find(project => project.slug === route.slug)} onNext={slug => navigate('brandingCaseStudy', undefined, slug)} /></NewCaseShell>}
@@ -539,6 +577,7 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
         <button id="rail-about" type="button" className={`rail-link rail-about${mode === 'about' ? ' is-active' : ''}`} aria-pressed={mode === 'about'} onClick={() => changeMode('about')}><Icon name="user" />About</button>
         <a className="rail-link" href={`mailto:${contact.email}`}><Icon name="mail" />Contact me</a>
       </div>
+      <ToolCarousel />
       <div className="rail-social">
         <SocialLinks />
         <button className="rail-social-resume" type="button" disabled title="Résumé to be added" aria-label="View résumé : résumé coming soon"><Icon name="file" />View résumé</button>
