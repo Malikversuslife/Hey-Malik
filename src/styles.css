@@ -540,7 +540,7 @@ main:has(> .home-shell) { padding-top:0; }
 main:has(> .home-shell) .return, main:has(> .home-shell) .back-to-top { display:none; }
 
 /* â€”â€”â€”â€”â€” PHASE 02 Â· ASK MALIK FLOATING CONTROL (home) â€”â€”â€”â€”â€” */
-.askmalik-float { position:fixed; z-index:6; right:20px; bottom:20px; display:inline-flex; align-items:center; gap:8px; width:fit-content; border:0; border-radius:999px; padding:11px 18px 12px; background:#211e18; color:#f9f6ef; font-family:'Rethink Sans',sans-serif; font-weight:500; font-size:14px; letter-spacing:-.01em; box-shadow:0 14px 32px -18px rgba(33,30,24,.45); transition:background .18s ease,transform .18s ease; }
+.askmalik-float { position:fixed; z-index:90; right:20px; bottom:20px; display:inline-flex; align-items:center; gap:8px; width:fit-content; border:0; border-radius:999px; padding:11px 18px 12px; background:#211e18; color:#f9f6ef; font-family:'Rethink Sans',sans-serif; font-weight:500; font-size:14px; letter-spacing:-.01em; box-shadow:0 14px 32px -18px rgba(33,30,24,.45); transition:background .18s ease,transform .18s ease; }
 .askmalik-float:hover { background:#6e695e; }
 .askmalik-float span { font-size:15px; }
 @media (prefers-reduced-motion:no-preference) { .askmalik-float { animation:float-in .3s cubic-bezier(.2,.7,.2,1) .1s both; } }
@@ -1307,9 +1307,9 @@ button:focus-visible,a:focus-visible,input:focus-visible { outline:3px solid rgb
 .askmalik-float:hover { background:#000; transform:translateY(-2px) scale(1.01); box-shadow:0 18px 42px rgba(0,0,0,.25); }
 .askpanel { width:min(440px,calc(100vw - 40px)); height:min(660px,calc(100dvh - 40px)); right:20px; bottom:20px; border:1px solid rgba(255,255,255,.64); border-radius:26px; background:rgba(250,250,252,.88); color:var(--ui-ink); box-shadow:var(--ui-shadow); -webkit-backdrop-filter:saturate(180%) blur(30px); backdrop-filter:saturate(180%) blur(30px); font-family:var(--ui-font); }
 .askpanel-head { min-height:58px; padding:13px 16px; border-bottom-color:var(--ui-line); background:rgba(255,255,255,.36); }
-.askpanel-title { font-size:16px; letter-spacing:-.015em; }
+.askpanel-title { display:inline-flex; align-items:center; gap:8px; margin-right:auto; font-size:16px; letter-spacing:-.015em; }
 .askpanel-new,.askpanel-close { min-height:34px; border-radius:999px; color:var(--ui-secondary); }
-.askpanel-new { padding:7px 11px; background:rgba(118,118,128,.10); }
+.askpanel-new { margin-left:0; padding:7px 11px; background:rgba(118,118,128,.10); }
 .askpanel-new:hover { background:rgba(118,118,128,.18); color:var(--ui-ink); text-decoration:none; }
 .askpanel-close { width:34px; padding:0; background:rgba(118,118,128,.10); }
 .askpanel-close:hover { background:rgba(118,118,128,.18); }
@@ -1342,7 +1342,10 @@ button:focus-visible,a:focus-visible,input:focus-visible { outline:3px solid rgb
   .home-shell { padding:0; background:#fff; }
   .home-rail,.home-canvas { border-radius:0; }
   .canvas-head { -webkit-backdrop-filter:saturate(180%) blur(22px); backdrop-filter:saturate(180%) blur(22px); }
-  .askpanel { width:100%; height:min(88dvh,100dvh); right:0; bottom:0; border-radius:28px 28px 0 0; border-bottom:0; }
+  .askpanel { width:100%; max-width:none; height:min(88dvh,100dvh); right:0; bottom:0; border-radius:28px 28px 0 0; border-right:0; border-bottom:0; border-left:0; }
+  .askpanel-head { width:100%; gap:8px; padding:12px 14px; }
+  .askpanel-title { min-width:0; }
+  .askpanel-close { flex:0 0 34px; margin-left:0; }
   .askpanel-body { padding:18px 16px; }
   .about-section>p { font-size:16px; }
 }
@@ -2113,7 +2116,7 @@ body::before {
 }
 
 /* Sci-fi gravity well: the panel is spaghettified through a visible singularity. */
-.ask-vacuum-stage { position:fixed; inset:0; z-index:39; pointer-events:none; overflow:hidden; }
+.ask-vacuum-stage { position:fixed; inset:0; z-index:90; pointer-events:none; overflow:hidden; }
 .ask-vacuum-stage .askpanel { pointer-events:auto; }
 .ask-vacuum-stage::before,.ask-vacuum-stage::after { content:''; position:absolute; right:-3px; bottom:-5px; pointer-events:none; opacity:0; }
 .ask-vacuum-stage::before {
@@ -2276,6 +2279,17 @@ body::before {
 .product-case .pc-media-grid,
 .case-media-placeholder {
   border-radius:0 !important;
+}
+
+/* Keep the complete two-device mobile presentation visible at its source ratio. */
+.pc-case-anansi #anansi-mobile .pc-media-frame {
+  aspect-ratio:auto !important;
+  min-height:0 !important;
+}
+.pc-case-anansi #anansi-mobile .pc-media-frame > img {
+  width:100% !important;
+  height:auto !important;
+  object-fit:contain !important;
 }
 
 /* Warm, playful portfolio system inspired by friendly community software. */

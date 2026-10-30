@@ -57,7 +57,7 @@ export type BrandingIndexProject = {
 export const brandingIndex: BrandingIndexProject[] = [
   { id: 'b-side-b', index: '001', slug: 'side-b', title: 'SIDE B', category: 'BRANDING', descriptor: 'Brand Identity · Packaging · Art Direction', ratio: 'ultra-wide', caseStudy: 'live', cover: '/Side%20b%20files/Side%20b%20thumbnail.png' },
   { id: 'b-the-kim-couture', index: '002', slug: 'the-kim-couture', title: 'THE KIM COUTURE', category: 'BRANDING', descriptor: 'Brand Identity · Fashion', ratio: '3:4', caseStudy: 'live', cover: '/Kim%20Branding%20files/Kim%20Thubnail.png' },
-  { id: 'b-finlancer', index: '003', slug: 'finlancer', title: 'FINLANCER', category: 'BRANDING', descriptor: 'Brand / Visual Identity', ratio: '21:9', caseStudy: 'live' },
+  { id: 'b-finlancer', index: '003', slug: 'finlancer', title: 'FINLANCER', category: 'BRANDING', descriptor: 'Brand / Visual Identity', ratio: '16:9', caseStudy: 'live', cover: '/Finlancer%20Branding%20Files/01-animated-identity-opener.gif' },
   { id: 'b-nomi', index: '005', slug: 'nomi', title: 'NOMI', category: 'BRANDING', descriptor: 'Brand / Visual Identity', ratio: '1:1', caseStudy: 'live', cover: '/Nomi%20Branding%20Files/Thimbnail.gif' },
   { id: 'b-belsquared', index: '006', slug: 'belsquared', title: 'BELSQUARED', category: 'BRANDING', descriptor: 'Brand Identity · Packaging', ratio: '16:9', caseStudy: 'live', cover: '/Belsquared%20Branding%20Files/04-three-flavour-packaging-family.png' }
 ]
@@ -197,7 +197,7 @@ export const brandProjects: BrandProject[] = [
     { title: 'Identity', statement: 'CLARITY FOR\nEVERY MOVE.', copy: 'The identity balances financial confidence with the flexibility and momentum associated with freelance work.' },
     { title: 'Visual Language', copy: 'A structured system of type, colour, iconography, and interface-led composition turns complex financial information into a clear visual rhythm.' },
     { title: 'Application', copy: 'The visual system is designed to move consistently across product screens, launch communication, social content, and supporting brand materials.' }
-  ], next: { name: 'PYCON NIGERIA 2024', slug: 'pycon-nigeria-2024', note: 'Conference Identity' } }),
+  ], hero: { index: 1, title: 'ANIMATED IDENTITY OPENER', ratio: '16:9', source: '/Finlancer%20Branding%20Files/01-animated-identity-opener.gif' }, gallery: [], next: { name: 'NOMI', slug: 'nomi', note: 'Brand / Visual Identity' } }),
   galleryProject({ slug: 'pycon-nigeria-2024', number: '004', name: 'PYCON NIGERIA 2024', descriptor: 'Conference Identity', tagline: 'A COMMUNITY\nIN MOTION.', intro: 'A conference identity designed to bring the energy of Nigeria’s Python community into one coherent experience.', year: '2024', world: 'pycon', story: [
     { title: 'Premise', copy: 'The conference brings different people, disciplines, and levels of experience into one community. Its identity needed to feel open, energetic, and unmistakably collective.' },
     { title: 'Identity', statement: 'BUILT BY\nTHE COMMUNITY.', copy: 'The system uses a flexible visual structure that can hold technical information while still feeling celebratory and human.' },

@@ -18,7 +18,7 @@ const tools: Tool[] = [
 
 function ToolMark({ tool }: { tool: Tool }) {
   if (tool.icon) return <svg role="img" viewBox="0 0 24 24" aria-label={`${tool.label} logo`}><path d={tool.icon.path} /></svg>
-  return <img src={tool.image} alt="" />
+  return <img src={tool.image} alt={`${tool.label} logo`} />
 }
 
 export function ToolCarousel() {
@@ -26,7 +26,7 @@ export function ToolCarousel() {
   return <section className="rail-tools" aria-label="Tools Malik uses">
     <div className="rail-tools-label"><span>TOOLS</span><small>DESIGN · BUILD · AI</small></div>
     <div className="rail-tools-window">
-      <div className="rail-tools-track">{repeated.map((tool, index) => <span className={`rail-tool rail-tool-${tool.key}`} key={`${tool.key}-${index}`} aria-hidden={index >= tools.length || undefined}>
+      <div className="rail-tools-track" role="list">{repeated.map((tool, index) => <span className={`rail-tool rail-tool-${tool.key}`} key={`${tool.key}-${index}`} role="listitem" aria-label={tool.label} aria-hidden={index >= tools.length || undefined}>
         <i><ToolMark tool={tool} /></i><b>{tool.label}</b>
       </span>)}</div>
     </div>

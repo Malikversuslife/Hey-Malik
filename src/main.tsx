@@ -36,7 +36,6 @@ const responses: PortfolioResponse[] = [
   { terms: ['what is side b', 'tell me about side b', 'side b case study', 'side b branding', 'side b identity', 'side b packaging', 'old stuff new socks'], mode: 'connect', targets: ['sideb-premise'], route: 'brandingCaseStudy', routeTarget: 'sideb-premise', classification: { intent: 'SIDE_B', evidence: 'BRAND CASE 001', representation: 'CONNECT' } },
   { terms: ['the kim couture', 'kim couture'], mode: 'focus', targets: ['branding-anchor'], route: 'home', routeTarget: 'branding-anchor', classification: { intent: 'KIM_COUTURE', evidence: 'BRANDING INDEX', representation: 'FOCUS' } },
   { terms: ['finlancer'], mode: 'focus', targets: ['branding-anchor'], route: 'home', routeTarget: 'branding-anchor', classification: { intent: 'FINLANCER', evidence: 'BRANDING INDEX', representation: 'FOCUS' } },
-  { terms: ['pycon nigeria 2024', 'pycon branding', 'pycon identity'], mode: 'focus', targets: ['branding-anchor'], route: 'home', routeTarget: 'branding-anchor', classification: { intent: 'PYCON_BRAND', evidence: 'BRANDING INDEX', representation: 'FOCUS' } },
   { terms: ['nomi branding', 'nomi visual identity', 'nomi brand identity'], mode: 'focus', targets: ['branding-anchor'], route: 'home', routeTarget: 'branding-anchor', classification: { intent: 'NOMI_BRAND', evidence: 'BRANDING INDEX', representation: 'FOCUS' } },
   { terms: ['belsquared brand', 'belsquared branding', 'belsquared identity', 'belsquared packaging'], mode: 'focus', targets: ['branding-anchor'], route: 'home', routeTarget: 'branding-anchor', classification: { intent: 'BELSQUARED_BRAND', evidence: 'BRANDING INDEX', representation: 'FOCUS' } },
   { terms: ['what is yousewire', 'tell me about yousewire', 'malik do on yousewire', 'design fintech', 'personal and business differ', 'yousewire verification', 'transaction tiers', 'business payments', 'roles and permissions', 'approval workflows', 'design payroll', 'work with developers', 'consistency without uniformity'], mode: 'connect', targets: ['yousewire-contexts'], route: 'workCaseStudy', routeTarget: 'yousewire-contexts', classification: { intent: 'YOUSEWIRE', evidence: 'CASE 003', representation: 'CONNECT' } },
@@ -132,7 +131,6 @@ const askFollowUps: Record<string, string[]> = {
   SIDE_B: ['What branding does Malik do?', 'What branding projects are in the portfolio?', 'Tell me about The Kim Couture.'],
   KIM_COUTURE: ['What is SIDE B?', 'What branding projects are in the portfolio?', 'What branding does Malik do?'],
   FINLANCER: ['What is SIDE B?', 'What branding projects are in the portfolio?', 'What branding does Malik do?'],
-  PYCON_BRAND: ['What is SIDE B?', 'What branding projects are in the portfolio?', 'What branding does Malik do?'],
   NOMI_BRAND: ['What is SIDE B?', 'What branding projects are in the portfolio?', 'What branding does Malik do?'],
   BELSQUARED_BRAND: ['What is SIDE B?', 'What branding projects are in the portfolio?', 'What branding does Malik do?']
 }
@@ -148,7 +146,7 @@ const askAnswers: Record<string, AskAnswer> = {
   PRINCIPLES: { text: "TRUST & EXPLAINABILITY : making enough of a system visible for people to make informed decisions.\nSYSTEMS THINKING : looking for relationships, constraints and the effects that exist beyond one screen.\nHUMAN-CENTERED AI : exploring intelligence that supports judgement rather than quietly replacing it.", followUps: askFollowUps.PRINCIPLES },
   BACKGROUND: { text: "I didn't really leave visual design behind. I kept adding new questions to it.\n\nVisual / Brand design → Product design → Product systems → Design leadership → Design + build → AI product design", followUps: askFollowUps.BACKGROUND },
   EXPERIENCE: { text: 'OCT 2025–PRESENT · PRODUCT DESIGN & VISUAL/BRAND DESIGN LEAD · EMERJ LLC\nJUL 2024–JUN 2026 · DESIGN MENTOR + TEAM LEAD · HNG TECH\nFEB 2023–FEB 2025 · FOUNDING PRODUCT DESIGNER & VISUAL/BRAND DESIGNER · BELSQUARED INC.', actions: [{ label: 'Read the full story ↗', page: 'about' }], followUps: askFollowUps.EXPERIENCE },
-  WORK: { text: 'PRODUCT WORK\nPRIMA : AI-assisted verification for decentralized payments.\nNOMI : Adaptive learning and contextual AI.\nHANYA : AI-assisted healthcare navigation.\nYOUSEWIRE : Cross-border personal and business finance.\nANANSI GALLERY : Immersive art discovery across a public website and browser-based 3D gallery.\n\nBRANDING WORK\nSIDE B : Brand identity, packaging, and art direction.\nTHE KIM COUTURE : Fashion identity.\nFINLANCER and NOMI : Brand and visual identity.\nPYCON NIGERIA 2024 : Conference identity.\nBELSQUARED : Brand identity and packaging.', actions: [{ label: 'View product work ↗', page: 'home', view: 'product' }, { label: 'View branding work ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.WORK },
+  WORK: { text: 'PRODUCT WORK\nPRIMA : AI-assisted verification for decentralized payments.\nNOMI : Adaptive learning and contextual AI.\nHANYA : AI-assisted healthcare navigation.\nYOUSEWIRE : Cross-border personal and business finance.\nANANSI GALLERY : Immersive art discovery across a public website and browser-based 3D gallery.\n\nBRANDING WORK\nSIDE B : Brand identity, packaging, and art direction.\nTHE KIM COUTURE : Fashion identity.\nFINLANCER and NOMI : Brand and visual identity.\nBELSQUARED : Brand identity and packaging.', actions: [{ label: 'View product work ↗', page: 'home', view: 'product' }, { label: 'View branding work ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.WORK },
   LAB: { text: 'The Lab is a collection of small experiments I use to explore how AI changes the way we design, build and interact with software.\n\nExperiments are currently in progress : new things will appear here as they are built.', actions: [{ label: 'Open the Lab ↗', page: 'lab' }], followUps: askFollowUps.LAB },
   SANDBOX: { text: 'The Sandbox is Malik’s space for aesthetic design explorations: visual studies, compositions, interface fragments, and ideas made to explore a feeling without requiring a full product or case study.', actions: [{ label: 'Open the Sandbox ↗', page: 'home', view: 'sandbox' }], followUps: askFollowUps.SANDBOX },
   CONTACT: { text: 'EMAIL : heymalik05@gmail.com\nLINKEDIN : linkedin.com/in/temitayo-l-74984b16a\n\nAvailable for selected collaborations.', actions: [{ label: 'Email Malik ↗', href: 'mailto:heymalik05@gmail.com' }, { label: 'LinkedIn ↗', href: 'https://www.linkedin.com/in/temitayo-l-74984b16a/' }], followUps: askFollowUps.CONTACT },
@@ -162,12 +160,11 @@ const askAnswers: Record<string, AskAnswer> = {
   FINLANCER_WEBSITE: { text: 'The Finlancer website turns a mobile financial operating system for freelancers into a clear, connected story about income, invoices, tax planning, and goals. The redesign retained the product’s energy while improving comprehension, responsive consistency, and mobile stability.', actions: [{ label: 'Visit Finlancer website', href: 'https://finlancer-virid.vercel.app/' }], followUps: askFollowUps.NOMI },
   NOMI_WEBSITE: { text: 'The Nomi website turns an adaptive learning system into a clear, playful product story. It helps learners and parents understand how practice, progress, recommendations, and contextual AI work together before they enter the product.', actions: [{ label: 'Visit Nomi website', href: 'https://nomi-alpha-bay.vercel.app' }], followUps: askFollowUps.NOMI },
   BRANDING: { text: 'Malik has worked independently in brand design since 2018, alongside his product practice. His branding work covers identity systems, visual direction, packaging, print, campaign design, and digital applications.\n\nThe same systems thinking carries across both disciplines: establish a clear idea, build a visual language around it, and make it hold together across every touchpoint.', actions: [{ label: 'View branding work ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.BRANDING },
-  BRANDING_WORK: { text: 'The branding portfolio includes SIDE B, The Kim Couture, Finlancer, PyCon Nigeria 2024, Nomi, and Belsquared.\n\nEvery project opens into its own image-led case-study gallery, ready for the project files.', actions: [{ label: 'View branding work ↗', page: 'home', view: 'branding' }, { label: 'Open SIDE B case study ↗', page: 'brandingCaseStudy', slug: 'side-b' }], followUps: askFollowUps.BRANDING_WORK },
+  BRANDING_WORK: { text: 'The published branding portfolio includes SIDE B, The Kim Couture, Finlancer, Nomi, and Belsquared.\n\nEach project opens into an image-led case study. Finlancer currently presents its animated identity opener and project story while the wider application set is assembled.', actions: [{ label: 'View branding work ↗', page: 'home', view: 'branding' }, { label: 'Open SIDE B case study ↗', page: 'brandingCaseStudy', slug: 'side-b' }], followUps: askFollowUps.BRANDING_WORK },
   SIDE_B: { text: 'SIDE B is a 2026 sock-label identity built around the idea “Old stuff. New socks.” Malik designed the brand identity, packaging, and art direction.\n\nThe system treats an ordinary object as a cultural artefact and carries one voice through the logo, colour, type, illustration, photography, product, packaging, campaign, social content, and digital store experience.', actions: [{ label: 'Open SIDE B case study ↗', page: 'brandingCaseStudy', slug: 'side-b' }], followUps: askFollowUps.SIDE_B },
-  KIM_COUTURE: { text: 'The Kim Couture is a fashion brand-identity project in Malik’s branding portfolio. Its full case study is being prepared, so the portfolio currently documents the project and discipline rather than the complete design process.', actions: [{ label: 'View branding index ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.KIM_COUTURE },
-  FINLANCER: { text: 'Finlancer is a brand and visual-identity project in Malik’s branding portfolio. Its full case study is still being prepared.', actions: [{ label: 'View branding index ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.FINLANCER },
-  PYCON_BRAND: { text: 'PyCon Nigeria 2024 is a conference-identity project in Malik’s branding portfolio. Malik’s wider portfolio also documents his product-design work for PyCon Nigeria’s 2024 and 2025 digital experiences. The full branding case study is still being prepared.', actions: [{ label: 'View branding index ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.PYCON_BRAND },
-  NOMI_BRAND: { text: 'Nomi is also represented as a brand and visual-identity project in Malik’s branding portfolio. Its full branding case study is still being prepared; the published Nomi product case study covers the adaptive learning experience.', actions: [{ label: 'View branding index ↗', page: 'home', view: 'branding' }, { label: 'Open Nomi product case ↗', page: 'workCaseStudy', slug: 'nomi' }], followUps: askFollowUps.NOMI_BRAND },
+  KIM_COUTURE: { text: 'The Kim Couture is a 2022 fashion brand-identity project shaped through elegance, confidence, and a clear visual point of view. The published case study follows the system through identity, typography, campaign imagery, labels, packaging, social content, and lookbook applications.', actions: [{ label: 'Open The Kim Couture case study ↗', page: 'brandingCaseStudy', slug: 'the-kim-couture' }], followUps: askFollowUps.KIM_COUTURE },
+  FINLANCER: { text: 'Finlancer is a 2025 brand and visual-identity project for a financial product built around the realities of independent work. Its published story focuses on clarity, momentum, and a structured system that can move across product and communication.', actions: [{ label: 'Open Finlancer case study ↗', page: 'brandingCaseStudy', slug: 'finlancer' }], followUps: askFollowUps.FINLANCER },
+  NOMI_BRAND: { text: 'Nomi is represented through a published 2022 brand and visual-identity case study. The system combines a warm character, rounded forms, colour, illustration, and approachable typography across the learning product and its communication.', actions: [{ label: 'Open Nomi brand case ↗', page: 'brandingCaseStudy', slug: 'nomi' }, { label: 'Open Nomi product case ↗', page: 'workCaseStudy', slug: 'nomi' }], followUps: askFollowUps.NOMI_BRAND },
   BELSQUARED_BRAND: { text: 'Belsquared is a 2023 brand identity and packaging project built around authentic African snacking and the idea “A little crunch. A lot of happy.”\n\nThe published case study covers the identity, typography, colour system, three-flavour packaging family, lifestyle imagery, social stories, outdoor campaign, shipping touchpoints, and animated product presentation.', actions: [{ label: 'Open Belsquared case study ↗', page: 'brandingCaseStudy', slug: 'belsquared' }], followUps: askFollowUps.BELSQUARED_BRAND }
 }
 
@@ -179,7 +176,7 @@ const projectAskAnswer = (project: WorkProject): AskAnswer => {
     ? `\n\nROLE : ${meta.role}\nPLATFORM : ${meta.platform}\nPROJECT TYPE : ${meta.projectType}\nSCOPE : ${meta.scope}`
     : ''
   return {
-    text: `${project.name}\n${project.summary ?? meta?.intro ?? project.category ?? 'Product design project.'}${details}`,
+    text: `${project.name}\n${project.summary ?? meta?.intro ?? project.category ?? 'Product design project.'}\n\nSTATUS : ${project.status}${details}`,
     actions: [{ label: `Open ${project.name} case study ↗`, page: 'workCaseStudy', slug: project.slug }],
     followUps: ['What product work has Malik done?', "What's in the Lab?", 'What does Malik do?']
   }
@@ -245,7 +242,7 @@ const resolvePortfolioAnswer = (value: string, intent?: string): AskAnswer | und
   return undefined
 }
 const ASK_SUGGESTIONS = ['What does Malik do?', 'What branding projects are in the portfolio?', 'What is SIDE B?', 'How does Malik think about AI?']
-const HOME_VIEWS: Record<string, HomeMode> = { work: 'product', about: 'about', lab: 'lab' }
+const HOME_VIEWS: Record<string, HomeMode> = { work: 'product', branding: 'branding', about: 'about', lab: 'lab', sandbox: 'sandbox' }
 const normalizeLegacyTopLevel = () => {
   const path = window.location.pathname.replace(/^\/+|\/+$/g, '')
   const view = HOME_VIEWS[path]
@@ -256,10 +253,13 @@ const normalizeLegacyTopLevel = () => {
 const routeFromPath = () => {
   if (normalizeLegacyTopLevel()) return { page: 'home' as Page }
   const segments = window.location.pathname.split('/').filter(Boolean)
-  if (segments[0] === 'work' && segments[1]) return { page: 'workCaseStudy' as Page, slug: segments[1] }
-  if (segments[0] === 'branding' && segments[1]) return { page: 'brandingCaseStudy' as Page, slug: segments[1] }
-  if (segments[0] === 'branding') return { page: 'brandingCaseStudy' as Page }
-  if (segments[0] === 'lab' && segments[1]) return { page: 'labExperiment' as Page, slug: segments[1] }
+  if (segments[0] === 'work' && segments[1] && workProjects.some(project => project.slug === segments[1] && project.hasCaseStudy)) return { page: 'workCaseStudy' as Page, slug: segments[1] }
+  if (segments[0] === 'branding' && segments[1] && brandingIndex.some(project => project.slug === segments[1])) return { page: 'brandingCaseStudy' as Page, slug: segments[1] }
+  if (segments[0] === 'lab' && segments[1] && labExperiments.some(experiment => experiment.slug === segments[1])) return { page: 'labExperiment' as Page, slug: segments[1] }
+  if (segments.length) {
+    const view: HomeMode = segments[0] === 'branding' ? 'branding' : segments[0] === 'lab' ? 'lab' : segments[0] === 'sandbox' ? 'sandbox' : 'product'
+    window.history.replaceState(null, '', `/?view=${view}`)
+  }
   return { page: 'home' as Page }
 }
 
@@ -404,9 +404,9 @@ function App() {
     {page === 'home' && entryPhase !== 'done' && <PortfolioEntry phase={entryPhase} />}
     {page === 'home' && <HomeShell key={new URLSearchParams(window.location.search).get('view') ?? 'product'} onProjectOpen={slug => navigate('workCaseStudy', undefined, slug)} onBrandProjectOpen={slug => navigate('brandingCaseStudy', undefined, slug)} />}{false && <><section className="hero" id="hero"><div className="hero-title" aria-label="I design intelligent products for human decisions"><span>I DESIGN</span><span className="intelligent" onPointerMove={handleIntelligentMove}>INTELLIGENT</span><span>PRODUCTS</span><span>FOR HUMAN <em>decisions.</em></span></div><div className="role-response"><div>PRODUCT DESIGNER</div><span>AI / UX / SYSTEMS</span><p>I work where product thinking, interaction and implementation meet.</p></div><div className="hero-meta"><span>PRODUCT DESIGNER<br />AI / UX / SYSTEMS</span><span>LAGOS, NG<br />GLOBAL / REMOTE</span></div><button className="ask-entry" onClick={() => openAsk()}><b>●</b> ASK ME SOMETHING</button><p className="annotation">because someone still has to make one.</p></section><SelectedWork onProjectOpen={slug => navigate('workCaseStudy', undefined, slug)} onAllWork={() => navigate('work')} /><HomeSections submit={submit} /></>}
     {page === 'workCaseStudy' && <NewCaseShell key={`product-${route.slug}`} kind="product" crumbs={[{ label: breadcrumbMark, onClick: caseBack('product'), mark: true }, { label: 'PRODUCT DESIGN', onClick: caseBack('product') }, { label: workProjects.find(project => project.slug === route.slug)?.name ?? 'CASE STUDY', current: true }]} onBack={caseBack('product')} onAsk={() => openAsk()}><WorkPreparation project={workProjects.find(project => project.slug === route.slug)} onBack={caseBack('product')} onNext={slug => navigate('workCaseStudy', undefined, slug)} /></NewCaseShell>}
-    {page === 'brandingCaseStudy' && <NewCaseShell key={`brand-${route.slug}`} kind="brand" crumbs={[{ label: breadcrumbMark, onClick: caseBack('branding'), mark: true }, { label: 'BRANDING', onClick: caseBack('branding') }, { label: brandProjects.find(project => project.slug === route.slug)?.name ?? 'CASE STUDY', current: true }]} onBack={caseBack('branding')} onAsk={() => openAsk()}><BrandCase project={brandProjects.find(project => project.slug === route.slug)} onNext={slug => navigate('brandingCaseStudy', undefined, slug)} /></NewCaseShell>}
+    {page === 'brandingCaseStudy' && <NewCaseShell key={`brand-${route.slug}`} kind="brand" crumbs={[{ label: breadcrumbMark, onClick: caseBack('branding'), mark: true }, { label: 'BRANDING', onClick: caseBack('branding') }, { label: brandingIndex.find(project => project.slug === route.slug)?.title ?? 'CASE STUDY', current: true }]} onBack={caseBack('branding')} onAsk={() => openAsk()}><BrandCase project={brandingIndex.some(project => project.slug === route.slug) ? brandProjects.find(project => project.slug === route.slug) : undefined} onNext={slug => navigate('brandingCaseStudy', undefined, slug)} /></NewCaseShell>}
     {page === 'labExperiment' && <NewCaseShell key={`lab-${route.slug}`} kind="lab" crumbs={[{ label: breadcrumbMark, onClick: caseBack('lab'), mark: true }, { label: 'LAB', onClick: caseBack('lab') }, { label: labExperiments.find(experiment => experiment.slug === route.slug)?.title ?? 'EXPERIMENT', current: true }]} onBack={caseBack('lab')} onAsk={() => openAsk()}><LabExperimentPage experiment={labExperiments.find(experiment => experiment.slug === route.slug)} onBack={caseBack('lab')} /></NewCaseShell>}
-    {!askOpen && <button className="askmalik-float" onClick={() => openAsk()} aria-haspopup="dialog"><Icon name="chat" />Ask Malik</button>}
+    {!askOpen && createPortal(<button className="askmalik-float" onClick={() => openAsk()} aria-haspopup="dialog"><Icon name="chat" />Ask Malik</button>, document.body)}
     {askOpen && createPortal(<div className={`ask-vacuum-stage ${askClosing ? 'is-collapsing' : 'is-erupting'}`}><section className={`askpanel ${askClosing ? 'is-vacuuming' : 'is-materializing'}`} role="dialog" aria-modal="true" aria-label="Ask Malik" aria-hidden={askClosing || undefined}>
     <header className="askpanel-head">
       <span className="askpanel-title"><Icon name="chat" />Ask Malik</span>
@@ -580,7 +580,6 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
       <ToolCarousel />
       <div className="rail-social">
         <SocialLinks />
-        <button className="rail-social-resume" type="button" disabled title="Résumé to be added" aria-label="View résumé : résumé coming soon"><Icon name="file" />View résumé</button>
       </div>
     </aside>
     <div className="home-canvas" role="region" aria-label="Portfolio canvas" tabIndex={0} ref={canvasRef} onScroll={onCanvasScroll}>
@@ -591,7 +590,7 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
           <button role="tab" id="tab-lab" aria-selected={mode === 'lab'} aria-controls="panel-lab" className={mode === 'lab' ? 'is-active' : ''} onClick={() => changeMode('lab')} onKeyDown={moveTab}><Icon name="lab" />Lab</button>
           <button role="tab" id="tab-sandbox" aria-selected={mode === 'sandbox'} aria-controls="panel-sandbox" className={mode === 'sandbox' ? 'is-active' : ''} onClick={() => changeMode('sandbox')} onKeyDown={moveTab}><Icon name="sandbox" />Sandbox</button>
         </div>
-        <button className="slash-sound-toggle" type="button" onClick={toggleSlashSound} aria-pressed={slashMuted} aria-label={`${slashMuted ? 'Enable' : 'Mute'} navigation slash sound`}><span aria-hidden="true">{slashMuted ? '◌' : '◉'}</span>SFX {slashMuted ? 'OFF' : 'ON'}</button>
+        <button className="slash-sound-toggle" type="button" onClick={toggleSlashSound} aria-pressed={!slashMuted} aria-label={`Navigation slash sound ${slashMuted ? 'off' : 'on'}. ${slashMuted ? 'Enable' : 'Mute'} sound`}><span aria-hidden="true">{slashMuted ? '◌' : '◉'}</span>SFX {slashMuted ? 'OFF' : 'ON'}</button>
       </div>
       <header className="canvas-intro" aria-labelledby="canvas-intro-title">
         <span>{intro.eyebrow}</span>
@@ -600,7 +599,7 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
       </header>
       {mode === 'product' ? <section className="home-panel" key="product" id="panel-product" role="tabpanel" aria-labelledby="tab-product">
         <h2 className="visually-hidden">Product design</h2>
-        <ProjectStack entries={workProjects.map(project => ({ id: project.slug, index: project.index, title: project.name, descriptor: productLine[project.slug] ?? project.category?.replace(/ \/ /g, ' · ') ?? project.status, live: true, slug: project.slug, label: `P/ ${project.index}`, cover: project.cover, externalUrl: project.externalUrl }))} onOpen={slug => foldToProject(() => onProjectOpen(slug))} note="Real product capture to be added to each project as it is produced." anchor="product-anchor" />
+        <ProjectStack entries={workProjects.map(project => ({ id: project.slug, index: project.index, title: project.name, descriptor: productLine[project.slug] ?? project.category?.replace(/ \/ /g, ' · ') ?? project.status, live: true, slug: project.slug, label: `P/ ${project.index}`, cover: project.cover, externalUrl: project.externalUrl, mediaNote: project.status === 'LIVE WEBSITE' ? 'Website capture coming soon' : project.status === 'CASE STUDY · MEDIA IN PROGRESS' ? 'Case-study media in progress' : undefined }))} onOpen={slug => foldToProject(() => onProjectOpen(slug))} note="Case-study media is added as each project is documented." anchor="product-anchor" />
       </section> : mode === 'branding' ? <section className="home-panel" key="branding" id="panel-branding" role="tabpanel" aria-labelledby="tab-branding">
         <h2 className="visually-hidden">Branding</h2>
         <ProjectStack entries={brandingIndex.map(project => ({ id: project.id, index: project.index, title: project.title, descriptor: project.descriptor, live: true, slug: project.slug, label: `B/ ${project.index}`, cover: project.cover }))} onOpen={slug => foldToProject(() => onBrandProjectOpen(slug))} anchor="branding-anchor" />
@@ -641,18 +640,18 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
   </div>
 }
 
-type ProjectStackEntry = { id: string; index: string; title: string; descriptor: string; live: boolean; slug: string; label: string; cover?: string | null; externalUrl?: string }
+type ProjectStackEntry = { id: string; index: string; title: string; descriptor: string; live: boolean; slug: string; label: string; cover?: string | null; externalUrl?: string; mediaNote?: string }
 const displayProjectTitle = (title: string) => title.toLocaleLowerCase().replace(/(^|[\s/-])\p{L}/gu, letter => letter.toLocaleUpperCase())
 function ProjectStack({ entries, onOpen, note, anchor }: { entries: ProjectStackEntry[]; onOpen: (slug: string) => void; note?: string; anchor: string }) {
   return <div className="project-stack" id={anchor}>
     {entries.map(entry => entry.externalUrl
       ? <a key={entry.id} className="project-stack-project is-live" href={entry.externalUrl} target="_blank" rel="noreferrer" aria-label={`${entry.title} : visit live website`}>
-          <ProjectStackMedia label={entry.label} source={entry.cover} />
+          <ProjectStackMedia label={entry.label} source={entry.cover} note={entry.mediaNote} />
           <span className="project-stack-meta"><span className="project-stack-title">{displayProjectTitle(entry.title)}</span><span className="project-stack-desc">{entry.descriptor}</span></span>
         </a>
       : entry.live
       ? <button key={entry.id} type="button" className="project-stack-project is-live" onClick={() => onOpen(entry.slug)} aria-label={`${entry.title} : open case study`}>
-          <ProjectStackMedia label={entry.label} source={entry.cover} />
+          <ProjectStackMedia label={entry.label} source={entry.cover} note={entry.mediaNote} />
           <span className="project-stack-meta"><span className="project-stack-title">{displayProjectTitle(entry.title)}</span><span className="project-stack-desc">{entry.descriptor}</span></span>
         </button>
       : <div key={entry.id} className="project-stack-project is-future">

@@ -32,7 +32,7 @@ export function BrandMedia({ media, priority = false }: { media: BrandMediaData;
 
 export function BrandVideo({ index, title, ratio = '9:16', source, poster, alt }: { index: number; title: string; ratio?: BrandRatio; caption?: string; source?: string; poster?: string; alt?: string }) {
   const video = source ? (
-    <video src={source} poster={poster} muted autoPlay loop playsInline aria-label={alt ?? `${pad(index)} / ${title}`} />
+    <video src={source} poster={poster} controls playsInline preload="metadata" aria-label={alt ?? `${pad(index)} / ${title}`} />
   ) : (
     <div className="brand-media-frame" role="img" aria-label={`${pad(index)} / ${title}`} />
   )

@@ -66,7 +66,6 @@ function TestimonialCards() {
       <blockquote>{testimonial.quote}</blockquote>
       <footer><strong>{testimonial.author}</strong><small>{testimonial.role}</small></footer>
     </article>)}
-    <article className="about-testimonial-card about-testimonial-pending"><p>Sixth testimonial coming soon.</p></article>
   </>
 }
 
@@ -164,7 +163,7 @@ export function AboutEditorial({ experienceRecords }: { experienceRecords: Exper
 
       <section className="about-section" id="about-offline">
         <h3>Beyond Work</h3>
-        <p>Personal notes are not indexed here yet. For now, the projects and the way I approach them are the clearest introduction. This section can grow when I have more of that story to share.</p>
+        <p>Outside client and product work, I keep a steady practice of visual exploration, writing, mentoring, and building small experiments. The Lab and Sandbox are where those curiosities become tangible.</p>
       </section>
 
       <section className="about-section about-together" id="about-together">

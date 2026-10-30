@@ -11,7 +11,7 @@ function CaseList({ children }: { children: string[] }) {
 
 export function AnansiProductCase({ onNext }: { onNext: (slug: string) => void }) {
   return <ProductCase className="pc-case-anansi" id="top">
-    <ProductCaseHero meta={META} media={{ index:'01', title:'ANANSI / A PLACE FOR THINGS THAT REMAIN', ratio:'full', source:`${MEDIA_ROOT}anansi-cinematic-opening.png`, caption:'The deployed gallery establishes architecture, atmosphere, and art as one encounter.', note:'Actual gallery capture from the deployed frontend demonstration.' }} />
+    <ProductCaseHero meta={META} media={{ index:'01', title:'ANANSI / A PLACE FOR THINGS THAT REMAIN', ratio:'full', source:`${MEDIA_ROOT}anansi-gallery-entry.webm`, caption:'The deployed gallery establishes architecture, atmosphere, and art as one encounter.', note:'Actual gallery capture from the deployed frontend demonstration.' }} />
     <ProductCaseIntro>Anansi is a browser-based art experience where guests can discover exhibitions, enter an explorable gallery, read artwork stories, save favourites, and create photographic keepsakes of their visit.</ProductCaseIntro>
 
     <ProductCaseSection id="anansi-opportunity" label="THE OPPORTUNITY">
@@ -26,14 +26,14 @@ export function AnansiProductCase({ onNext }: { onNext: (slug: string) => void }
       <ProductCaseStatement>The website is the front door. The virtual gallery is the spatial encounter.</ProductCaseStatement>
       <p className="pc-copy pc-reveal">The public website supports direct discovery through exhibitions, artworks, artists, and saved pieces. The gallery lets guests move through the architecture and approach works at their own pace. Neither route is treated as secondary.</p>
       <ProductCaseConnected items={['DISCOVER ANANSI', 'CHOOSE A WAY TO EXPLORE', 'ENCOUNTER A WORK', 'UNDERSTAND ITS STORY', 'SAVE, EXPRESS INTEREST, OR KEEP WANDERING']} />
-      <ProductCaseMedia media={{ index:'02', title:'PUBLIC WEBSITE / DISCOVERY PATH', ratio:'full', source:`${MEDIA_ROOT}anansi-deployed-public-website.png`, caption:'The public website keeps exhibitions and artwork stories available without requiring the 3D experience.' }} />
+      <ProductCaseMedia media={{ index:'02', title:'PUBLIC WEBSITE / DISCOVERY PATH', ratio:'full', source:`${MEDIA_ROOT}anansi-website-hero.webm`, caption:'A three-second capture of the public website hero and its invitation into the gallery.' }} />
     </ProductCaseSection>
 
     <ProductCaseSection id="anansi-architecture" label="BRINGING THE ARCHITECTURE TO LIFE">
       <ProductCaseStatement>A striking image had to become a believable place from every direction.</ProductCaseStatement>
       <p className="pc-copy pc-reveal">The entrance, atrium, staircase, upper gallery, glazing, and exhibition surfaces were developed as parts of one building. Iteration resolved practical details such as the staircase meeting the upper floor, railings staying within their boundaries, and seating clearing the walls.</p>
       <p className="pc-copy pc-reveal">Lighting, reflective flooring, and views beyond the glazing create atmosphere, while the current interactive model remains intentionally described as a frontend demonstration rather than a photoreal architectural simulation.</p>
-      <ProductCaseMedia media={{ index:'03', title:'GALLERY ARCHITECTURE / ATRIUM + UPPER FLOOR', ratio:'full', source:`${MEDIA_ROOT}anansi-moving-gallery-hero.png`, caption:'The real model provides a continuous route through the gallery architecture.' }} />
+      <ProductCaseMedia media={{ index:'03', title:'GALLERY ARCHITECTURE / ATRIUM + UPPER FLOOR', ratio:'full', source:`${MEDIA_ROOT}anansi-gallery-rooms.webm`, caption:'The real model provides a continuous route through the gallery architecture.' }} />
     </ProductCaseSection>
 
     <ProductCaseSection id="anansi-expression" label="AN ENTRANCE THAT BELONGS TO THE GUEST">
@@ -41,34 +41,34 @@ export function AnansiProductCase({ onNext }: { onNext: (slug: string) => void }
       <p className="pc-copy pc-reveal">Guests begin with a display name and a supported appearance choice. The flow offers six coherent character presets with controls for skin tone, hair colour, clothing tint, footwear where supported, and accessories.</p>
       <p className="pc-copy pc-reveal">Procedurally generated heads did not reach the intended standard, so the design returned to licensed modelled presets and built honest controls around what those assets could support convincingly.</p>
       <ProductCaseSticky>Six coherent presets were more useful than a promise of unlimited customisation that the model quality could not sustain.</ProductCaseSticky>
-      <ProductCaseMedia media={{ index:'04', title:'GUEST ENTRY / APPEARANCE CONTROLS', ratio:'full', source:`${MEDIA_ROOT}anansi-appearance-controls.png`, caption:'Display name, character selection, and supported appearance controls precede gallery entry.' }} />
+      <ProductCaseMedia media={{ index:'04', title:'GUEST ENTRY / APPEARANCE CONTROLS', ratio:'full', source:`${MEDIA_ROOT}anansi-identity-creation.webm`, caption:'Display name, character selection, and supported appearance controls precede gallery entry.' }} />
     </ProductCaseSection>
 
     <ProductCaseSection id="anansi-artwork" label="MAKING AN ARTWORK MORE THAN AN IMAGE">
       <ProductCaseStatement>Atmosphere matters only when the artwork remains the focus.</ProductCaseStatement>
       <p className="pc-copy pc-reveal">Selecting a work opens its details and story, with clear routes to save it, express interest, or continue exploring. The public website provides a parallel path to those stories for visitors who prefer direct browsing.</p>
       <p className="pc-copy pc-reveal">The illustrative Tidal Intervals collection and surrounding decorative works are AI-generated presentation assets. They are not attributed to invented artists or presented as real works for sale.</p>
-      <ProductCaseMedia media={{ index:'05', title:'ARTWORK / STORY + SAVED WORKS', ratio:'full', source:`${MEDIA_ROOT}anansi-artwork-journey.png`, caption:'Artwork discovery connects spatial encounter, story, and browser-local saving.' }} />
+      <ProductCaseMedia media={{ index:'05', title:'ARTWORK / STORY + SAVED WORKS', ratio:'full', source:`${MEDIA_ROOT}anansi-artwork-story.webm`, caption:'Artwork discovery connects spatial encounter, story, and browser-local saving.' }} />
     </ProductCaseSection>
 
     <ProductCaseSection id="anansi-presence" label="PRESENCE WITHOUT INTERRUPTION">
       <ProductCaseStatement>Social presence should wait until the visitor is ready.</ProductCaseStatement>
       <p className="pc-copy pc-reveal">Instead of opening a conversation modal during exploration, Anansi uses a notification control. Guests decide when to respond, preserving the continuity of the visit.</p>
       <CaseList children={['Conversation invitations are demonstrated through simulated frontend interactions.', 'Accept, decline, block, and unblock paths are represented.', 'Display names and pseudonymous IDs avoid mandatory email or phone collection for ordinary entry.', 'A live implementation still needs secure sessions, participant verification, moderation, and clear privacy rules.']} />
-      <ProductCaseMedia media={{ index:'06', title:'VISIT CONTROLS / DELIBERATE ENGAGEMENT', ratio:'full', source:`${MEDIA_ROOT}anansi-public-controls.png`, caption:'Guest controls remain available without repeatedly interrupting exploration.' }} />
+      <ProductCaseMedia media={{ index:'06', title:'GUEST CHAT / DELIBERATE ENGAGEMENT', ratio:'full', source:`${MEDIA_ROOT}anansi-guest-chat.webm`, caption:'A simulated invitation, acceptance, and conversation between gallery guests.' }} />
     </ProductCaseSection>
 
     <ProductCaseSection id="anansi-linger" label="GIVING PEOPLE REASONS TO LINGER">
       <ProductCaseStatement>Not every interaction needs to lead toward a transaction.</ProductCaseStatement>
       <p className="pc-copy pc-reveal">Seating, personal music mute, room shortcuts, and photographs help the gallery feel more like a visit. A polaroid-like keepsake carries Anansi’s tagline and exhibition context, connecting the image to the place where it was made.</p>
-      <ProductCaseMedia media={{ index:'07', title:'KEEPSAKE / A PLACE FOR THINGS THAT REMAIN', ratio:'full', source:`${MEDIA_ROOT}anansi-polaroid-tagline.png`, caption:'The photographic keepsake connects personal expression with the exhibition context.' }} />
+      <ProductCaseMedia media={{ index:'07', title:'VISIT RITUALS / SEATING + SOUND + SHORTCUTS + KEEPSAKE', ratio:'full', source:`${MEDIA_ROOT}anansi-linger-sequence.webm`, caption:'Seating, soundtrack mute, room shortcuts, and a photographic keepsake make the gallery feel more like a visit.' }} />
     </ProductCaseSection>
 
     <ProductCaseSection id="anansi-mobile" label="TRANSLATING THE EXPERIENCE TO MOBILE">
       <ProductCaseStatement>Mobile needed a new control hierarchy, not a smaller desktop arrangement.</ProductCaseStatement>
       <p className="pc-copy pc-reveal">Gallery actions were consolidated into an expandable menu beside the guest name, destinations became a separate compact control, and movement received dedicated space. Modal back actions preserve a visitor’s place in the journey.</p>
       <p className="pc-copy pc-reveal">The responsive website keeps navigation and motion controls legible around the wordmark. Mobile layouts were checked through viewport simulation, with physical-device testing across browsers and GPU capabilities still required.</p>
-      <ProductCaseMedia media={{ index:'08', title:'MOBILE / GALLERY ACTIONS + DESTINATIONS', ratio:'full', source:`${MEDIA_ROOT}anansi-mobile-menus.png`, caption:'Compact menus separate visit actions from movement and destination controls.' }} />
+      <ProductCaseMedia media={{ index:'08', title:'MOBILE / GALLERY ACTIONS + DESTINATIONS', ratio:'full', source:`${MEDIA_ROOT}anansi-mobile.png`, caption:'Compact menus separate visit actions from movement and destination controls.' }} />
     </ProductCaseSection>
 
     <ProductCaseSection id="anansi-performance" label="WORKING WITHIN BROWSER LIMITS">
