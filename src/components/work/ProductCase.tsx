@@ -60,7 +60,6 @@ export function ProductCaseHero({ meta, media }: { meta: ProductCaseMeta; media:
     <header className="pc-hero">
       <div className="pc-hero-top">
         <span className="pc-eyebrow">{meta.discipline}</span>
-        <span className="pc-index">CASE {pad(meta.index)}</span>
       </div>
       <div className="pc-hero-opening"><h1 className="pc-hero-title">{meta.title}</h1><p className="pc-hero-descriptor">{meta.descriptor}</p></div>
       <dl className="pc-meta">
@@ -405,7 +404,6 @@ export function ProductCaseNext({
     <button type="button" className="pc-next pc-reveal" onClick={() => onNext(next.slug)} aria-label={`Next project: ${next.title}`}>
       <div className="pc-next-top">
         <span className="pc-label">NEXT PROJECT</span>
-        <span className="pc-index">CASE {pad(next.index)}</span>
       </div>
       <div className="pc-next-line">
         <span className="pc-next-title">{next.title}</span>

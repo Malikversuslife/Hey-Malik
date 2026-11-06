@@ -17,12 +17,21 @@ export function ProjectStackMedia({
   useEffect(() => {
     const video = videoRef.current
     if (!video || !source) return
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+    if (reducedMotion.matches) {
+      video.pause()
+      video.currentTime = 0
+      return
+    }
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting && entry.intersectionRatio >= 0.35) video.play().catch(() => undefined)
-      else video.pause()
+      else {
+        video.pause()
+        video.currentTime = 0
+      }
     }, { threshold: [0, .35, .7] })
     observer.observe(video)
-    return () => { observer.disconnect(); video.pause() }
+    return () => { observer.disconnect(); video.pause(); video.currentTime = 0 }
   }, [source])
 
   return (

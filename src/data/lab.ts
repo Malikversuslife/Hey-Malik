@@ -25,6 +25,17 @@ export type LabExperiment = {
 
 export const labExperiments: LabExperiment[] = [
   {
+    id: '003', slug: 'scythe-night', title: 'SCYTHE NIGHT', year: '2026',
+    category: 'INTERACTIVE GAME / STORYTELLING',
+    question: 'HOW CAN TWO STORIES SHARE ONE HAUNTED NIGHT?',
+    summary: 'A moonlit horror game where two stories unfold across one haunted night.',
+    experiment: 'Scythe Night explores atmosphere, character, and choice through a playable horror experience.',
+    learning: ['A strong visual world can set the tone before play begins.', 'A shared setting can connect distinct character stories.'],
+    tools: ['GAME DESIGN', 'INTERACTIVE STORYTELLING'],
+    cover: '/scythe-night-lab.png', media: '/scythe-night-lab.png',
+    liveUrl: 'https://scythe-night.vercel.app/', aiTool: 'Claude', previewMode: 'mobile', status: 'SHIPPED',
+  },
+  {
     id: '002', slug: 'ad-astra', title: 'AD ASTRA', year: '2026',
     category: 'ICON LIBRARY / FIGMA PLUGIN',
     question: 'HOW MIGHT A SCULPTURAL ICON SYSTEM FEEL PREMIUM WITHOUT LOSING EDITABILITY?',

@@ -20,6 +20,7 @@ import { markInAppNavigation } from './components/CaseBackButton'
 import { NewCaseShell } from './components/NewCaseShell'
 import { ProjectStackMedia } from './components/ProjectStackMedia'
 import { ToolCarousel } from './components/ToolCarousel'
+import { siClaude } from 'simple-icons'
 import './styles.css'
 
 type ResponseMode = 'focus' | 'recompose' | 'connect' | 'divide' | 'sequence'
@@ -565,7 +566,27 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
   }
   const intro = modeIntro[mode]
   return <div className={`home-shell home-mode-${mode} page-transition-${transitionPhase}`} aria-busy={transitionPhase !== 'idle'}>
-    <div className="transition-seam" aria-hidden="true"><i /><span className="transition-mark">M/</span><span className="slash-trail" /><svg className="transition-sword" viewBox="0 0 420 100" focusable="false"><path className="sword-blade" d="M18 50 300 31l48 19-48 19z"/><path className="sword-shine" d="M31 49 300 38l23 10-292 5z"/><path className="sword-guard" d="M298 23h15v54h-15z"/><path className="sword-grip" d="M313 37h90v26h-90z"/><path className="sword-wrap" d="m325 38 13 24m10-24 13 24m10-24 13 24"/></svg></div>
+    <div className="transition-seam" aria-hidden="true"><i /><span className="transition-mark">M/</span><span className="slash-trail" /><svg className="transition-sword" viewBox="0 0 520 130" focusable="false">
+      <defs>
+        <linearGradient id="katana-steel" x1="0" y1="0" x2="0" y2="1"><stop stopColor="#65727b"/><stop offset=".23" stopColor="#f7faf9"/><stop offset=".52" stopColor="#aebdc3"/><stop offset=".78" stopColor="#e7eeef"/><stop offset="1" stopColor="#819096"/></linearGradient>
+        <linearGradient id="katana-brass" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#d5b578"/><stop offset=".5" stopColor="#69502d"/><stop offset="1" stopColor="#dfbf84"/></linearGradient>
+        <pattern id="katana-wrap" width="22" height="32" patternUnits="userSpaceOnUse"><path d="M-7 0 15 32M15 0 37 32M-7 32 15 0M15 32 37 0" fill="none" stroke="#c3b5a0" strokeWidth="5"/><path d="M-7 0 15 32M15 0 37 32" fill="none" stroke="#6c6258" strokeWidth="1"/></pattern>
+      </defs>
+      <path className="sword-blade" d="M15 71 Q24 57 55 52 Q165 36 281 45 Q329 48 371 55 L371 76 Q294 72 221 68 Q105 62 15 71Z"/>
+      <path className="sword-ridge" d="M30 66 Q163 46 278 52 Q326 55 369 61"/>
+      <path className="sword-hamon" d="M29 69 Q54 63 72 67 T112 65 T153 65 T194 65 T235 65 T276 68 T317 70 T370 73"/>
+      <path className="sword-tip" d="M15 71 Q24 57 55 52 L65 52 Q42 59 30 67Z"/>
+      <path className="sword-yokote" d="M63 53 Q68 60 67 68"/>
+      <path className="sword-habaki" d="M365 54 380 56 381 77 365 76Z"/>
+      <path className="sword-seppa" d="M380 53 385 53 386 79 381 79Z"/>
+      <ellipse className="sword-guard" cx="390" cy="66" rx="7" ry="34"/>
+      <ellipse className="sword-guard-inset" cx="390" cy="66" rx="3" ry="24"/>
+      <path className="sword-fuchi" d="M397 53 406 54 406 78 397 79Z"/>
+      <path className="sword-grip" d="M406 54 Q451 57 494 62 Q501 64 501 68 Q501 74 493 76 Q450 80 406 78Z"/>
+      <path className="sword-grip-wrap" d="M406 54 Q451 57 494 62 Q501 64 501 68 Q501 74 493 76 Q450 80 406 78Z"/>
+      <path className="sword-menuki" d="M442 66 Q449 61 455 66 Q450 70 442 66Z"/>
+      <path className="sword-kashira" d="M489 61 Q502 61 503 68 Q503 76 489 78 L486 77 Q495 69 489 61Z"/>
+    </svg></div>
     <aside className="home-rail" aria-label="Malik profile and site navigation">
       <div className="rail-mark" aria-hidden="true">M<span>/</span></div>
       <div className="rail-portrait"><img src="/malik-portrait.jpg" alt="Portrait of Temitayo Lawal Malik" /></div>
@@ -606,11 +627,11 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
       </section> : mode === 'lab' ? <section className="home-panel" key="lab" id="panel-lab" role="tabpanel" aria-labelledby="tab-lab">
         <h2 className="visually-hidden">Lab</h2>
         {labExperiments.length ? <div className="work-gallery">
-          {labExperiments.map(experiment => <button key={experiment.slug} className="work-tile tile-standard lab-card" onClick={() => foldWithinPortfolio(() => setActiveLab(experiment))} aria-label={`${experiment.title} : open interactive preview`}>
+          {labExperiments.map(experiment => <button key={experiment.slug} className={`work-tile tile-standard lab-card lab-card-${experiment.slug}`} onClick={() => { if (experiment.slug === 'scythe-night' && window.matchMedia('(max-width: 760px)').matches) { window.location.assign(experiment.liveUrl!); return } foldWithinPortfolio(() => setActiveLab(experiment)) }} aria-label={`${experiment.title} : ${experiment.slug === 'scythe-night' ? 'play game' : 'open interactive preview'}`}>
             <span className="tile-visual" aria-hidden="true">{experiment.cover ? <img src={experiment.cover} alt="" /> : <span className="tile-pending">Image coming soon</span>}</span>
             <span className="tile-meta lab-card-meta"><span className="tile-name">{displayProjectTitle(experiment.title)}</span></span>
             <span className="lab-card-description">{experiment.summary}</span>
-            <span className="lab-card-tool"><span>Tool</span>{experiment.badges?.map(badge => <span key={badge}>{badge}</span>)}<strong><img src="/openai-logo.svg" alt="" aria-hidden="true" />{experiment.aiTool}</strong></span>
+            <span className="lab-card-tool"><span>Tool</span>{experiment.badges?.map(badge => <span key={badge}>{badge}</span>)}<strong>{experiment.aiTool === 'Claude' ? <svg viewBox="0 0 24 24" aria-hidden="true"><path d={siClaude.path} /></svg> : <img src="/openai-logo.svg" alt="" aria-hidden="true" />}{experiment.aiTool}</strong></span>
           </button>)}
         </div> : <div className="empty-panel">
           <div className="empty-well" aria-hidden="true"><span className="tile-pending">Experiments coming soon</span></div>

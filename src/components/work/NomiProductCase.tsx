@@ -3,6 +3,7 @@ import { ProductCase, ProductCaseClosing, ProductCaseDisclosure, ProductCaseHero
 
 const META = productCaseMeta.nomi
 const NEXT = productCaseProjectMeta[META.nextProject]
+const MEDIA_ROOT = '/Nomi%20Product%20Files/'
 
 function CaseList({ children }: { children: string[] }) {
   return <ul className="pc-case-list pc-reveal">{children.map(item => <li key={item}>{item}</li>)}</ul>
@@ -10,7 +11,7 @@ function CaseList({ children }: { children: string[] }) {
 
 export function NomiProductCase({ onNext }: { onNext: (slug: string) => void }) {
   return <ProductCase className="pc-case-nomi" id="top">
-    <ProductCaseHero meta={META} media={{ index:'01', title:'SIGNED-IN HOME / RECOMMENDED TOPIC + LEARNING PATH', ratio:'full', note:'Home brings the recommended Factorisation topic, mastery, learning path, and Nomi’s contextual prompt into one starting point.' }} />
+    <ProductCaseHero meta={META} media={{ index:'01', title:'SIGNED-IN HOME / RECOMMENDED TOPIC + LEARNING PATH', ratio:'full', source:`${MEDIA_ROOT}01-signed-in-home.mp4`, note:'Home brings the recommended Factorisation topic, mastery, learning path, and Nomi’s contextual prompt into one starting point.' }} />
     <ProductCaseIntro>Nomi is an adaptive AI learning companion for secondary school learners. It observes assessed practice, identifies patterns in performance, and uses that evidence to recommend what the learner should do next.</ProductCaseIntro>
     <ProductCaseSection id="nomi-overview" label="OVERVIEW">
       <ProductCaseStatement>One curriculum identity. One continuous learning journey.</ProductCaseStatement>
@@ -35,7 +36,7 @@ export function NomiProductCase({ onNext }: { onNext: (slug: string) => void }) 
       ].map(([n,title,copy]) => <div key={n}><span>{n}</span><b>{title}</b><p>{copy}</p></div>)}</div>
       <ProductCaseStatement>Why five questions?</ProductCaseStatement>
       <p className="pc-copy pc-reveal">A short session creates a clear commitment and a visible completion point. It collects several signals while remaining easy to start. The completion screen becomes a decision moment where the learner can continue practising, return to the path, or review weak spots with Nomi.</p>
-      <ProductCasePair a={{ index:'02', title:'PRACTICE / FOCUSED FIVE-QUESTION SESSION' }} b={{ index:'03', title:'COMPLETION / NEXT USEFUL ACTION' }} />
+      <ProductCasePair a={{ index:'02', title:'PRACTICE / FOCUSED FIVE-QUESTION SESSION', source:`${MEDIA_ROOT}02-five-question-practice.mp4` }} b={{ index:'03', title:'COMPLETION / NEXT USEFUL ACTION', source:`${MEDIA_ROOT}03-practice-completion.mp4` }} />
     </ProductCaseSection>
     <ProductCaseSection id="nomi-principles" label="MAKING ADAPTATION UNDERSTANDABLE">
       <ProductCaseStatement>The system recommends. The learner still chooses.</ProductCaseStatement>
@@ -48,7 +49,7 @@ export function NomiProductCase({ onNext }: { onNext: (slug: string) => void }) 
       <p className="pc-copy pc-reveal">After a Factorisation session, the tutor could inherit stale shared state and show the generic label “Practice.” This revealed that several parts of the product could compete to define the learner’s context.</p>
       <p className="pc-copy pc-reveal">I made canonical curriculum and route identity authoritative. The topic ID selected in Home or Learn travels into Practice and then into Nomi. The latest assessed session supplies supporting evidence, but shared state cannot overwrite the canonical topic.</p>
       <ProductCaseConnected items={['HOME OR LEARN', 'FACTORISATION PRACTICE', 'FIVE-QUESTION COMPLETION', 'REVIEW WITH NOMI', 'CONTEXTUAL GUIDANCE']} />
-      <ProductCasePair a={{ index:'04', title:'FACTORISATION / COMPLETION' }} b={{ index:'05', title:'NOMI / SAME TOPIC + RECENT EVIDENCE' }} />
+      <ProductCasePair a={{ index:'04', title:'FACTORISATION / COMPLETION', source:`${MEDIA_ROOT}04-factorisation-completion-context.mp4` }} b={{ index:'05', title:'NOMI / SAME TOPIC + RECENT EVIDENCE', source:`${MEDIA_ROOT}05-contextual-nomi-tutoring.mp4` }} />
     </ProductCaseSection>
     <ProductCaseSection id="nomi-ai" label="GIVING AI A DEFINED ROLE">
       <ProductCaseStatement>Nomi is both the system and the tutor.</ProductCaseStatement>
@@ -60,23 +61,23 @@ export function NomiProductCase({ onNext }: { onNext: (slug: string) => void }) 
     <ProductCaseSection id="nomi-shell" label="REBUILDING THE APPLICATION SHELL">
       <ProductCaseStatement>A productive desktop dashboard with a focused mobile experience.</ProductCaseStatement>
       <p className="pc-copy pc-reveal">The navigation centres five learner destinations: Home, Learn, Practice, Nomi, and Progress. Desktop uses a persistent sidebar and dashboard header. Mobile uses a slide-in menu to preserve screen space while maintaining the same hierarchy.</p>
-      <ProductCasePair a={{ index:'06', title:'DESKTOP / PERSISTENT SIDEBAR + DASHBOARD HEADER' }} b={{ index:'07', title:'MOBILE / FOCUSED SLIDE-IN NAVIGATION' }} />
+      <ProductCasePair a={{ index:'06', title:'DESKTOP / PERSISTENT SIDEBAR + DASHBOARD HEADER', source:`${MEDIA_ROOT}06-desktop-application-shell.mp4` }} b={{ index:'07', title:'MOBILE / FOCUSED SLIDE-IN NAVIGATION', source:`${MEDIA_ROOT}07-mobile-navigation.mp4` }} />
     </ProductCaseSection>
     <ProductCaseSection id="nomi-discovery" label="EXPANDING SUBJECT DISCOVERY">
       <ProductCaseStatement>Choosing a first subject and adding one later should feel like one system.</ProductCaseStatement>
       <CaseList children={['Search across the subject catalogue.', 'Classification by field.', 'Scrollable category filters with directional controls.', 'Two-column rectangular subject cards.', 'Distinct subject colours and 3D illustrations.', 'Available and coming-soon states.', 'A subject detail modal with an appropriate Nomi mood.']} />
-      <ProductCasePair a={{ index:'08', title:'ONBOARDING / SUBJECT SELECTION' }} b={{ index:'09', title:'LEARN / SUBJECT DETAIL' }} />
+      <ProductCasePair a={{ index:'08', title:'ONBOARDING / SUBJECT SELECTION', source:`${MEDIA_ROOT}08-onboarding-and-subject-selection.mp4` }} b={{ index:'09', title:'LEARN / SUBJECT DETAIL', source:`${MEDIA_ROOT}09-learn-and-subject-detail.mp4` }} />
     </ProductCaseSection>
     <ProductCaseSection id="nomi-brand" label="VISUAL SYSTEM">
       <ProductCaseStatement>Intelligent, warm, and playful at the moments that need it.</ProductCaseStatement>
       <CaseList children={['Warm cream canvas and calm raised surfaces.', 'Nomi purple for primary actions and adaptive guidance.', 'Bricolage Grotesque for expressive headings and Inter for interface copy.', 'Distinct identities for Mathematics, Physics, Chemistry, and Biology.', 'Hugeicons for functional controls.', '3D subject objects and Nomi artwork at high-value moments.', 'Rounded geometry, restrained borders, and subtle depth.', 'Complete light and dark themes.']} />
       <p className="pc-copy pc-reveal">The mascot communicates rather than decorates. Curious, supportive, encouraging, thinking, reinforcing, and celebrating states appear when tone helps explain the moment.</p>
-      <ProductCasePair a={{ index:'10', title:'NOMI / CHARACTER STATES' }} b={{ index:'11', title:'LIGHT + DARK PRODUCT THEMES' }} />
+      <ProductCasePair a={{ index:'10', title:'NOMI / CHARACTER STATES', source:`${MEDIA_ROOT}10-nomi-character-states.mp4` }} b={{ index:'11', title:'LIGHT + DARK PRODUCT THEMES', source:`${MEDIA_ROOT}11-light-and-dark-themes.mp4` }} />
     </ProductCaseSection>
     <ProductCaseSection id="nomi-product-path" label="THE FINISHED PRODUCT">
       <ProductCaseStatement>A complete path from account creation to evidence-backed next action.</ProductCaseStatement>
       <CaseList children={['Email and Google authentication.', 'Account confirmation and password recovery.', 'Learner onboarding and subject selection.', 'Protected authenticated routes.', 'Evidence-backed Home recommendations.', 'Searchable subject catalogue and curriculum paths.', 'Five-question assessed Practice sessions.', 'Correct, incorrect, hint, retry, and reinforcement states.', 'Mastery, difficulty, accuracy, and misconception tracking.', 'Contextual tutoring with recent session evidence.', 'Responsive Progress views.', 'Notifications, profile, settings, theme, and sign-out flows.']} />
-      <ProductCaseMedia media={{ index:'12', title:'SIGN UP → ONBOARDING → HOME → LEARN → PRACTICE → NOMI → PROGRESS', ratio:'full' }} />
+      <ProductCaseMedia media={{ index:'12', title:'SIGN UP → ONBOARDING → HOME → LEARN → PRACTICE → NOMI → PROGRESS', ratio:'full', source:`${MEDIA_ROOT}12-complete-product-journey.mp4` }} />
       <ProductCaseDisclosure label="LIVE PRODUCT" url="https://nomi-alpha-bay.vercel.app" cta="Open Nomi web app" simulates={['responsive authenticated learning journeys', 'assessed practice and persisted progress', 'contextual tutoring and adaptive recommendations']} excludes={['improved-grade claims', 'retention claims', 'learning-effectiveness claims before user studies']} />
     </ProductCaseSection>
     <ProductCaseSection id="nomi-reflection" label="VALIDATION + REFLECTION">
