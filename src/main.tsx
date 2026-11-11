@@ -15,6 +15,7 @@ import { NomiProductCase } from './components/work/NomiProductCase'
 import { HanyaProductCase } from './components/work/HanyaProductCase'
 import { YousewireProductCase } from './components/work/YousewireProductCase'
 import { AnansiProductCase } from './components/work/AnansiProductCase'
+import { RoomwiseProductCase } from './components/work/RoomwiseProductCase'
 import { BrandCase } from './components/brand/BrandCase'
 import { markInAppNavigation } from './components/CaseBackButton'
 import { NewCaseShell } from './components/NewCaseShell'
@@ -29,6 +30,7 @@ type Page = 'home' | 'about' | 'work' | 'workCaseStudy' | 'brandingCaseStudy' | 
 type PortfolioResponse = { terms: string[]; mode: ResponseMode; targets: string[]; route?: Page; routeTarget?: string; classification: { intent: string; evidence: string; representation: string } }
 
 const responses: PortfolioResponse[] = [
+  { terms: ['roomwise', 'roomwise case study', 'roomwise prototype', 'measured floor plan', 'property app concept', 'furniture fit check'], mode: 'connect', targets: ['roomwise-problem'], route: 'workCaseStudy', routeTarget: 'roomwise-problem', classification: { intent: 'ROOMWISE', evidence: 'PRODUCT CASE 008', representation: 'CONNECT' } },
   { terms: ['anansi', 'anansi gallery', 'anansi case study', 'virtual gallery', 'immersive gallery', 'art discovery', '3d gallery'], mode: 'connect', targets: ['anansi-opportunity'], route: 'workCaseStudy', routeTarget: 'anansi-opportunity', classification: { intent: 'ANANSI_GALLERY', evidence: 'PRODUCT CASE 007', representation: 'CONNECT' } },
   { terms: ['finlancer website', 'finlancer web design', 'finlancer product website', 'finlancer mobile website'], mode: 'connect', targets: ['product-anchor'], route: 'home', routeTarget: 'product-anchor', classification: { intent: 'FINLANCER_WEBSITE', evidence: 'LIVE WEBSITE', representation: 'CONNECT' } },
   { terms: ['nomi website', 'nomi marketing website', 'nomi web design'], mode: 'connect', targets: ['product-anchor'], route: 'home', routeTarget: 'product-anchor', classification: { intent: 'NOMI_WEBSITE', evidence: 'LIVE WEBSITE', representation: 'CONNECT' } },
@@ -127,6 +129,7 @@ const askFollowUps: Record<string, string[]> = {
   HANYA: ['What is Yousewire?', "What's in the Lab?", 'What has Malik worked on?'],
   YOUSEWIRE: ['What is Prima?', "What's in the Lab?", 'What does Malik care about?'],
   ANANSI_GALLERY: ['What is Prima?', "What's in the Lab?", 'What has Malik worked on?'],
+  ROOMWISE: ['How does Roomwise connect photos to the plan?', 'What does the Roomwise walkthrough show?', 'What product work has Malik done?'],
   BRANDING: ['What branding projects are in the portfolio?', 'What is SIDE B?', 'How did Malik get into product design?'],
   BRANDING_WORK: ['What is SIDE B?', 'What branding does Malik do?', 'Tell me about The Kim Couture.'],
   SIDE_B: ['What branding does Malik do?', 'What branding projects are in the portfolio?', 'Tell me about The Kim Couture.'],
@@ -147,7 +150,7 @@ const askAnswers: Record<string, AskAnswer> = {
   PRINCIPLES: { text: "TRUST & EXPLAINABILITY : making enough of a system visible for people to make informed decisions.\nSYSTEMS THINKING : looking for relationships, constraints and the effects that exist beyond one screen.\nHUMAN-CENTERED AI : exploring intelligence that supports judgement rather than quietly replacing it.", followUps: askFollowUps.PRINCIPLES },
   BACKGROUND: { text: "I didn't really leave visual design behind. I kept adding new questions to it.\n\nVisual / Brand design → Product design → Product systems → Design leadership → Design + build → AI product design", followUps: askFollowUps.BACKGROUND },
   EXPERIENCE: { text: 'OCT 2025–PRESENT · PRODUCT DESIGN & VISUAL/BRAND DESIGN LEAD · EMERJ LLC\nJUL 2024–JUN 2026 · DESIGN MENTOR + TEAM LEAD · HNG TECH\nFEB 2023–FEB 2025 · FOUNDING PRODUCT DESIGNER & VISUAL/BRAND DESIGNER · BELSQUARED INC.', actions: [{ label: 'Read the full story ↗', page: 'about' }], followUps: askFollowUps.EXPERIENCE },
-  WORK: { text: 'PRODUCT WORK\nPRIMA : AI-assisted verification for decentralized payments.\nNOMI : Adaptive learning and contextual AI.\nHANYA : AI-assisted healthcare navigation.\nYOUSEWIRE : Cross-border personal and business finance.\nANANSI GALLERY : Immersive art discovery across a public website and browser-based 3D gallery.\n\nBRANDING WORK\nSIDE B : Brand identity, packaging, and art direction.\nTHE KIM COUTURE : Fashion identity.\nFINLANCER and NOMI : Brand and visual identity.\nBELSQUARED : Brand identity and packaging.', actions: [{ label: 'View product work ↗', page: 'home', view: 'product' }, { label: 'View branding work ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.WORK },
+  WORK: { text: 'PRODUCT WORK\nPRIMA : AI-assisted verification for decentralized payments.\nNOMI : Adaptive learning and contextual AI.\nHANYA : AI-assisted healthcare navigation.\nYOUSEWIRE : Cross-border personal and business finance.\nANANSI GALLERY : Immersive art discovery across a public website and browser-based 3D gallery.\nROOMWISE : A property app concept connecting photos to measured floor plans and 3D space.\n\nBRANDING WORK\nSIDE B : Brand identity, packaging, and art direction.\nTHE KIM COUTURE : Fashion identity.\nFINLANCER and NOMI : Brand and visual identity.\nBELSQUARED : Brand identity and packaging.', actions: [{ label: 'View product work ↗', page: 'home', view: 'product' }, { label: 'View branding work ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.WORK },
   LAB: { text: 'The Lab is a collection of small experiments I use to explore how AI changes the way we design, build and interact with software.\n\nExperiments are currently in progress : new things will appear here as they are built.', actions: [{ label: 'Open the Lab ↗', page: 'lab' }], followUps: askFollowUps.LAB },
   SANDBOX: { text: 'The Sandbox is Malik’s space for aesthetic design explorations: visual studies, compositions, interface fragments, and ideas made to explore a feeling without requiring a full product or case study.', actions: [{ label: 'Open the Sandbox ↗', page: 'home', view: 'sandbox' }], followUps: askFollowUps.SANDBOX },
   CONTACT: { text: 'EMAIL : heymalik05@gmail.com\nLINKEDIN : linkedin.com/in/temitayo-l-74984b16a\n\nAvailable for selected collaborations.', actions: [{ label: 'Email Malik ↗', href: 'mailto:heymalik05@gmail.com' }, { label: 'LinkedIn ↗', href: 'https://www.linkedin.com/in/temitayo-l-74984b16a/' }], followUps: askFollowUps.CONTACT },
@@ -158,6 +161,7 @@ const askAnswers: Record<string, AskAnswer> = {
   HANYA: { text: 'An AI-assisted healthcare navigator that helps people understand what kind of care to seek next, without pretending to diagnose them.\n\nSafety means steering people toward appropriate care : guidance, not diagnosis.', actions: [{ label: 'Open Hanya case study ↗', page: 'workCaseStudy', slug: 'hanya' }], followUps: askFollowUps.HANYA },
   YOUSEWIRE: { text: 'A cross-border financial platform designed to help individuals and businesses hold, move, receive, convert, and manage money across currencies and payment networks.', actions: [{ label: 'Open Yousewire case study ↗', page: 'workCaseStudy', slug: 'yousewire' }], followUps: askFollowUps.YOUSEWIRE },
   ANANSI_GALLERY: { text: 'Anansi Gallery is an immersive art-discovery experience that connects a public catalogue with an explorable browser-based 3D gallery. Guests can encounter artworks spatially, read their stories, save favourites, and create keepsakes from a visit.\n\nThe published case study clearly separates the working frontend demonstration from social, messaging, and durable server features that would require a production backend.', actions: [{ label: 'Open Anansi Gallery case study ↗', page: 'workCaseStudy', slug: 'anansi-gallery' }, { label: 'Visit Anansi Gallery ↗', href: 'https://anansi-gallery.vercel.app/catalogue.html#home' }], followUps: askFollowUps.ANANSI_GALLERY },
+  ROOMWISE: { text: 'Roomwise is a pre-launch property app concept for Nigeria. It keeps listing photos first, then links each room to its dimensions, a floor plan and a 3D view. The case study includes a full app walkthrough covering discovery, comparison and viewing requests. It does not include real listings, on-site measurement capture, bookings or payments.', actions: [{ label: 'Open Roomwise case study ↗', page: 'workCaseStudy', slug: 'roomwise' }], followUps: askFollowUps.ROOMWISE },
   FINLANCER_WEBSITE: { text: 'The Finlancer website turns a mobile financial operating system for freelancers into a clear, connected story about income, invoices, tax planning, and goals. The redesign retained the product’s energy while improving comprehension, responsive consistency, and mobile stability.', actions: [{ label: 'Visit Finlancer website', href: 'https://finlancer-virid.vercel.app/' }], followUps: askFollowUps.NOMI },
   NOMI_WEBSITE: { text: 'The Nomi website turns an adaptive learning system into a clear, playful product story. It helps learners and parents understand how practice, progress, recommendations, and contextual AI work together before they enter the product.', actions: [{ label: 'Visit Nomi website', href: 'https://nomi-alpha-bay.vercel.app' }], followUps: askFollowUps.NOMI },
   BRANDING: { text: 'Malik has worked independently in brand design since 2018, alongside his product practice. His branding work covers identity systems, visual direction, packaging, print, campaign design, and digital applications.\n\nThe same systems thinking carries across both disciplines: establish a clear idea, build a visual language around it, and make it hold together across every touchpoint.', actions: [{ label: 'View branding work ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.BRANDING },
@@ -556,7 +560,7 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
     const next = event.key === 'ArrowRight' ? (at + 1) % order.length : (at - 1 + order.length) % order.length
     changeMode(order[next])
   }
-  const productLine: Record<string, string> = { prima: 'AI · Fintech', nomi: 'AI · Education', hanya: 'Healthcare · AI', yousewire: 'Fintech', 'anansi-gallery': 'Immersive Web · Art' }
+  const productLine: Record<string, string> = { prima: 'AI · Fintech', nomi: 'AI · Education', hanya: 'Healthcare · AI', yousewire: 'Fintech', 'anansi-gallery': 'Immersive Web · Art', roomwise: 'Proptech · Mobile' }
   const modeIntro: Record<HomeMode, { eyebrow: string; line: string; accent: string; note: string }> = {
     product: { eyebrow: 'PRODUCT DESIGN', line: 'Products for', accent: 'complicated realities.', note: 'systems, behaviour + useful intelligence' },
     branding: { eyebrow: 'BRAND DESIGN', line: 'Ideas made', accent: 'impossible to miss.', note: 'identity, packaging + visual worlds' },
@@ -667,12 +671,12 @@ function ProjectStack({ entries, onOpen, note, anchor }: { entries: ProjectStack
   return <div className="project-stack" id={anchor}>
     {entries.map(entry => entry.externalUrl
       ? <a key={entry.id} className="project-stack-project is-live" href={entry.externalUrl} target="_blank" rel="noreferrer" aria-label={`${entry.title} : visit live website`}>
-          <ProjectStackMedia label={entry.label} source={entry.cover} note={entry.mediaNote} />
+          <ProjectStackMedia label={entry.label} source={entry.cover} note={entry.mediaNote} className={entry.slug === 'roomwise' ? 'roomwise-cover' : ''} poster={entry.slug === 'roomwise' ? '/roomwise/videos/roomwise-00-thumbnail-loop.jpg' : undefined} />
           <span className="project-stack-meta"><span className="project-stack-title">{displayProjectTitle(entry.title)}</span><span className="project-stack-desc">{entry.descriptor}</span></span>
         </a>
       : entry.live
       ? <button key={entry.id} type="button" className="project-stack-project is-live" onClick={() => onOpen(entry.slug)} aria-label={`${entry.title} : open case study`}>
-          <ProjectStackMedia label={entry.label} source={entry.cover} note={entry.mediaNote} />
+          <ProjectStackMedia label={entry.label} source={entry.cover} note={entry.mediaNote} className={entry.slug === 'roomwise' ? 'roomwise-cover' : ''} poster={entry.slug === 'roomwise' ? '/roomwise/videos/roomwise-00-thumbnail-loop.jpg' : undefined} />
           <span className="project-stack-meta"><span className="project-stack-title">{displayProjectTitle(entry.title)}</span><span className="project-stack-desc">{entry.descriptor}</span></span>
         </button>
       : <div key={entry.id} className="project-stack-project is-future">
@@ -698,6 +702,7 @@ function About() {
 function WorkIndex({ onProjectOpen }: { onProjectOpen: (slug: string) => void }) { return <section className="work-page" id="work"><div className="section-label">M/ WORK <span>INDEX</span></div><h1>SELECTED<br />PRODUCT<br />WORK.</h1><p className="work-intro">A selection of products, systems and experiences I've designed across AI, fintech and digital platforms.</p><div className="work-index">{workProjects.map(project => <article key={project.slug}><button onClick={() => onProjectOpen(project.slug)} aria-label={`Open ${project.name} ${project.hasCaseStudy ? 'case study' : 'case study preparation'}`}><span>{project.index} /</span><div className="work-media" aria-hidden="true">MEDIA / IN PREPARATION</div><h2>{project.name}</h2><small>{project.status}</small></button></article>)}</div></section> }
 
 function WorkPreparation({ project, onBack, onNext }: { project?: WorkProject; onBack: () => void; onNext: (slug: string) => void }) {
+  if (project?.slug === 'roomwise') return <RoomwiseProductCase onNext={onNext} />
   if (project?.slug === 'anansi-gallery') return <AnansiProductCase onNext={onNext} />
   if (project?.slug === 'prima') return <PrimaProductCase onNext={onNext} />
   if (project?.slug === 'nomi') return <NomiProductCase onNext={onNext} />

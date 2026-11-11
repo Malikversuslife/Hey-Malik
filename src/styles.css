@@ -2887,3 +2887,8 @@ main.page-brandingCaseStudy,.new-case-brand .brand-case { --world-bg:var(--play-
     bottom:clamp(122px,12vw,176px);
   }
 }
+/* The Roomwise captures are 3:2. Let the actual video set each case-study frame height. */
+.pc-case-roomwise .pc-media-frame:has(> video) { aspect-ratio:auto; min-height:0; height:auto; }
+.pc-case-roomwise .pc-media-frame > video { display:block; width:100%; height:auto; object-fit:contain; }
+.home-shell:not(.home-mode-about) .project-stack-media.roomwise-cover { aspect-ratio:3/2; min-height:0; }
+.home-shell:not(.home-mode-about) .project-stack-media.roomwise-cover > video { object-fit:contain; }

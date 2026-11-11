@@ -179,7 +179,7 @@ export function ProductCaseMedia({ media, className = '', priority = false }: { 
     <figure className={`pc-media pc-media-${ratio} pc-reveal ${className}`.trim()} role="group" aria-label={media.title}>
       <div className="pc-media-frame">
         {isImage ? <img src={media.source} alt={media.caption ?? media.title} loading={priority ? 'eager' : 'lazy'} /> : media.source ? <>
-          <video ref={videoRef} src={media.source} controls playsInline preload={priority ? 'auto' : 'metadata'} onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onEnded={() => setPlaying(false)} />
+          <video ref={videoRef} src={media.source} poster={media.poster} controls playsInline preload={priority ? 'auto' : 'metadata'} onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onEnded={() => setPlaying(false)} />
           {!playing && <button type="button" className="pc-video-play" onClick={togglePlayback} aria-label={`Play ${media.title}`}><Icon name="play" /></button>}
         </> : <>
           <div className="pc-media-grid" />

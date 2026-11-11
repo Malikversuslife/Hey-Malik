@@ -7,6 +7,7 @@ export type ProductCaseMediaData = {
   caption?: string
   note?: string
   source?: string
+  poster?: string
 }
 
 export type ProductCaseMeta = {
@@ -104,6 +105,19 @@ export const productCaseMeta: Record<string, ProductCaseMeta> = {
     prototypeLabel: 'Live Gallery Experience',
     prototypeUrl: 'https://anansi-gallery.vercel.app/catalogue.html#home',
     intro: 'Anansi asks what visiting art online could feel like if it were less like browsing a catalogue and more like entering a place.',
+    nextProject: 'roomwise'
+  },
+  roomwise: {
+    slug: 'roomwise',
+    index: '08',
+    title: 'ROOMWISE',
+    descriptor: 'Property listings for Nigeria that connect photos to measured space.',
+    discipline: 'Product Design · Proptech',
+    role: 'Product Designer',
+    scope: 'Product Strategy · UX/UI Design · Interaction Design · Design System · Prototyping',
+    platform: 'Mobile App Concept (iOS & Android)',
+    projectType: 'New Product · Pre-launch',
+    intro: 'Roomwise explores a better way to judge a home before visiting it: keep the photos people already browse, then connect each room to its dimensions, a floor plan and a 3D view.',
     nextProject: 'prima'
   }
 }
@@ -113,5 +127,6 @@ export const productCaseProjectMeta: Record<string, ProductCaseProjectMeta> = {
   nomi: { slug: 'nomi', index: '02', title: 'NOMI', descriptor: 'AI · Education', discipline: 'Product Design · AI', note: 'An adaptive learning companion that responds to how the learner learns.' },
   hanya: { slug: 'hanya', index: '04', title: 'HANYA', descriptor: 'Healthcare · AI', discipline: 'Product Design · AI', note: 'AI-assisted healthcare navigation built around guidance, safety and human judgement.' },
   yousewire: { slug: 'yousewire', index: '05', title: 'YOUSEWIRE', descriptor: 'Fintech', discipline: 'Product Design · Fintech', note: 'A cross-border financial system for personal and business money.' },
-  'anansi-gallery': { slug: 'anansi-gallery', index: '07', title: 'ANANSI GALLERY', descriptor: 'Immersive Web · Art', discipline: 'Product Design · Immersive Web', note: 'A browser-based art journey built around atmosphere, access, and personal expression.' }
+  'anansi-gallery': { slug: 'anansi-gallery', index: '07', title: 'ANANSI GALLERY', descriptor: 'Immersive Web · Art', discipline: 'Product Design · Immersive Web', note: 'A browser-based art journey built around atmosphere, access, and personal expression.' },
+  roomwise: { slug: 'roomwise', index: '08', title: 'ROOMWISE', descriptor: 'Proptech · Mobile', discipline: 'Product Design · Proptech', note: 'A property app concept that makes a home’s actual dimensions visible while browsing.' }
 }

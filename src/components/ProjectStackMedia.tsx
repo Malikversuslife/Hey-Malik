@@ -4,12 +4,14 @@ export function ProjectStackMedia({
   label,
   note = 'Real project capture to be added',
   className = '',
-  source
+  source,
+  poster
 }: {
   label: string
   note?: string
   className?: string
   source?: string | null
+  poster?: string
 }) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const isVideo = !!source && /\.(mp4|webm|mov)(?:[?#]|$)/i.test(source)
@@ -38,7 +40,7 @@ export function ProjectStackMedia({
     <span className={`project-stack-media${className ? ` ${className}` : ''}`} aria-hidden="true">
       {source
         ? isVideo
-          ? <video ref={videoRef} src={source} muted loop playsInline preload="metadata" />
+          ? <video ref={videoRef} src={source} poster={poster} muted loop playsInline preload="metadata" />
           : <img src={source} alt="" loading="lazy" />
         : <><span className="project-stack-media-label">{label}</span><span className="project-stack-media-note">{note}</span></>}
     </span>
