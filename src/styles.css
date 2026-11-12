@@ -667,7 +667,6 @@ main.page-workCaseStudy, main.page-labExperiment { padding-top:0; background:#f4
 .project-stack-title { grid-column:1; grid-row:1; font:600 clamp(1.4rem,2.6vw,2.1rem)/1.05 var(--home-font); letter-spacing:-.02em; color:var(--home-ink); }
 .project-stack-desc { grid-column:1/-1; grid-row:2; margin-top:6px; font:14px var(--home-font); color:var(--home-muted); }
 .project-stack-arrow { grid-column:2; grid-row:1; justify-self:end; font-size:15px; color:var(--home-ink); opacity:0; transform:translate(0,3px); transition:opacity .18s ease,transform .18s ease; }
-.project-stack-note { margin-top:clamp(36px,5vw,64px); padding-top:16px; border-top:1px solid var(--home-line); font:13px var(--home-font); color:var(--home-muted); }
 @media (prefers-reduced-motion:no-preference) {
   .project-stack-media { transition:transform .3s cubic-bezier(.2,.7,.2,1); }
   .project-stack-project.is-live:hover .project-stack-media { transform:translateY(-3px); }
@@ -1103,6 +1102,7 @@ main.page-brandingCaseStudy, .new-case-brand { background:#fff; color:#191919; }
 .new-case-brand .brand-story-expanded .brand-quote footer { margin-top:8px; }
 .new-case-brand .brand-segment-label { margin:16px 0; }
 .brand-gallery { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; align-items:start; }
+#finlancer .brand-gallery { grid-template-columns:minmax(0,1fr); }
 .new-case-brand .brand-gallery > .brand-media { width:100%; margin:0; min-width:0; }
 .new-case-brand .brand-gallery > .brand-media[data-ratio='16:9'],
 .new-case-brand .brand-gallery > .brand-media[data-ratio='21:9'],
@@ -2892,3 +2892,18 @@ main.page-brandingCaseStudy,.new-case-brand .brand-case { --world-bg:var(--play-
 .pc-case-roomwise .pc-media-frame > video { display:block; width:100%; height:auto; object-fit:contain; }
 .home-shell:not(.home-mode-about) .project-stack-media.roomwise-cover { aspect-ratio:3/2; min-height:0; }
 .home-shell:not(.home-mode-about) .project-stack-media.roomwise-cover > video { object-fit:contain; }
+
+/* Finlancer's captures are 3:2. Each file sets its own frame height on every viewport. */
+.pc-case-finlancer-app .pc-media-frame:has(> img),
+.pc-case-finlancer-app .pc-media-frame:has(> video) {
+  aspect-ratio:auto;
+  min-height:0;
+  height:auto;
+}
+.pc-case-finlancer-app .pc-media-frame > img,
+.pc-case-finlancer-app .pc-media-frame > video {
+  display:block;
+  width:100%;
+  height:auto;
+  object-fit:contain;
+}

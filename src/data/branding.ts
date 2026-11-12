@@ -55,12 +55,32 @@ export type BrandingIndexProject = {
 }
 
 export const brandingIndex: BrandingIndexProject[] = [
-  { id: 'b-side-b', index: '001', slug: 'side-b', title: 'SIDE B', category: 'BRANDING', descriptor: 'Brand Identity · Packaging · Art Direction', ratio: 'ultra-wide', caseStudy: 'live', cover: '/Side%20b%20files/Side%20b%20thumbnail.png' },
-  { id: 'b-the-kim-couture', index: '002', slug: 'the-kim-couture', title: 'THE KIM COUTURE', category: 'BRANDING', descriptor: 'Brand Identity · Fashion', ratio: '3:4', caseStudy: 'live', cover: '/Kim%20Branding%20files/Kim%20Thubnail.png' },
-  { id: 'b-finlancer', index: '003', slug: 'finlancer', title: 'FINLANCER', category: 'BRANDING', descriptor: 'Brand / Visual Identity', ratio: '16:9', caseStudy: 'live', cover: '/Finlancer%20Branding%20Files/01-animated-identity-opener.gif' },
-  { id: 'b-nomi', index: '005', slug: 'nomi', title: 'NOMI', category: 'BRANDING', descriptor: 'Brand / Visual Identity', ratio: '1:1', caseStudy: 'live', cover: '/Nomi%20Branding%20Files/Thimbnail.gif' },
-  { id: 'b-belsquared', index: '006', slug: 'belsquared', title: 'BELSQUARED', category: 'BRANDING', descriptor: 'Brand Identity · Packaging', ratio: '16:9', caseStudy: 'live', cover: '/Belsquared%20Branding%20Files/04-three-flavour-packaging-family.png' }
+  { id: 'b-finlancer', index: '001', slug: 'finlancer', title: 'FINLANCER', category: 'BRANDING', descriptor: 'Brand / Visual Identity', ratio: '16:9', caseStudy: 'live', cover: '/finlancer-branding/30-poster-wall.webp' },
+  { id: 'b-belsquared', index: '002', slug: 'belsquared', title: 'BELSQUARED', category: 'BRANDING', descriptor: 'Brand Identity · Packaging', ratio: '16:9', caseStudy: 'live', cover: '/Belsquared%20Branding%20Files/04-three-flavour-packaging-family.png' },
+  { id: 'b-the-kim-couture', index: '003', slug: 'the-kim-couture', title: 'THE KIM COUTURE', category: 'BRANDING', descriptor: 'Brand Identity · Fashion', ratio: '3:4', caseStudy: 'live', cover: '/Kim%20Branding%20files/Kim%20Thubnail.png' },
+  { id: 'b-side-b', index: '004', slug: 'side-b', title: 'SIDE B', category: 'BRANDING', descriptor: 'Brand Identity · Packaging · Art Direction', ratio: 'ultra-wide', caseStudy: 'live', cover: '/Side%20b%20files/Side%20b%20thumbnail.png' },
+  { id: 'b-nomi', index: '005', slug: 'nomi', title: 'NOMI', category: 'BRANDING', descriptor: 'Brand / Visual Identity', ratio: '1:1', caseStudy: 'live', cover: '/Nomi%20Branding%20Files/Thimbnail.gif' }
 ]
+
+const finlancerBrandGallery: BrandMediaData[] = ([
+  [2, 'Statement', '16:9'], [3, 'Full and quiet', '3:4'], [4, 'Both', '4:5'],
+  [5, 'Month grid', '4:5'], [6, 'Manifesto', '4:5'], [7, 'Symbol', 'ultra-wide'],
+  [8, 'Land art', '1:1'], [9, 'Construction', '4:5'], [10, 'People', '16:9'],
+  [11, 'Typeface', 'tall'], [12, 'Twelve wordmarks', '4:5'], [13, 'Skyline', '16:9'],
+  [14, 'Colour', '4:5'], [15, 'Icons', 'ultra-wide'], [16, 'One payment', '4:5'],
+  [17, 'Monolith', '4:5'], [18, 'Income', '16:9'], [19, 'Invoices', '16:9'],
+  [20, 'Tax', '16:9'], [21, 'Goals', '16:9'], [22, 'In hand', '4:5'],
+  [24, 'Website on laptop', '16:9'], [28, 'Year desk', '16:9'], [29, 'Social', '4:5'],
+  [30, 'Poster wall', '16:9'], [31, 'Billboard', '4:5'], [32, 'Tote', '1:1'],
+  [34, 'Stationery', '16:9'], [35, 'Pin', '16:9'], [36, 'App icon', '4:5'],
+  [38, 'Watch', '1:1'], [39, 'Closing', '4:5']
+] as const).map(([index, title, ratio]) => ({
+  index,
+  title: title.toUpperCase(),
+  ratio,
+  source: `/finlancer-branding/${String(index).padStart(2, '0')}-${title.toLowerCase().replace(/\s+/g, '-')}.webp`,
+  alt: `Finlancer brand identity: ${title}`
+}))
 
 function galleryProject(config: {
   slug: string
@@ -197,7 +217,7 @@ export const brandProjects: BrandProject[] = [
     { title: 'Identity', statement: 'CLARITY FOR\nEVERY MOVE.', copy: 'The identity balances financial confidence with the flexibility and momentum associated with freelance work.' },
     { title: 'Visual Language', copy: 'A structured system of type, colour, iconography, and interface-led composition turns complex financial information into a clear visual rhythm.' },
     { title: 'Application', copy: 'The visual system is designed to move consistently across product screens, launch communication, social content, and supporting brand materials.' }
-  ], hero: { index: 1, title: 'ANIMATED IDENTITY OPENER', ratio: '16:9', source: '/Finlancer%20Branding%20Files/01-animated-identity-opener.gif' }, gallery: [], next: { name: 'NOMI', slug: 'nomi', note: 'Brand / Visual Identity' } }),
+  ], hero: { index: 1, title: 'HERO', ratio: '4:5', source: '/finlancer-branding/01-hero.webp', alt: 'Finlancer brand identity hero' }, gallery: finlancerBrandGallery, next: { name: 'NOMI', slug: 'nomi', note: 'Brand / Visual Identity' } }),
   galleryProject({ slug: 'pycon-nigeria-2024', number: '004', name: 'PYCON NIGERIA 2024', descriptor: 'Conference Identity', tagline: 'A COMMUNITY\nIN MOTION.', intro: 'A conference identity designed to bring the energy of Nigeria’s Python community into one coherent experience.', year: '2024', world: 'pycon', story: [
     { title: 'Premise', copy: 'The conference brings different people, disciplines, and levels of experience into one community. Its identity needed to feel open, energetic, and unmistakably collective.' },
     { title: 'Identity', statement: 'BUILT BY\nTHE COMMUNITY.', copy: 'The system uses a flexible visual structure that can hold technical information while still feeling celebratory and human.' },

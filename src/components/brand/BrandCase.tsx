@@ -6,14 +6,14 @@ import { brandProjects } from '../../data/branding'
 
 function pad(value: number) { return String(value).padStart(2, '0') }
 
-function standardGallery(segments: BrandSegment[]) {
+function standardGallery(segments: BrandSegment[], limit = 19) {
   const items: BrandSegment[] = []
   segments.forEach(segment => {
     if (segment.kind === 'media' || segment.kind === 'video') items.push(segment)
     if (segment.kind === 'pair') items.push({ kind: 'media', media: segment.left }, { kind: 'media', media: segment.right })
     if (segment.kind === 'grid') items.push(...segment.tiles.map(media => ({ kind: 'media' as const, media })))
   })
-  return items.slice(0, 19)
+  return items.slice(0, limit)
 }
 
 function Lines({ text }: { text: string }) {
@@ -142,7 +142,7 @@ export function BrandCase({ project, onNext }: { project?: BrandProject; onNext:
   }
   const gallerySegments = standardGallery(project.movements.flatMap(movement => movement.segments
     .filter(segment => ['media', 'pair', 'grid', 'video'].includes(segment.kind))
-    .filter(segment => !(segment.kind === 'media' && segment.media.index === project.hero.index && segment.media.title === project.hero.title))))
+    .filter(segment => !(segment.kind === 'media' && segment.media.index === project.hero.index && segment.media.title === project.hero.title))), project.slug === 'finlancer' ? Infinity : 19)
   return <article className={`brand-case brand-world-${project.world}`} ref={rootRef} data-world={project.world} id={project.slug}>
     <BrandHero project={project} />
     <div className="brand-gallery" aria-label={`${project.name} brand gallery`}>

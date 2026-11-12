@@ -118,7 +118,20 @@ export const productCaseMeta: Record<string, ProductCaseMeta> = {
     platform: 'Mobile App Concept (iOS & Android)',
     projectType: 'New Product · Pre-launch',
     intro: 'Roomwise explores a better way to judge a home before visiting it: keep the photos people already browse, then connect each room to its dimensions, a floor plan and a 3D view.',
-    nextProject: 'prima'
+    nextProject: 'finlancer-app'
+  },
+  'finlancer-app': {
+    slug: 'finlancer-app',
+    index: '09',
+    title: 'FINLANCER',
+    descriptor: 'A calmer money app for independent work.',
+    discipline: 'Product Design · Fintech',
+    role: 'Product & Brand Designer',
+    scope: 'Product Strategy · UX & Interaction Design · UI Design · Design System · Brand Integration',
+    platform: 'iOS App (iPhone)',
+    projectType: 'Pre-launch Product',
+    intro: 'Finlancer brings income, expenses, clients, invoices, tax preparation, savings goals and multiple currencies into one calm iOS app. I designed the brand first, then rebuilt 108 product screens so both speak with one voice.',
+    nextProject: 'finlancer-website'
   }
 }
 
@@ -128,5 +141,7 @@ export const productCaseProjectMeta: Record<string, ProductCaseProjectMeta> = {
   hanya: { slug: 'hanya', index: '04', title: 'HANYA', descriptor: 'Healthcare · AI', discipline: 'Product Design · AI', note: 'AI-assisted healthcare navigation built around guidance, safety and human judgement.' },
   yousewire: { slug: 'yousewire', index: '05', title: 'YOUSEWIRE', descriptor: 'Fintech', discipline: 'Product Design · Fintech', note: 'A cross-border financial system for personal and business money.' },
   'anansi-gallery': { slug: 'anansi-gallery', index: '07', title: 'ANANSI GALLERY', descriptor: 'Immersive Web · Art', discipline: 'Product Design · Immersive Web', note: 'A browser-based art journey built around atmosphere, access, and personal expression.' },
-  roomwise: { slug: 'roomwise', index: '08', title: 'ROOMWISE', descriptor: 'Proptech · Mobile', discipline: 'Product Design · Proptech', note: 'A property app concept that makes a home’s actual dimensions visible while browsing.' }
+  roomwise: { slug: 'roomwise', index: '08', title: 'ROOMWISE', descriptor: 'Proptech · Mobile', discipline: 'Product Design · Proptech', note: 'A property app concept that makes a home’s actual dimensions visible while browsing.' },
+  'finlancer-app': { slug: 'finlancer-app', index: '09', title: 'FINLANCER', descriptor: 'Fintech · Mobile', discipline: 'Product Design · Fintech', note: 'An iOS money app that helps freelancers understand what each payment means.' },
+  'finlancer-website': { slug: 'finlancer-website', index: '06', title: 'FINLANCER WEBSITE', descriptor: 'Web design · Fintech', discipline: 'Web design · Brand experience', note: 'The live marketing website for Finlancer.' }
 }
