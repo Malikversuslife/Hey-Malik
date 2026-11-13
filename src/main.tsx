@@ -9,6 +9,7 @@ import { workProjects, type WorkProject } from './data/work'
 import { productCaseMeta } from './data/productCases'
 import { brandProjects, brandingIndex } from './data/branding'
 import { contact } from './data/contact'
+import { sandboxExplorations, type SandboxExploration } from './data/sandbox'
 import { CaseMedia, CaseMediaPair } from './components/work/CaseMedia'
 import { PrimaProductCase } from './components/work/PrimaProductCase'
 import { NomiProductCase } from './components/work/NomiProductCase'
@@ -155,7 +156,7 @@ const askAnswers: Record<string, AskAnswer> = {
   EXPERIENCE: { text: 'OCT 2025–PRESENT · PRODUCT DESIGN & VISUAL/BRAND DESIGN LEAD · EMERJ LLC\nJUL 2024–JUN 2026 · DESIGN MENTOR + TEAM LEAD · HNG TECH\nFEB 2023–FEB 2025 · FOUNDING PRODUCT DESIGNER & VISUAL/BRAND DESIGNER · BELSQUARED INC.', actions: [{ label: 'Read the full story ↗', page: 'about' }], followUps: askFollowUps.EXPERIENCE },
   WORK: { text: `PRODUCT WORK\n${workProjects.map(project => `${project.name} : ${project.summary ?? project.category ?? project.status}`).join('\n')}\n\nBRANDING WORK\n${brandingIndex.map(project => `${project.title} : ${project.descriptor}`).join('\n')}`, actions: [{ label: 'View product work ↗', page: 'home', view: 'product' }, { label: 'View branding work ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.WORK },
   LAB: { text: 'The Lab is a collection of small experiments I use to explore how AI changes the way we design, build and interact with software.\n\nExperiments are currently in progress : new things will appear here as they are built.', actions: [{ label: 'Open the Lab ↗', page: 'lab' }], followUps: askFollowUps.LAB },
-  SANDBOX: { text: 'The Sandbox is Malik’s space for aesthetic design explorations: visual studies, compositions, interface fragments, and ideas made to explore a feeling without requiring a full product or case study.', actions: [{ label: 'Open the Sandbox ↗', page: 'home', view: 'sandbox' }], followUps: askFollowUps.SANDBOX },
+  SANDBOX: { text: `The Sandbox holds ${sandboxExplorations.length} aesthetic design explorations, including interface concepts, visual studies, and graphic compositions. They are presented as individual images without case studies.`, actions: [{ label: 'Open the Sandbox ↗', page: 'home', view: 'sandbox' }], followUps: askFollowUps.SANDBOX },
   CONTACT: { text: 'EMAIL : heymalik05@gmail.com\nLINKEDIN : linkedin.com/in/temitayo-l-74984b16a\n\nAvailable for selected collaborations.', actions: [{ label: 'Email Malik ↗', href: 'mailto:heymalik05@gmail.com' }, { label: 'LinkedIn ↗', href: 'https://www.linkedin.com/in/temitayo-l-74984b16a/' }], followUps: askFollowUps.CONTACT },
   EVOLUTION: { text: '2018–PRESENT · INDEPENDENT BRAND DESIGNER\n2022 · INDEPENDENT DESIGN CONSULTANT\n2023 · FOUNDING PRODUCT DESIGNER & VISUAL/BRAND DESIGNER · BELSQUARED\n2023 · PRODUCT DESIGNER & VISUAL/BRAND DESIGNER · PYTHON NIGERIA\nJUL 2024–JUN 2026 · DESIGN MENTOR + TEAM LEAD · HNG TECH\n2025 · PRODUCT DESIGN & VISUAL/BRAND DESIGN LEAD · EMERJ LLC\n2026 · AI PRODUCT DESIGN : intelligent products + systems', followUps: askFollowUps.EVOLUTION },
   OFFLINE: { text: "That isn't documented on the site yet. Try asking about the work, the Lab, or how Malik thinks about AI.", followUps: askFollowUps.OFFLINE },
@@ -451,6 +452,9 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
     return view === 'branding' || view === 'lab' || view === 'sandbox' || view === 'about' ? view : 'product'
   })
   const [activeLab, setActiveLab] = useState<LabExperiment | null>(null)
+  const [activeSandbox, setActiveSandbox] = useState<SandboxExploration | null>(null)
+  const sandboxCloseRef = useRef<HTMLButtonElement>(null)
+  const sandboxTriggerRef = useRef<HTMLButtonElement>(null)
   const [transitionPhase, setTransitionPhase] = useState<'idle' | 'folding' | 'revealing'>('idle')
   const [slashMuted, setSlashMuted] = useState(() => localStorage.getItem('m:slash-muted') === 'true')
   const canvasRef = useRef<HTMLDivElement>(null)
@@ -538,6 +542,22 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
     document.addEventListener('keydown', close)
     return () => document.removeEventListener('keydown', close)
   }, [activeLab])
+  const closeSandbox = () => {
+    setActiveSandbox(null)
+    window.requestAnimationFrame(() => sandboxTriggerRef.current?.focus())
+  }
+  useEffect(() => {
+    if (!activeSandbox) return
+    sandboxCloseRef.current?.focus()
+    const previousOverflow = document.documentElement.style.overflow
+    document.documentElement.style.overflow = 'hidden'
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') closeSandbox()
+      if (event.key === 'Tab') { event.preventDefault(); sandboxCloseRef.current?.focus() }
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => { document.documentElement.style.overflow = previousOverflow; document.removeEventListener('keydown', handleKeyDown) }
+  }, [activeSandbox])
   useEffect(() => {
     const saved = Number(sessionStorage.getItem(scrollKey(mode)) ?? '0')
     if (saved > 0) {
@@ -648,8 +668,14 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
         </div>}
       </section> : mode === 'sandbox' ? <section className="home-panel sandbox-panel" key="sandbox" id="panel-sandbox" role="tabpanel" aria-labelledby="tab-sandbox">
         <h2 className="visually-hidden">Sandbox</h2>
-        <div className="sandbox-intro" id="sandbox-anchor"><span>DESIGN EXPLORATIONS</span><h3>A place for ideas<br />that deserve to exist.</h3><p>Visual studies, interface fragments, compositions, and aesthetic experiments. No case study required.</p></div>
-        <div className="empty-panel sandbox-empty"><div className="empty-well" aria-hidden="true"><span className="tile-pending">Explorations coming soon</span></div><p className="empty-title">The canvas is open.</p><p className="empty-note">New visual experiments will appear here as they are made.</p></div>
+        <div className="sandbox-gallery" id="sandbox-anchor" aria-label="Design explorations">
+          {sandboxExplorations.map(({ title, image }) => <figure className="sandbox-piece" key={image}>
+            <button type="button" onClick={event => { sandboxTriggerRef.current = event.currentTarget; setActiveSandbox({ title, image }) }} aria-label={`View ${title} enlarged`}>
+              <img src={image} alt={`${title} design exploration`} loading="lazy" />
+            </button>
+            <figcaption>{title}</figcaption>
+          </figure>)}
+        </div>
       </section> : <section className="home-panel" key="about" id="panel-about" role="tabpanel" aria-labelledby="rail-about">
         <h2 className="visually-hidden">About Malik</h2>
         <AboutEditorial experienceRecords={experienceRecords} />
@@ -666,6 +692,12 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
         <a href={activeLab.liveUrl} target="_blank" rel="noreferrer">OPEN FULL SITE <span aria-hidden="true">↗</span></a>
       </div>
     </div>}
+    {activeSandbox && createPortal(<div className="sandbox-lightbox" role="dialog" aria-modal="true" aria-labelledby="sandbox-lightbox-title" onMouseDown={event => { if (event.target === event.currentTarget) closeSandbox() }}>
+      <div className="sandbox-lightbox-content">
+        <div className="sandbox-lightbox-head"><h2 id="sandbox-lightbox-title">{activeSandbox.title}</h2><button ref={sandboxCloseRef} type="button" onClick={closeSandbox} aria-label={`Close ${activeSandbox.title} image`}>Close <span aria-hidden="true">×</span></button></div>
+        <img src={activeSandbox.image} alt={`${activeSandbox.title} design exploration`} />
+      </div>
+    </div>, document.body)}
   </div>
 }
 

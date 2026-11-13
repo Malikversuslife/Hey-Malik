@@ -1694,16 +1694,8 @@ body::before {
 .rail-about { margin-top:12px; }
 .rail-about.is-active { background:#19a978; color:#fff; box-shadow:0 8px 24px rgba(25,169,120,.22); }
 .rail-about.is-active:hover { background:#15936a; }
-.sandbox-intro { padding:clamp(58px,8vw,112px) clamp(20px,4vw,64px) clamp(48px,7vw,96px); border-bottom:1px solid var(--home-line); }
-.sandbox-intro > span { color:#f5a524; font-size:11px; font-weight:700; letter-spacing:.14em; }
-.sandbox-intro h3 { max-width:900px; margin:24px 0 0; color:#fff; font-size:clamp(3rem,7vw,7.8rem); line-height:.84; letter-spacing:-.075em; }
-.sandbox-intro p { max-width:610px; margin:clamp(30px,5vw,64px) 0 0 auto; color:var(--home-muted); font-size:clamp(17px,1.8vw,24px); line-height:1.4; }
-.sandbox-empty { padding-inline:clamp(18px,2.1vw,34px); }
 @media (max-width:700px) {
   .home-shell:not(.home-mode-about) .mode-tabs button { padding-inline:8px; font-size:11px; }
-  .sandbox-intro { padding-inline:20px; }
-  .sandbox-intro h3 { font-size:clamp(2.8rem,15vw,4.4rem); }
-  .sandbox-intro p { margin-left:0; }
 }
 
 /* Desktop media uses each source's natural proportions and carries its copy as an overlay. */
@@ -2401,11 +2393,6 @@ body::before {
 .home-shell .project-stack-media::after,.tile-visual::after { display:none; }
 .canvas-more { border:1px solid var(--play-ink); border-radius:999px; color:var(--play-ink); background:transparent; }
 .canvas-more:hover { background:var(--play-ink); color:#fff; }
-.sandbox-intro { border-color:var(--play-line); }
-.sandbox-intro>span { color:#c67900; }
-.sandbox-intro h3 { color:var(--play-ink); }
-.sandbox-intro p { color:var(--play-muted); }
-
 /* Editorial pages and case studies share the warm system while artwork keeps its own colour. */
 .home-shell:has(#panel-about) .home-canvas,.about-editorial { background:var(--play-paper); color:var(--play-ink); }
 .about-editorial { --about-accent:var(--play-orange); --about-line:var(--play-line); }
@@ -2907,3 +2894,87 @@ main.page-brandingCaseStudy,.new-case-brand .brand-case { --world-bg:var(--play-
   height:auto;
   object-fit:contain;
 }
+
+/* Sandbox artwork keeps its original composition and flows in a compact gallery. */
+.sandbox-gallery {
+  columns:2;
+  column-gap:12px;
+  padding:12px;
+}
+.sandbox-piece {
+  break-inside:avoid;
+  margin:0 0 12px;
+}
+.sandbox-piece button {
+  display:block;
+  width:100%;
+  padding:0;
+  border:0;
+  background:none;
+  cursor:zoom-in;
+}
+.sandbox-piece button:focus-visible { outline:2px solid var(--play-orange); outline-offset:3px; }
+.sandbox-piece img {
+  display:block;
+  width:100%;
+  height:auto;
+}
+.sandbox-piece figcaption {
+  padding:10px 2px 2px;
+  color:var(--play-muted);
+  font:600 12px/1.3 var(--ui-font);
+}
+.sandbox-lightbox {
+  position:fixed;
+  z-index:1100;
+  inset:0;
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  place-items:center;
+  box-sizing:border-box;
+  padding:clamp(12px,3vw,32px);
+  overflow:hidden;
+  background:rgba(14,14,14,.88);
+  backdrop-filter:blur(12px);
+  animation:lab-overlay-in .2s ease both;
+}
+.sandbox-lightbox-content {
+  display:flex;
+  flex-direction:column;
+  width:100%;
+  max-width:1200px;
+  height:100%;
+  min-width:0;
+  min-height:0;
+  gap:12px;
+}
+.sandbox-lightbox-head { display:flex; align-items:center; justify-content:space-between; gap:24px; color:#fff; }
+.sandbox-lightbox-head h2 { margin:0; font:600 clamp(14px,2vw,18px)/1.2 var(--ui-font); }
+.sandbox-lightbox-head button {
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:9px 13px;
+  border:1px solid rgba(255,255,255,.5);
+  border-radius:999px;
+  background:rgba(255,255,255,.12);
+  color:#fff;
+  font:600 12px/1 var(--ui-font);
+  cursor:pointer;
+}
+.sandbox-lightbox-head button span { font-size:20px; line-height:0.7; }
+.sandbox-lightbox-head button:focus-visible { outline:2px solid #fff; outline-offset:3px; }
+.sandbox-lightbox-content > img {
+  display:block;
+  flex:1 1 0;
+  width:100%;
+  min-height:0;
+  object-fit:contain;
+}
+@media (max-width:700px) {
+  .sandbox-gallery { columns:1; padding:8px; }
+  .sandbox-piece { margin-bottom:18px; }
+  .sandbox-piece figcaption { padding-inline:8px; }
+  .sandbox-lightbox { padding:calc(12px + env(safe-area-inset-top)) 12px calc(12px + env(safe-area-inset-bottom)); }
+}
+@media (prefers-reduced-motion:reduce) { .sandbox-lightbox { animation:none; } }

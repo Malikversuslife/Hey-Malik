@@ -1,0 +1,27 @@
+export type SandboxExploration = { title: string; image: string }
+
+export const sandboxExplorations: SandboxExploration[] = [
+  { title: 'Ember Wallet', image: '/sandbox/ember-wallet.webp' },
+  { title: 'Drizzle', image: '/sandbox/drizzle.webp' },
+  { title: 'Grove Market', image: '/sandbox/grove-market.webp' },
+  { title: 'Fika', image: '/sandbox/fika.webp' },
+  { title: 'Northvale', image: '/sandbox/northvale.webp' },
+  { title: 'Kinetic', image: '/sandbox/kinetic.webp' },
+  { title: 'Havn Home', image: '/sandbox/havn-home.webp' },
+  { title: 'Loopwise', image: '/sandbox/loopwise.webp' },
+  { title: 'Penny AI', image: '/sandbox/penny-ai.webp' },
+  { title: 'Nimbus Studio', image: '/sandbox/nimbus-studio.webp' },
+  { title: 'Glance Widgets', image: '/sandbox/glance-widgets.webp' },
+  { title: 'Pocket Club', image: '/sandbox/pocket-club.webp' },
+  { title: 'Ticker Card', image: '/sandbox/ticker-card.webp' },
+  { title: 'Saturday Drop', image: '/sandbox/saturday-drop.webp' },
+  { title: 'Orbit Pay Pricing', image: '/sandbox/orbit-pay-pricing.webp' },
+  { title: 'Maison Verre', image: '/sandbox/maison-verre.webp' },
+  { title: 'Oolo Tea House', image: '/sandbox/oolo-tea-house.webp' },
+  { title: 'DIVE', image: '/sandbox/dive.webp' },
+  { title: 'Kestrel Capital', image: '/sandbox/kestrel-capital.webp' },
+  { title: '48 HRS LEFT', image: '/sandbox/48-hrs-left.webp' },
+  { title: 'Marel Skincare', image: '/sandbox/marel-skincare.webp' },
+  { title: 'Tracklane', image: '/sandbox/tracklane.webp' },
+  { title: 'Quill', image: '/sandbox/quill.webp' },
+]
