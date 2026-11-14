@@ -276,6 +276,11 @@ const routeFromPath = () => {
 const breadcrumbMark = <>M<span className="case-chrome-slash" aria-hidden="true">/</span></>
 
 type EntryPhase = 'showing' | 'exiting' | 'done'
+type PortfolioTheme = 'light' | 'dark'
+const initialTheme: PortfolioTheme = (() => {
+  try { return localStorage.getItem('m:portfolio-theme') === 'dark' ? 'dark' : 'light' } catch { return 'light' }
+})()
+document.documentElement.dataset.theme = initialTheme
 
 function PortfolioEntry({ phase }: { phase: Exclude<EntryPhase, 'done'> }) {
   return <div className={`portfolio-entry portfolio-entry-${phase}`} aria-hidden="true">
@@ -299,6 +304,7 @@ function PortfolioEntry({ phase }: { phase: Exclude<EntryPhase, 'done'> }) {
 
 function App() {
   const [route, setRoute] = useState(routeFromPath)
+  const [theme, setTheme] = useState<PortfolioTheme>(initialTheme)
   const page = route.page
   const [entryPhase, setEntryPhase] = useState<EntryPhase>(() => {
     if (route.page !== 'home' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return 'done'
@@ -316,6 +322,7 @@ function App() {
   const askCloseTimer = useRef<number | null>(null)
   const askMsgId = useRef(0)
   const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const toggleTheme = () => setTheme(current => current === 'light' ? 'dark' : 'light')
   const navigate = (next: Page, target?: string, slug?: string, view?: HomeMode) => {
     markInAppNavigation()
     const homeView = next === 'work' ? 'product' : next === 'about' ? 'about' : next === 'lab' ? 'lab' : null
@@ -375,6 +382,10 @@ function App() {
   }
   const submit = askQuestion
   useEffect(() => {
+    document.documentElement.dataset.theme = theme
+    try { localStorage.setItem('m:portfolio-theme', theme) } catch { /* storage unavailable */ }
+  }, [theme])
+  useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); if (askOpen) askInputRef.current?.focus(); else openAsk() }
       if (event.key === 'Escape') { if (askOpen) closeAsk() }
@@ -412,7 +423,7 @@ function App() {
   const caseBack = (view: HomeMode) => () => navigate('home', undefined, undefined, view)
   return <main className={`${page !== 'home' ? `page-${page}` : ''}${page === 'home' && entryPhase !== 'done' ? ` portfolio-entry-${entryPhase}-main` : ''}`}>
     {page === 'home' && entryPhase !== 'done' && <PortfolioEntry phase={entryPhase} />}
-    {page === 'home' && <HomeShell key={new URLSearchParams(window.location.search).get('view') ?? 'product'} onProjectOpen={slug => navigate('workCaseStudy', undefined, slug)} onBrandProjectOpen={slug => navigate('brandingCaseStudy', undefined, slug)} />}{false && <><section className="hero" id="hero"><div className="hero-title" aria-label="I design intelligent products for human decisions"><span>I DESIGN</span><span className="intelligent" onPointerMove={handleIntelligentMove}>INTELLIGENT</span><span>PRODUCTS</span><span>FOR HUMAN <em>decisions.</em></span></div><div className="role-response"><div>PRODUCT DESIGNER</div><span>AI / UX / SYSTEMS</span><p>I work where product thinking, interaction and implementation meet.</p></div><div className="hero-meta"><span>PRODUCT DESIGNER<br />AI / UX / SYSTEMS</span><span>LAGOS, NG<br />GLOBAL / REMOTE</span></div><button className="ask-entry" onClick={() => openAsk()}><b>●</b> ASK ME SOMETHING</button><p className="annotation">because someone still has to make one.</p></section><SelectedWork onProjectOpen={slug => navigate('workCaseStudy', undefined, slug)} onAllWork={() => navigate('work')} /><HomeSections submit={submit} /></>}
+    {page === 'home' && <HomeShell key={new URLSearchParams(window.location.search).get('view') ?? 'product'} theme={theme} onToggleTheme={toggleTheme} onProjectOpen={slug => navigate('workCaseStudy', undefined, slug)} onBrandProjectOpen={slug => navigate('brandingCaseStudy', undefined, slug)} />}{false && <><section className="hero" id="hero"><div className="hero-title" aria-label="I design intelligent products for human decisions"><span>I DESIGN</span><span className="intelligent" onPointerMove={handleIntelligentMove}>INTELLIGENT</span><span>PRODUCTS</span><span>FOR HUMAN <em>decisions.</em></span></div><div className="role-response"><div>PRODUCT DESIGNER</div><span>AI / UX / SYSTEMS</span><p>I work where product thinking, interaction and implementation meet.</p></div><div className="hero-meta"><span>PRODUCT DESIGNER<br />AI / UX / SYSTEMS</span><span>LAGOS, NG<br />GLOBAL / REMOTE</span></div><button className="ask-entry" onClick={() => openAsk()}><b>●</b> ASK ME SOMETHING</button><p className="annotation">because someone still has to make one.</p></section><SelectedWork onProjectOpen={slug => navigate('workCaseStudy', undefined, slug)} onAllWork={() => navigate('work')} /><HomeSections submit={submit} /></>}
     {page === 'workCaseStudy' && <NewCaseShell key={`product-${route.slug}`} kind="product" crumbs={[{ label: breadcrumbMark, onClick: caseBack('product'), mark: true }, { label: 'PRODUCT DESIGN', onClick: caseBack('product') }, { label: workProjects.find(project => project.slug === route.slug)?.name ?? 'CASE STUDY', current: true }]} onBack={caseBack('product')} onAsk={() => openAsk()}><WorkPreparation project={workProjects.find(project => project.slug === route.slug)} onBack={caseBack('product')} onNext={slug => navigate('workCaseStudy', undefined, slug)} /></NewCaseShell>}
     {page === 'brandingCaseStudy' && <NewCaseShell key={`brand-${route.slug}`} kind="brand" crumbs={[{ label: breadcrumbMark, onClick: caseBack('branding'), mark: true }, { label: 'BRANDING', onClick: caseBack('branding') }, { label: brandingIndex.find(project => project.slug === route.slug)?.title ?? 'CASE STUDY', current: true }]} onBack={caseBack('branding')} onAsk={() => openAsk()}><BrandCase project={brandingIndex.some(project => project.slug === route.slug) ? brandProjects.find(project => project.slug === route.slug) : undefined} onNext={slug => navigate('brandingCaseStudy', undefined, slug)} /></NewCaseShell>}
     {page === 'labExperiment' && <NewCaseShell key={`lab-${route.slug}`} kind="lab" crumbs={[{ label: breadcrumbMark, onClick: caseBack('lab'), mark: true }, { label: 'LAB', onClick: caseBack('lab') }, { label: labExperiments.find(experiment => experiment.slug === route.slug)?.title ?? 'EXPERIMENT', current: true }]} onBack={caseBack('lab')} onAsk={() => openAsk()}><LabExperimentPage experiment={labExperiments.find(experiment => experiment.slug === route.slug)} onBack={caseBack('lab')} /></NewCaseShell>}
@@ -446,13 +457,14 @@ function App() {
   </main>
 }
 
-function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug: string) => void; onBrandProjectOpen: (slug: string) => void }) {
+function HomeShell({ theme, onToggleTheme, onProjectOpen, onBrandProjectOpen }: { theme: PortfolioTheme; onToggleTheme: () => void; onProjectOpen: (slug: string) => void; onBrandProjectOpen: (slug: string) => void }) {
   const [mode, setMode] = useState<HomeMode>(() => {
     const view = new URLSearchParams(window.location.search).get('view')
     return view === 'branding' || view === 'lab' || view === 'sandbox' || view === 'about' ? view : 'product'
   })
   const [activeLab, setActiveLab] = useState<LabExperiment | null>(null)
   const [activeSandbox, setActiveSandbox] = useState<SandboxExploration | null>(null)
+  const [ropePullCount, setRopePullCount] = useState(0)
   const sandboxCloseRef = useRef<HTMLButtonElement>(null)
   const sandboxTriggerRef = useRef<HTMLButtonElement>(null)
   const [transitionPhase, setTransitionPhase] = useState<'idle' | 'folding' | 'revealing'>('idle')
@@ -539,8 +551,13 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
   useEffect(() => {
     if (!activeLab) return
     const close = (event: KeyboardEvent) => { if (event.key === 'Escape') setActiveLab(null) }
+    const previousOverflow = document.documentElement.style.overflow
+    document.documentElement.style.overflow = 'hidden'
     document.addEventListener('keydown', close)
-    return () => document.removeEventListener('keydown', close)
+    return () => {
+      document.documentElement.style.overflow = previousOverflow
+      document.removeEventListener('keydown', close)
+    }
   }, [activeLab])
   const closeSandbox = () => {
     setActiveSandbox(null)
@@ -616,12 +633,21 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
       <path className="sword-kashira" d="M489 61 Q502 61 503 68 Q503 76 489 78 L486 77 Q495 69 489 61Z"/>
     </svg></div>
     <aside className="home-rail" aria-label="Malik profile and site navigation">
-      <div className="rail-mark" aria-hidden="true">M<span>/</span></div>
+      <div className="rail-brandline">
+        <div className="rail-mark" aria-hidden="true">M<span>/</span></div>
+        <p className="rail-status"><i aria-hidden="true" />Available to work</p>
+      </div>
+      <button className="theme-pull" type="button" onClick={() => { setRopePullCount(count => count + 1); onToggleTheme() }} aria-label={`Pull to switch to ${theme === 'light' ? 'dark' : 'light'} mode`} aria-pressed={theme === 'dark'} title={`Pull for ${theme === 'light' ? 'dark' : 'light'} mode`}>
+        <span className={`theme-pull-assembly${ropePullCount ? ' is-flailing' : ''}`} key={ropePullCount} aria-hidden="true"><span className="theme-pull-anchor" /><span className="theme-pull-cord" /><span className="theme-pull-grip">{theme === 'light' ? '☾' : '☀'}</span></span>
+      </button>
       <div className="rail-portrait"><img src="/malik-portrait.jpg" alt="Portrait of Temitayo Lawal Malik" /></div>
       <h1 className="rail-name">Temitayo Lawal Malik</h1>
       <p className="rail-role">Product &amp; Brand Designer</p>
-      <p className="rail-intro">I design digital products and visual identities, from early ideas and systems to prototypes and shipped experiences.</p>
-      <p className="rail-status"><i aria-hidden="true" />Available for work</p>
+      <div className="rail-intro">
+        <p>I design digital products and visual identities, from early ideas and systems to prototypes and shipped experiences.</p>
+        <p>I helped raise funding and ticket sales through brand, marketing and product design for <span className="rail-company">PyCon Nigeria<span className="rail-company-logo rail-company-pycon"><img src="/partner-logos/pycon-nigeria.svg" alt="" aria-hidden="true" /></span></span>.</p>
+        <p>I have mentored over 1,000 design interns at <span className="rail-company">HNG<span className="rail-company-logo rail-company-hng"><img src="/partner-logos/hng.svg" alt="" aria-hidden="true" /></span></span>.</p>
+      </div>
       <div className="rail-actions">
         <button id="rail-about" type="button" className={`rail-link rail-about${mode === 'about' ? ' is-active' : ''}`} aria-pressed={mode === 'about'} onClick={() => changeMode('about')}><Icon name="user" />About</button>
         <a className="rail-link" href={`mailto:${contact.email}`}><Icon name="mail" />Contact me</a>
@@ -629,6 +655,7 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
       <ToolCarousel />
       <div className="rail-social">
         <SocialLinks />
+        <button className="rail-social-resume" type="button" disabled title="Résumé to be added" aria-label="View résumé : résumé coming soon"><Icon name="file" />View résumé</button>
       </div>
     </aside>
     <div className="home-canvas" role="region" aria-label="Portfolio canvas" tabIndex={0} ref={canvasRef} onScroll={onCanvasScroll}>
@@ -685,13 +712,13 @@ function HomeShell({ onProjectOpen, onBrandProjectOpen }: { onProjectOpen: (slug
         <span className="canvas-more-action">More about Malik <b aria-hidden="true">↗</b></span>
       </button>}
     </div>
-    {activeLab && <div className="lab-preview-overlay" role="dialog" aria-modal="true" aria-labelledby="lab-preview-title" onMouseDown={event => { if (event.target === event.currentTarget) setActiveLab(null) }}>
+    {activeLab && createPortal(<div className="lab-preview-overlay" role="dialog" aria-modal="true" aria-labelledby="lab-preview-title" onMouseDown={event => { if (event.target === event.currentTarget) setActiveLab(null) }}>
       <div className={`lab-preview-panel lab-preview-${activeLab.previewMode ?? 'mobile'}`}>
         <div className="lab-preview-head"><div><span>LIVE EXPERIMENT</span><h2 id="lab-preview-title">{activeLab.title}</h2></div><button type="button" onClick={() => setActiveLab(null)} aria-label={`Close ${activeLab.title} preview`}>CLOSE <span aria-hidden="true">×</span></button></div>
         <div className="lab-preview-device"><iframe src={activeLab.liveUrl} title={`${activeLab.title} interactive ${activeLab.previewMode ?? 'mobile'} preview`} allow="geolocation" /></div>
         <a href={activeLab.liveUrl} target="_blank" rel="noreferrer">OPEN FULL SITE <span aria-hidden="true">↗</span></a>
       </div>
-    </div>}
+    </div>, document.body)}
     {activeSandbox && createPortal(<div className="sandbox-lightbox" role="dialog" aria-modal="true" aria-labelledby="sandbox-lightbox-title" onMouseDown={event => { if (event.target === event.currentTarget) closeSandbox() }}>
       <div className="sandbox-lightbox-content">
         <div className="sandbox-lightbox-head"><h2 id="sandbox-lightbox-title">{activeSandbox.title}</h2><button ref={sandboxCloseRef} type="button" onClick={closeSandbox} aria-label={`Close ${activeSandbox.title} image`}>Close <span aria-hidden="true">×</span></button></div>
