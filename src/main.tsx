@@ -289,10 +289,28 @@ const scrollDestinationToTop = () => {
   })
 }
 
-type EntryPhase = 'showing' | 'exiting' | 'done'
+type EntryPhase = 'loading' | 'showing' | 'exiting' | 'done'
 type PortfolioTheme = 'light' | 'dark'
+const ENTRY_POLAROIDS = [
+  { src: '/entry-polaroids/polaroid-01.webp', position: '50% 52%' },
+  { src: '/entry-polaroids/polaroid-02.webp', position: '50% 54%' },
+  { src: '/entry-polaroids/polaroid-03.webp', position: '50% 58%' },
+  { src: '/entry-polaroids/polaroid-04.webp', position: '50% 52%' },
+  { src: '/entry-polaroids/polaroid-05.webp', position: '50% 68%' },
+  { src: '/entry-polaroids/polaroid-06.webp', position: '50% 56%' },
+  { src: '/entry-polaroids/polaroid-07.webp', position: '50% 58%' },
+  { src: '/entry-polaroids/polaroid-08.webp', position: '50% 56%' },
+  { src: '/entry-polaroids/polaroid-09.webp', position: '50% 62%' },
+  { src: '/entry-polaroids/polaroid-10.webp', position: '50% 62%' },
+  { src: '/entry-polaroids/polaroid-11.webp', position: '50% 62%' },
+  { src: '/entry-polaroids/polaroid-12.webp', position: '50% 50%' }
+] as const
 const initialTheme: PortfolioTheme = (() => {
-  try { return localStorage.getItem('m:portfolio-theme') === 'dark' ? 'dark' : 'light' } catch { return 'light' }
+  try {
+    const saved = localStorage.getItem('m:portfolio-theme-choice')
+    if (saved === 'dark' || saved === 'light') return saved
+  } catch { /* storage unavailable */ }
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 })()
 document.documentElement.dataset.theme = initialTheme
 
@@ -300,10 +318,9 @@ function PortfolioEntry({ phase }: { phase: Exclude<EntryPhase, 'done'> }) {
   return <div className={`portfolio-entry portfolio-entry-${phase}`} aria-hidden="true">
     <div className="portfolio-entry-curtain portfolio-entry-curtain-left" />
     <div className="portfolio-entry-curtain portfolio-entry-curtain-right" />
-    <div className="portfolio-entry-polaroids">
-      {Array.from({ length: 12 }, (_, index) => <div className="entry-polaroid" key={index}>
-        <span className="entry-polaroid-photo" />
-        <small>DESIGN {String(index + 1).padStart(2, '0')}</small>
+    {phase !== 'loading' && <><div className="portfolio-entry-polaroids">
+      {ENTRY_POLAROIDS.map(photo => <div className="entry-polaroid" key={photo.src}>
+        <span className="entry-polaroid-photo"><img src={photo.src} alt="" style={{ objectPosition: photo.position }} loading="eager" decoding="sync" fetchPriority="high" /></span>
       </div>)}
     </div>
     <div className="portfolio-entry-title">
@@ -311,7 +328,7 @@ function PortfolioEntry({ phase }: { phase: Exclude<EntryPhase, 'done'> }) {
         <span>Hey Malik</span><span>Hey Malik</span><span>Hey Malik</span><span>Hey Malik</span><span>Hey Malik</span>
       </div>
       <p>Product &amp; Brand Designer</p>
-    </div>
+    </div></>}
     <span className="portfolio-entry-seam" />
   </div>
 }
@@ -322,8 +339,8 @@ function App() {
   const page = route.page
   const [entryPhase, setEntryPhase] = useState<EntryPhase>(() => {
     if (route.page !== 'home' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return 'done'
-    if (new URLSearchParams(window.location.search).get('intro') === '1') return 'showing'
-    try { return sessionStorage.getItem('m:portfolio-entry-seen') === 'true' ? 'done' : 'showing' } catch { return 'showing' }
+    if (new URLSearchParams(window.location.search).get('intro') === '1') return 'loading'
+    try { return sessionStorage.getItem('m:portfolio-entry-seen') === 'true' ? 'done' : 'loading' } catch { return 'loading' }
   })
   const [askOpen, setAskOpen] = useState(false)
   const [askClosing, setAskClosing] = useState(false)
@@ -336,7 +353,11 @@ function App() {
   const askCloseTimer = useRef<number | null>(null)
   const askMsgId = useRef(0)
   const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  const toggleTheme = () => setTheme(current => current === 'light' ? 'dark' : 'light')
+  const toggleTheme = () => setTheme(current => {
+    const next = current === 'light' ? 'dark' : 'light'
+    try { localStorage.setItem('m:portfolio-theme-choice', next) } catch { /* storage unavailable */ }
+    return next
+  })
   const navigate = (next: Page, target?: string, slug?: string, view?: HomeMode) => {
     markInAppNavigation()
     const homeView = next === 'work' ? 'product' : next === 'about' ? 'about' : next === 'lab' ? 'lab' : null
@@ -393,8 +414,16 @@ function App() {
   const submit = askQuestion
   useEffect(() => {
     document.documentElement.dataset.theme = theme
-    try { localStorage.setItem('m:portfolio-theme', theme) } catch { /* storage unavailable */ }
   }, [theme])
+  useEffect(() => {
+    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)')
+    const followSystemTheme = (event: MediaQueryListEvent) => {
+      try { if (localStorage.getItem('m:portfolio-theme-choice')) return } catch { /* storage unavailable */ }
+      setTheme(event.matches ? 'dark' : 'light')
+    }
+    systemTheme.addEventListener('change', followSystemTheme)
+    return () => systemTheme.removeEventListener('change', followSystemTheme)
+  }, [])
   useEffect(() => {
     scrollDestinationToTop()
   }, [route.page, route.slug])
@@ -424,6 +453,26 @@ function App() {
     const body = askBodyRef.current
     if (body) body.scrollTop = body.scrollHeight
   }, [askMessages, askInterpreting])
+  useEffect(() => {
+    if (entryPhase !== 'loading') return
+    let cancelled = false
+    const preload = ({ src }: (typeof ENTRY_POLAROIDS)[number]) => new Promise<void>(resolve => {
+      const image = new Image()
+      let settled = false
+      const finish = () => {
+        if (settled) return
+        settled = true
+        if (typeof image.decode === 'function') image.decode().catch(() => undefined).finally(resolve)
+        else resolve()
+      }
+      image.onload = finish
+      image.onerror = finish
+      image.src = src
+      if (image.complete) finish()
+    })
+    Promise.all(ENTRY_POLAROIDS.map(preload)).then(() => { if (!cancelled) setEntryPhase('showing') })
+    return () => { cancelled = true }
+  }, [entryPhase])
   useEffect(() => {
     if (entryPhase !== 'showing') return
     const splitTimer = window.setTimeout(() => setEntryPhase('exiting'), 2650)
