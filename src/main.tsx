@@ -645,8 +645,8 @@ function HomeShell({ theme, onToggleTheme, onProjectOpen, onBrandProjectOpen }: 
       <p className="rail-role">Product &amp; Brand Designer</p>
       <div className="rail-intro">
         <p>I design digital products and visual identities, from early ideas and systems to prototypes and shipped experiences.</p>
-        <p>I helped raise funding and ticket sales through brand, marketing and product design for <span className="rail-company">PyCon Nigeria<span className="rail-company-logo rail-company-pycon"><img src="/partner-logos/pycon-nigeria.svg" alt="" aria-hidden="true" /></span></span>.</p>
-        <p>I have mentored over 1,000 design interns at <span className="rail-company">HNG<span className="rail-company-logo rail-company-hng"><img src="/partner-logos/hng.svg" alt="" aria-hidden="true" /></span></span>.</p>
+        <p>I helped raise funding and ticket sales through brand, marketing and product design for <span className="rail-company">PyCon Nigeria<span className="rail-company-logo rail-company-pycon"><img src="/partner-logos/pycon-nigeria.png" alt="" aria-hidden="true" /></span></span>.</p>
+        <p>I have mentored over 1,000 design interns at <span className="rail-company">HNG<span className="rail-company-logo rail-company-hng"><img src="/partner-logos/hng.png" alt="" aria-hidden="true" /></span></span>.</p>
       </div>
       <div className="rail-actions">
         <button id="rail-about" type="button" className={`rail-link rail-about${mode === 'about' ? ' is-active' : ''}`} aria-pressed={mode === 'about'} onClick={() => changeMode('about')}><Icon name="user" />About</button>

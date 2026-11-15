@@ -1195,8 +1195,8 @@ main.page-brandingCaseStudy, .new-case-brand { background:#fff; color:#191919; }
 .about-testimonials-track { overflow:hidden; padding:12px 0 14px; mask-image:linear-gradient(to right,transparent,#000 3%,#000 97%,transparent); }
 .about-testimonials-rail { display:flex; width:max-content; animation:about-testimonials-marquee 96s linear infinite; will-change:transform; }
 .about-testimonials-track:hover .about-testimonials-rail,.about-testimonials-track:focus-within .about-testimonials-rail { animation-play-state:paused; }
-.about-testimonials-set { display:flex; flex:none; gap:12px; padding-right:12px; }
-@keyframes about-testimonials-marquee { to { transform:translateX(-50%); } }
+.about-testimonials-set { display:flex; flex:none; width:max-content; min-width:max-content; gap:12px; padding-right:12px; }
+@keyframes about-testimonials-marquee { to { transform:translate3d(-33.333333%,0,0); } }
 .about-testimonial-card { position:relative; flex:0 0 clamp(340px,42vw,520px); min-height:0; display:flex; flex-direction:column; padding:22px 24px 18px; border:1px solid #dce8dc; border-radius:10px; background:#f5f9f4; }
 .about-testimonial-card:nth-child(3n + 2) { background:#f0f6f6; border-color:#dce8e8; }
 .about-testimonial-card:nth-child(3n) { background:#f7f8f2; border-color:#e7e9d9; }
@@ -3165,17 +3165,16 @@ main.page-brandingCaseStudy,.new-case-brand .brand-case { --world-bg:var(--play-
   display:inline-grid;
   place-items:center;
   height:20px;
-  padding:2px 5px;
-  border:1px solid rgba(255,255,255,.14);
-  border-radius:5px;
-  background:#151719;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
   vertical-align:middle;
-  box-shadow:0 2px 5px rgba(20,18,15,.12);
+  box-shadow:none;
 }
 .rail-company-logo img { display:block; max-width:100%; max-height:100%; object-fit:contain; }
-.rail-company-pycon { width:42px; }
-.rail-company-hng { width:38px; }
-:root[data-theme='dark'] .rail-company-logo { border-color:rgba(255,255,255,.22); background:#0c0e10; box-shadow:0 2px 8px rgba(0,0,0,.32); }
+.rail-company-pycon,.rail-company-hng { width:20px; }
+:root[data-theme='dark'] .rail-company-logo { border:0; background:transparent; box-shadow:none; }
 
 .theme-pull-cord {
   width:4px;

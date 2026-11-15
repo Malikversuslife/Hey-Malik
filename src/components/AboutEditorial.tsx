@@ -189,6 +189,7 @@ export function AboutEditorial({ experienceRecords }: { experienceRecords: Exper
         <div className="about-testimonials-rail">
           <div className="about-testimonials-set"><TestimonialCards /></div>
           <div className="about-testimonials-set" aria-hidden="true"><TestimonialCards /></div>
+          <div className="about-testimonials-set" aria-hidden="true"><TestimonialCards /></div>
         </div>
       </div>
     </section>
