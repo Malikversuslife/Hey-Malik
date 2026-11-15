@@ -68,7 +68,7 @@ export function AnansiProductCase({ onNext }: { onNext: (slug: string) => void }
       <ProductCaseStatement>Mobile needed a new control hierarchy, not a smaller desktop arrangement.</ProductCaseStatement>
       <p className="pc-copy pc-reveal">Gallery actions were consolidated into an expandable menu beside the guest name, destinations became a separate compact control, and movement received dedicated space. Modal back actions preserve a visitor’s place in the journey.</p>
       <p className="pc-copy pc-reveal">The responsive website keeps navigation and motion controls legible around the wordmark. Mobile layouts were checked through viewport simulation, with physical-device testing across browsers and GPU capabilities still required.</p>
-      <ProductCaseMedia media={{ index:'08', title:'MOBILE / GALLERY ACTIONS + DESTINATIONS', ratio:'full', source:`${MEDIA_ROOT}anansi-mobile.png`, caption:'Compact menus separate visit actions from movement and destination controls.' }} />
+      <ProductCaseMedia media={{ index:'08', title:'MOBILE / GALLERY ACTIONS + DESTINATIONS', ratio:'full', source:`${MEDIA_ROOT}anansi-mobile.webp`, caption:'Compact menus separate visit actions from movement and destination controls.' }} />
     </ProductCaseSection>
 
     <ProductCaseSection id="anansi-performance" label="WORKING WITHIN BROWSER LIMITS">

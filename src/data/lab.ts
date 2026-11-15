@@ -32,7 +32,7 @@ export const labExperiments: LabExperiment[] = [
     experiment: 'Scythe Night explores atmosphere, character, and choice through a playable horror experience.',
     learning: ['A strong visual world can set the tone before play begins.', 'A shared setting can connect distinct character stories.'],
     tools: ['GAME DESIGN', 'INTERACTIVE STORYTELLING'],
-    cover: '/scythe-night-lab.png', media: '/scythe-night-lab.png',
+    cover: '/scythe-night-lab.webp', media: '/scythe-night-lab.webp',
     liveUrl: 'https://scythe-night.vercel.app/', aiTool: 'Claude', previewMode: 'mobile', status: 'SHIPPED',
   },
   {

@@ -23,7 +23,7 @@ function Lines({ text }: { text: string }) {
 export function BrandMedia({ media, priority = false }: { media: BrandMediaData; priority?: boolean }) {
   const ratio: BrandRatio = media.ratio ?? '16:9'
   const frame = media.source ? (
-    <img src={media.source} alt={media.alt ?? ''} loading={priority ? 'eager' : 'lazy'} />
+    <img src={media.source} alt={media.alt ?? ''} loading={priority ? 'eager' : 'lazy'} decoding="async" fetchPriority={priority ? 'high' : 'low'} />
   ) : (
     <div className="brand-media-frame" role="img" aria-label={`${pad(media.index)} / ${media.title}`} />
   )
@@ -32,7 +32,7 @@ export function BrandMedia({ media, priority = false }: { media: BrandMediaData;
 
 export function BrandVideo({ index, title, ratio = '9:16', source, poster, alt }: { index: number; title: string; ratio?: BrandRatio; caption?: string; source?: string; poster?: string; alt?: string }) {
   const video = source ? (
-    <video src={source} poster={poster} controls playsInline preload="metadata" aria-label={alt ?? `${pad(index)} / ${title}`} />
+    <video src={source} poster={poster} controls playsInline preload="none" aria-label={alt ?? `${pad(index)} / ${title}`} />
   ) : (
     <div className="brand-media-frame" role="img" aria-label={`${pad(index)} / ${title}`} />
   )
