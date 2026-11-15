@@ -525,19 +525,43 @@ function HomeShell({ theme, onToggleTheme, onProjectOpen, onBrandProjectOpen }: 
   }
   const startSlash = () => { playSlash(); setTransitionPhase('folding') }
   const toggleSlashSound = () => setSlashMuted(previous => { const next = !previous; localStorage.setItem('m:slash-muted', String(next)); return next })
+  const scrollModeDestination = (next: HomeMode) => {
+    if (next === 'about') {
+      scrollDestinationToTop()
+      return
+    }
+    const anchor = `${next}-anchor`
+    const placeAtProjects = () => {
+      const target = document.getElementById(anchor)
+      const canvas = canvasRef.current
+      if (!target || !canvas) return
+      if (window.matchMedia('(min-width: 901px)').matches) {
+        const top = canvas.scrollTop + target.getBoundingClientRect().top - canvas.getBoundingClientRect().top - 88
+        canvas.scrollTo({ top: Math.max(0, top), left: 0, behavior: 'auto' })
+      } else {
+        const top = window.scrollY + target.getBoundingClientRect().top - 76
+        window.scrollTo({ top: Math.max(0, top), left: 0, behavior: 'auto' })
+      }
+    }
+    window.requestAnimationFrame(() => window.requestAnimationFrame(placeAtProjects))
+  }
   const changeMode = (next: HomeMode) => {
-    if (next === mode || transitionPhase !== 'idle') return
+    if (transitionPhase !== 'idle') return
+    if (next === mode) {
+      scrollModeDestination(next)
+      return
+    }
     if (calm()) {
       window.history.pushState(null, '', `/?view=${next}`)
       setMode(next)
-      scrollDestinationToTop()
+      scrollModeDestination(next)
       return
     }
     startSlash()
     transitionTimers.current.push(window.setTimeout(() => {
       window.history.pushState(null, '', `/?view=${next}`)
       setMode(next)
-      scrollDestinationToTop()
+      scrollModeDestination(next)
       setTransitionPhase('revealing')
     }, 800))
     transitionTimers.current.push(window.setTimeout(() => setTransitionPhase('idle'), 1520))
@@ -586,9 +610,6 @@ function HomeShell({ theme, onToggleTheme, onProjectOpen, onBrandProjectOpen }: 
     document.addEventListener('keydown', handleKeyDown)
     return () => { document.documentElement.style.overflow = previousOverflow; document.removeEventListener('keydown', handleKeyDown) }
   }, [activeSandbox])
-  useEffect(() => {
-    scrollDestinationToTop()
-  }, [mode])
   useEffect(() => {
     if (calm()) return
     const canvas = canvasRef.current
@@ -688,7 +709,7 @@ function HomeShell({ theme, onToggleTheme, onProjectOpen, onBrandProjectOpen }: 
         <ProjectStack entries={brandingIndex.map(project => ({ id: project.id, index: project.index, title: project.title, descriptor: project.descriptor, live: true, slug: project.slug, label: `B/ ${project.index}`, cover: project.cover }))} onOpen={slug => foldToProject(() => onBrandProjectOpen(slug))} anchor="branding-anchor" />
       </section> : mode === 'lab' ? <section className="home-panel" key="lab" id="panel-lab" role="tabpanel" aria-labelledby="tab-lab">
         <h2 className="visually-hidden">Lab</h2>
-        {labExperiments.length ? <div className="work-gallery">
+        {labExperiments.length ? <div className="work-gallery" id="lab-anchor">
           {labExperiments.map(experiment => <button key={experiment.slug} className={`work-tile tile-standard lab-card lab-card-${experiment.slug}`} onClick={() => { if (experiment.slug === 'scythe-night' && window.matchMedia('(max-width: 760px)').matches) { window.location.assign(experiment.liveUrl!); return } foldWithinPortfolio(() => setActiveLab(experiment)) }} aria-label={`${experiment.title} : ${experiment.slug === 'scythe-night' ? 'play game' : 'open interactive preview'}`}>
             <span className="tile-visual" aria-hidden="true">{experiment.cover ? <img src={experiment.cover} alt="" /> : <span className="tile-pending">Image coming soon</span>}</span>
             <span className="tile-meta lab-card-meta"><span className="tile-name">{displayProjectTitle(experiment.title)}</span></span>
