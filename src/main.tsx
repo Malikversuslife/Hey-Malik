@@ -275,6 +275,20 @@ const routeFromPath = () => {
 
 const breadcrumbMark = <>M<span className="case-chrome-slash" aria-hidden="true">/</span></>
 
+const scrollDestinationToTop = () => {
+  const reset = () => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+    document.documentElement.scrollTop = 0
+    document.body.scrollTop = 0
+    document.querySelectorAll<HTMLElement>('.home-canvas,.new-case-body').forEach(element => element.scrollTo({ top: 0, left: 0, behavior: 'auto' }))
+  }
+  reset()
+  window.requestAnimationFrame(() => {
+    reset()
+    window.requestAnimationFrame(reset)
+  })
+}
+
 type EntryPhase = 'showing' | 'exiting' | 'done'
 type PortfolioTheme = 'light' | 'dark'
 const initialTheme: PortfolioTheme = (() => {
@@ -330,11 +344,7 @@ function App() {
     const path = next === 'home' ? (view ? `/?view=${view}` : '/') : next === 'workCaseStudy' ? `/work/${slug}` : next === 'brandingCaseStudy' ? `/branding/${slug}` : next === 'labExperiment' ? `/lab/${slug}` : `/${next}`
     window.history.pushState(null, '', path)
     setRoute({ page: next, slug })
-    window.setTimeout(() => {
-      const destination = document.getElementById(target ?? 'top')
-      if (destination) destination.scrollIntoView({ behavior: target && !reducedMotion() ? 'smooth' : 'auto', block: 'start' })
-      else window.scrollTo({ top: 0, behavior: 'auto' })
-    }, 30)
+    scrollDestinationToTop()
   }
   const openAsk = (focus = true) => {
     if (askCloseTimer.current !== null) window.clearTimeout(askCloseTimer.current)
@@ -385,6 +395,14 @@ function App() {
     document.documentElement.dataset.theme = theme
     try { localStorage.setItem('m:portfolio-theme', theme) } catch { /* storage unavailable */ }
   }, [theme])
+  useEffect(() => {
+    scrollDestinationToTop()
+  }, [route.page, route.slug])
+  useEffect(() => {
+    const previous = window.history.scrollRestoration
+    window.history.scrollRestoration = 'manual'
+    return () => { window.history.scrollRestoration = previous }
+  }, [])
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); if (askOpen) askInputRef.current?.focus(); else openAsk() }
@@ -471,7 +489,6 @@ function HomeShell({ theme, onToggleTheme, onProjectOpen, onBrandProjectOpen }: 
   const [slashMuted, setSlashMuted] = useState(() => localStorage.getItem('m:slash-muted') === 'true')
   const canvasRef = useRef<HTMLDivElement>(null)
   const transitionTimers = useRef<number[]>([])
-  const lastScrollRef = useRef(0)
   const calm = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
   const playSlash = () => {
     if (slashMuted || calm()) return
@@ -508,21 +525,19 @@ function HomeShell({ theme, onToggleTheme, onProjectOpen, onBrandProjectOpen }: 
   }
   const startSlash = () => { playSlash(); setTransitionPhase('folding') }
   const toggleSlashSound = () => setSlashMuted(previous => { const next = !previous; localStorage.setItem('m:slash-muted', String(next)); return next })
-  const scrollKey = (key: HomeMode) => `m:portfolio:home-scroll:${key}`
   const changeMode = (next: HomeMode) => {
     if (next === mode || transitionPhase !== 'idle') return
-    try { sessionStorage.setItem(scrollKey(mode), String(lastScrollRef.current)) } catch { /* storage unavailable */ }
     if (calm()) {
       window.history.pushState(null, '', `/?view=${next}`)
       setMode(next)
-      canvasRef.current?.scrollTo({ top: 0 })
+      scrollDestinationToTop()
       return
     }
     startSlash()
     transitionTimers.current.push(window.setTimeout(() => {
       window.history.pushState(null, '', `/?view=${next}`)
       setMode(next)
-      canvasRef.current?.scrollTo({ top: 0 })
+      scrollDestinationToTop()
       setTransitionPhase('revealing')
     }, 800))
     transitionTimers.current.push(window.setTimeout(() => setTransitionPhase('idle'), 1520))
@@ -543,10 +558,6 @@ function HomeShell({ theme, onToggleTheme, onProjectOpen, onBrandProjectOpen }: 
     }, 800))
     transitionTimers.current.push(window.setTimeout(() => setTransitionPhase('idle'), 1520))
   }
-  const onCanvasScroll = () => { lastScrollRef.current = canvasRef.current?.scrollTop ?? 0 }
-  useEffect(() => {
-    return () => { try { sessionStorage.setItem(scrollKey(mode), String(lastScrollRef.current)) } catch { /* storage unavailable */ } }
-  }, [mode])
   useEffect(() => () => transitionTimers.current.forEach(timer => window.clearTimeout(timer)), [])
   useEffect(() => {
     if (!activeLab) return
@@ -576,12 +587,8 @@ function HomeShell({ theme, onToggleTheme, onProjectOpen, onBrandProjectOpen }: 
     return () => { document.documentElement.style.overflow = previousOverflow; document.removeEventListener('keydown', handleKeyDown) }
   }, [activeSandbox])
   useEffect(() => {
-    const saved = Number(sessionStorage.getItem(scrollKey(mode)) ?? '0')
-    if (saved > 0) {
-      window.setTimeout(() => { const el = canvasRef.current; if (el) el.scrollTo({ top: Math.min(saved, el.scrollHeight) }) }, 40)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    scrollDestinationToTop()
+  }, [mode])
   useEffect(() => {
     if (calm()) return
     const canvas = canvasRef.current
@@ -658,7 +665,7 @@ function HomeShell({ theme, onToggleTheme, onProjectOpen, onBrandProjectOpen }: 
         <button className="rail-social-resume" type="button" disabled title="Résumé to be added" aria-label="View résumé : résumé coming soon"><Icon name="file" />View résumé</button>
       </div>
     </aside>
-    <div className="home-canvas" role="region" aria-label="Portfolio canvas" tabIndex={0} ref={canvasRef} onScroll={onCanvasScroll}>
+    <div className="home-canvas" role="region" aria-label="Portfolio canvas" tabIndex={0} ref={canvasRef}>
       <div className="canvas-head">
         <div className="mode-tabs" role="tablist" aria-label="Portfolio work">
           <button role="tab" id="tab-product" aria-selected={mode === 'product'} aria-controls="panel-product" className={mode === 'product' ? 'is-active' : ''} onClick={() => changeMode('product')} onKeyDown={moveTab}><Icon name="product" />Product design</button>

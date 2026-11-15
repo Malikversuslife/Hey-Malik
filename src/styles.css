@@ -1212,7 +1212,6 @@ main.page-brandingCaseStudy, .new-case-brand { background:#fff; color:#191919; }
 @media(max-width:950px) { .about-editorial { padding-top:2px; } .about-editorial-main { display:flex; flex-direction:column; gap:0; } .about-profile-card { display:block; position:static; order:-2; align-self:flex-start; width:min(100%,260px); margin:22px 0 28px; } .about-contents { position:static; order:-1; align-self:stretch; display:flex; flex-direction:row; justify-content:flex-start; flex-wrap:wrap; gap:9px 15px; padding:0 0 18px; border-bottom:1px solid var(--about-line); text-align:left; } .about-story { width:100%; } .about-section:first-child { padding-top:29px; } }
 @media(max-width:760px) { .about-contents { display:none; } .about-section:first-child { padding-top:18px; } }
 @media(max-width:560px) { .about-card-grid,.about-tool-grid { grid-template-columns:1fr; } .about-card,.about-tool { min-height:0; padding:13px; } .about-evolution > div { grid-template-columns:24px 1fr; } .about-evolution small { grid-column:2; } .about-process-list > div { grid-template-columns:22px 65px 1fr; } .about-section > p { font-size:13px; } .about-testimonial-card { flex-basis:min(85vw,340px); padding:20px; } .about-testimonial-card blockquote { font-size:15px; } .about-testimonials-rail { animation-duration:120s; } }
-@media(prefers-reduced-motion:reduce) { .about-testimonials-track { overflow-x:auto; mask-image:none; scrollbar-width:thin; } .about-testimonials-rail { animation:none; } .about-testimonials-set[aria-hidden="true"] { display:none; } }
 @media(max-width:700px) {
   .new-case-brand .brand-case { padding:12px 16px 0; }
   .new-case-brand .brand-overview { display:flex; flex-direction:column-reverse; gap:32px; padding:32px 4px 40px; }
@@ -3268,9 +3267,10 @@ main.page-brandingCaseStudy,.new-case-brand .brand-case { --world-bg:var(--play-
 
 /* Keep the testimonial conveyor identical on small screens. */
 @media(max-width:560px) {
-  .about-testimonials-track { overflow:hidden; }
-  .about-testimonials-rail { width:max-content; animation:about-testimonials-marquee 88s linear infinite; }
-  .about-testimonials-set { flex:none; }
+  .about-testimonials-track { width:100%; max-width:100%; overflow:hidden; contain:paint; }
+  .about-testimonials-rail { display:flex; width:max-content; min-width:max-content; animation:about-testimonials-marquee 88s linear infinite; }
+  .about-testimonials-set { flex:0 0 auto; width:max-content; min-width:max-content; }
+  .about-testimonial-card { width:min(85vw,340px); flex:0 0 min(85vw,340px); }
 }
 
 @media(max-width:760px) {
