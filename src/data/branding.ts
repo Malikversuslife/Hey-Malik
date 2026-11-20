@@ -91,6 +91,9 @@ function galleryProject(config: {
   intro: string
   year: string
   world: string
+  role?: string
+  platform?: string
+  projectType?: string
   story: { title: string; statement?: string; copy: string }[]
   hero?: BrandMediaData
   gallery?: BrandMediaData[]
@@ -105,8 +108,11 @@ function galleryProject(config: {
     descriptor: config.descriptor,
     intro: config.intro,
     meta: [
-      { label: 'YEAR', value: config.year },
-      { label: 'SCOPE OF WORK', value: config.descriptor }
+      { label: 'ROLE', value: config.role ?? 'Brand & Visual Designer' },
+      { label: 'SCOPE', value: config.descriptor },
+      { label: 'PLATFORM', value: config.platform ?? 'Digital + Physical Touchpoints' },
+      { label: 'PROJECT TYPE', value: config.projectType ?? 'Brand Identity' },
+      { label: 'YEAR', value: config.year }
     ],
     hero: config.hero ?? { index: 1, title: 'HERO IMAGE', ratio: 'ultra-wide' },
     movements: [
@@ -212,11 +218,11 @@ export const brandProjects: BrandProject[] = [
       { title: 'Visual Language', copy: 'A controlled visual language keeps photography, campaign layouts, and product communication connected while leaving space for each garment to lead.' },
       { title: 'Application', copy: 'The system extends across labels, packaging, campaign material, social content, and digital touchpoints as one coherent fashion identity.' }
     ], next: { name: 'FINLANCER', slug: 'finlancer', note: 'Brand / Visual Identity' } }),
-  galleryProject({ slug: 'finlancer', number: '003', name: 'FINLANCER', descriptor: 'Brand / Visual Identity', tagline: 'FINANCE FOR\nINDEPENDENT WORK.', intro: 'A visual identity for a financial product built around the realities of independent work.', year: '2025', world: 'finlancer', story: [
-    { title: 'Premise', copy: 'Independent work can make money management feel fragmented. The brand needed to make financial organisation feel calm, capable, and easy to approach.' },
-    { title: 'Identity', statement: 'CLARITY FOR\nEVERY MOVE.', copy: 'The identity balances financial confidence with the flexibility and momentum associated with freelance work.' },
-    { title: 'Visual Language', copy: 'A structured system of type, colour, iconography, and interface-led composition turns complex financial information into a clear visual rhythm.' },
-    { title: 'Application', copy: 'The visual system is designed to move consistently across product screens, launch communication, social content, and supporting brand materials.' }
+  galleryProject({ slug: 'finlancer', number: '003', name: 'FINLANCER', descriptor: 'Brand / Visual Identity', tagline: 'FINANCE FOR\nINDEPENDENT WORK.', intro: 'A visual identity for a financial product built around the realities of independent work.', year: '2025', world: 'finlancer', role: 'Product & Brand Designer', platform: 'Digital Product · Web · Campaign', projectType: 'Product Brand Identity', story: [
+    { title: 'Premise', copy: 'Independent professionals often manage irregular income, tax, invoices, expenses, and goals across disconnected tools. Finlancer needed to feel financially capable without adopting the cold, institutional language of traditional banking.' },
+    { title: 'Identity', statement: 'CLARITY FOR\nEVERY MOVE.', copy: 'The identity balances the stability expected from a financial product with the flexibility and momentum of freelance work. The mark, word system, and structured compositions make variable financial activity feel organised.' },
+    { title: 'Visual Language', copy: 'A disciplined system of type, colour, iconography, grids, and interface-led composition turns complex financial information into a clear rhythm. Repetition creates recognition while open space keeps the system calm.' },
+    { title: 'Application', copy: 'The identity was designed as product infrastructure rather than a layer around the product. It moves consistently across 108 mobile screens, the website, social communication, outdoor material, stationery, and everyday financial touchpoints.' }
   ], hero: { index: 1, title: 'HERO', ratio: '4:5', source: '/finlancer-branding/01-hero.webp', alt: 'Finlancer brand identity hero' }, gallery: finlancerBrandGallery, next: { name: 'NOMI', slug: 'nomi', note: 'Brand / Visual Identity' } }),
   galleryProject({ slug: 'pycon-nigeria-2024', number: '004', name: 'PYCON NIGERIA 2024', descriptor: 'Conference Identity', tagline: 'A COMMUNITY\nIN MOTION.', intro: 'A conference identity designed to bring the energy of Nigeria’s Python community into one coherent experience.', year: '2024', world: 'pycon', story: [
     { title: 'Premise', copy: 'The conference brings different people, disciplines, and levels of experience into one community. Its identity needed to feel open, energetic, and unmistakably collective.' },
@@ -224,7 +230,7 @@ export const brandProjects: BrandProject[] = [
     { title: 'Visual Language', copy: 'Bold colour, modular composition, and expressive graphic elements create continuity across speakers, sessions, schedules, and event communication.' },
     { title: 'Event World', copy: 'The identity scales across the website, stage environment, passes, signage, merchandise, social content, and post-event material.' }
   ], next: { name: 'NOMI', slug: 'nomi', note: 'Brand / Visual Identity' } }),
-  galleryProject({ slug: 'nomi', number: '005', name: 'NOMI', descriptor: 'Brand / Visual Identity', tagline: 'LEARNING WITH\nA PERSONALITY.', intro: 'A warm visual identity for an adaptive learning product that responds to each learner.', year: '2022', world: 'nomi',
+  galleryProject({ slug: 'nomi', number: '005', name: 'NOMI', descriptor: 'Brand / Visual Identity', tagline: 'LEARNING WITH\nA PERSONALITY.', intro: 'A warm visual identity for an adaptive learning product that responds to each learner.', year: '2022', world: 'nomi', platform: 'Digital Product · Campaign', projectType: 'Product Brand Identity',
     hero: { index: 1, title: 'CURIOUS BY DESIGN', ratio: 'ultra-wide', source: '/Nomi%20Branding%20Files/hero%20image.webp' },
     gallery: [
       { index: 3, title: 'COLOUR SYSTEM', ratio: '16:9', source: '/Nomi%20Branding%20Files/colour%20system.png' },
@@ -251,7 +257,7 @@ export const brandProjects: BrandProject[] = [
       { title: 'Visual Language', copy: 'Colour, rounded forms, character expression, illustration, and approachable typography give the product a consistent emotional language.' },
       { title: 'Product World', copy: 'The brand extends through onboarding, subject discovery, assessed practice, progress, contextual tutoring, campaigns, and the marketing website.' }
     ], next: { name: 'BELSQUARED', slug: 'belsquared', note: 'Brand Identity · Packaging' } }),
-  galleryProject({ slug: 'belsquared', number: '006', name: 'BELSQUARED', descriptor: 'Brand Identity · Packaging', tagline: 'A LITTLE CRUNCH.\nA LOT OF HAPPY.', intro: 'A joyful identity and packaging system that brings authentic African snacking into everyday moments.', year: '2023', world: 'belsquared',
+  galleryProject({ slug: 'belsquared', number: '006', name: 'BELSQUARED', descriptor: 'Brand Identity · Packaging', tagline: 'A LITTLE CRUNCH.\nA LOT OF HAPPY.', intro: 'A joyful identity and packaging system that brings authentic African snacking into everyday moments.', year: '2023', world: 'belsquared', role: 'Founding Product & Brand Designer', platform: 'Packaging · E-commerce · Campaign', projectType: 'Client Brand Identity',
     hero: { index: 1, title: 'THREE-FLAVOUR PACKAGING FAMILY', ratio: 'ultra-wide', source: '/Belsquared%20Branding%20Files/04-three-flavour-packaging-family.webp' },
     gallery: [
       { index: 2, title: 'TYPOGRAPHY AND COLOUR SYSTEM', ratio: '16:9', source: '/Belsquared%20Branding%20Files/02-typography-and-colour-system.png' },
@@ -270,10 +276,10 @@ export const brandProjects: BrandProject[] = [
       { index: 15, title: 'CRUNCH PRODUCT COMPOSITION', ratio: '16:9', source: '/Belsquared%20Branding%20Files/15-crunch-product-composition.webp' },
       { index: 16, title: 'LOGO ON GINGHAM', ratio: '16:9', source: '/Belsquared%20Branding%20Files/16-logo-on-gingham.webp' }
     ], story: [
-    { title: 'Premise', copy: 'The brand needed to bring order and personality to a broad consumer experience without becoming complicated or overly decorative.' },
-    { title: 'Identity', statement: 'SIMPLE SHAPES.\nSTRONG RECALL.', copy: 'A direct identity system uses clear geometry, typography, and repetition to build recognition across physical and digital touchpoints.' },
-    { title: 'Visual Language', copy: 'The visual system balances functional information with confident colour and composition, giving everyday applications a distinct point of view.' },
-    { title: 'Packaging', copy: 'The identity is designed to remain consistent across packaging formats, product communication, campaign assets, and the wider customer experience.' }
+    { title: 'Premise', copy: 'Belsquared needed to make authentic African snacks feel familiar, joyful, and easy to recognise across a growing range. The system had to organise flavours and product information without losing the warmth of the food or the people around it.' },
+    { title: 'Identity', statement: 'SIMPLE SHAPES.\nSTRONG RECALL.', copy: 'Clear geometry, bold typography, and repeatable graphic devices create recognition at shelf distance, in a social feed, and throughout the shopping experience.' },
+    { title: 'Visual Language', copy: 'Each flavour receives its own colour and product expression while typography, pattern, composition, and photography hold the family together. The result is flexible enough for campaigns but disciplined enough for packaging.' },
+    { title: 'Packaging', copy: 'The architecture scales across three flavour pouches, shipping touchpoints, social stories, outdoor campaigns, lifestyle imagery, and e-commerce—one system supporting a customer experience serving more than 1,000 people.' }
   ], next: { name: 'SIDE B', slug: 'side-b', note: 'Brand Identity · Packaging · Art Direction' } })
 ]
 

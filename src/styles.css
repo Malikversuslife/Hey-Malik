@@ -2667,9 +2667,11 @@ main.page-brandingCaseStudy,.new-case-brand .brand-case { --world-bg:var(--play-
   border:1px solid var(--play-line); border-radius:999px;
   background:rgba(255,255,255,.5); color:var(--play-muted);
   font:400 12px/1.2 'Rethink Sans',sans-serif;
+  text-decoration:none;
 }
 .rail-social-resume .portfolio-icon { width:15px; height:15px; }
 .rail-social-resume:disabled { opacity:1; cursor:not-allowed; }
+.rail-social-resume:hover { transform:translateY(-1px); color:var(--play-ink); }
 .canvas-intro h2 { letter-spacing:-.035em; }
 @media(max-width:760px) { .canvas-intro h2 { letter-spacing:-.025em; } }
 
@@ -3283,4 +3285,56 @@ main.page-brandingCaseStudy,.new-case-brand .brand-case { --world-bg:var(--play-
   .entry-polaroid:nth-child(4) { left:-3%; }
   .entry-polaroid:nth-child(5) { left:52%; }
   .rail-brandline .rail-status { font-size:11px; }
+}
+
+/* Keep the mobile chat launcher compact and icon-only. */
+@media(max-width:720px) {
+  .askmalik-float {
+    right:16px;
+    bottom:16px;
+    width:48px;
+    min-width:48px;
+    height:48px;
+    min-height:48px;
+    justify-content:center;
+    gap:0;
+    padding:0;
+  }
+
+  .askmalik-float-label { display:none; }
+  .askmalik-float::after { position:absolute; top:8px; right:8px; }
+}
+
+/* Leadership evidence stays scannable beside the longer career narrative. */
+.about-impact-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  margin:24px 0;
+}
+.about-impact-grid article {
+  min-height:170px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:28px;
+  padding:18px;
+  border:1px solid var(--play-line);
+  border-radius:18px;
+  background:rgba(255,255,255,.42);
+}
+.about-impact-grid strong {
+  font:600 clamp(2.5rem,5vw,4.8rem)/.85 'Rethink Sans',sans-serif;
+  letter-spacing:-.07em;
+  color:var(--play-ink);
+}
+.about-impact-grid span {
+  max-width:34ch;
+  color:var(--play-muted);
+  font:400 13px/1.45 'Rethink Sans',sans-serif;
+}
+:root[data-theme='dark'] .about-impact-grid article { background:#20252b; border-color:var(--play-line); }
+@media(max-width:560px) {
+  .about-impact-grid { grid-template-columns:1fr; }
+  .about-impact-grid article { min-height:145px; }
 }

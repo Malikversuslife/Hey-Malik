@@ -83,15 +83,13 @@ function BrandHero({ project }: { project: BrandProject }) {
     <BrandMedia media={{ ...project.hero, caption: project.hero.caption ?? project.movements.flatMap(movement => movement.segments).find((segment): segment is Extract<BrandSegment, { kind: 'media' }> => segment.kind === 'media' && segment.media.index === project.hero.index && segment.media.title === project.hero.title)?.media.caption }} priority />
     <div className="brand-overview">
       <dl className="brand-meta">
-        <div><dt>PROJECT</dt><dd>{project.name}</dd></div>
-        <div><dt>DISCIPLINE</dt><dd>{project.category}</dd></div>
         {project.meta.map(entry => <div key={entry.label}><dt>{entry.label}</dt><dd>{entry.value}</dd></div>)}
       </dl>
       <div className="brand-story">
         <h1 className="brand-hero-title"><Lines text={project.tagline} /></h1>
         <p className="brand-descriptor">{project.descriptor}</p>
         <p className="brand-intro">{project.intro}</p>
-        {narrative.length > 0 && <details className="brand-story-details">
+        {narrative.length > 0 && <details className="brand-story-details" open>
           <summary><span className="brand-expand-label">Expand info</span><span className="brand-collapse-label">Less info</span><Icon name="arrowRight" /></summary>
           <div className="brand-story-expanded">{narrative.map(movement => <section key={movement.id} aria-labelledby={`${movement.id}-story-title`}>
             <h2 id={`${movement.id}-story-title`}>{movement.title.toLowerCase()}</h2>

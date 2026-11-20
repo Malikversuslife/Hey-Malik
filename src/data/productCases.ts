@@ -20,6 +20,7 @@ export type ProductCaseMeta = {
   scope: string
   platform: string
   projectType: string
+  year: string
   prototypeLabel?: string
   prototypeUrl?: string
   intro: string
@@ -46,6 +47,7 @@ export const productCaseMeta: Record<string, ProductCaseMeta> = {
     scope: 'Product Strategy · UX/UI Design · AI Experience · Prototyping',
     platform: 'Merchant Web Application',
     projectType: 'Speculative Product Concept',
+    year: '2026',
     prototypeLabel: 'Connected Frontend Prototype',
     prototypeUrl: 'https://prima-mu-nine.vercel.app/',
     intro: 'Prima explores how merchants could verify decentralized identity evidence, investigate uncertainty, and make safer settlement decisions without handing deterministic trust decisions to AI.',
@@ -61,6 +63,7 @@ export const productCaseMeta: Record<string, ProductCaseMeta> = {
     scope: 'Product Strategy · UX Architecture · AI Product Design · Responsive Interaction Design · Authentication · Design System',
     platform: 'Responsive Web Application',
     projectType: 'Functional Production Build',
+    year: '2026',
     prototypeLabel: 'Live Web Application',
     prototypeUrl: 'https://nomi-alpha-bay.vercel.app',
     intro: 'Nomi is an adaptive learning product built around a simple idea: learning should respond to the learner instead of moving everyone through the same fixed path.',
@@ -76,6 +79,7 @@ export const productCaseMeta: Record<string, ProductCaseMeta> = {
     scope: 'Product Strategy · UX Flows · Interaction Design · Safety Architecture · UI Design · Prototyping · Frontend Implementation',
     platform: 'Responsive Web Application',
     projectType: 'Functional MVP',
+    year: '2026',
     intro: 'An AI-assisted healthcare navigator that helps people understand what kind of care to seek next, without pretending to diagnose them.',
     nextProject: 'yousewire'
   },
@@ -89,6 +93,7 @@ export const productCaseMeta: Record<string, ProductCaseMeta> = {
     scope: 'Product Strategy · UX & Interaction Design · UI Design · Design Systems · Prototyping',
     platform: 'Responsive Web Application',
     projectType: 'Live Product',
+    year: '2026',
     intro: 'A cross-border financial platform designed to help individuals and businesses hold, move, receive, convert, and manage money across currencies and payment networks.',
     nextProject: 'anansi-gallery'
   },
@@ -102,6 +107,7 @@ export const productCaseMeta: Record<string, ProductCaseMeta> = {
     scope: 'Product Strategy · UX Architecture · 3D Experience · Responsive Design · Frontend Implementation',
     platform: 'Public Website + Browser-based 3D Gallery',
     projectType: 'Deployed Interactive Frontend Demonstration',
+    year: '2026',
     prototypeLabel: 'Live Gallery Experience',
     prototypeUrl: 'https://anansi-gallery.vercel.app/catalogue.html#home',
     intro: 'Anansi asks what visiting art online could feel like if it were less like browsing a catalogue and more like entering a place.',
@@ -117,6 +123,7 @@ export const productCaseMeta: Record<string, ProductCaseMeta> = {
     scope: 'Product Strategy · UX/UI Design · Interaction Design · Design System · Prototyping',
     platform: 'Mobile App Concept (iOS & Android)',
     projectType: 'New Product · Pre-launch',
+    year: '2026',
     intro: 'Roomwise explores a better way to judge a home before visiting it: keep the photos people already browse, then connect each room to its dimensions, a floor plan and a 3D view.',
     nextProject: 'finlancer-app'
   },
@@ -130,6 +137,7 @@ export const productCaseMeta: Record<string, ProductCaseMeta> = {
     scope: 'Product Strategy · UX & Interaction Design · UI Design · Design System · Brand Integration',
     platform: 'iOS App (iPhone)',
     projectType: 'Pre-launch Product',
+    year: '2025',
     intro: 'Finlancer brings income, expenses, clients, invoices, tax preparation, savings goals and multiple currencies into one calm iOS app. I designed the brand first, then rebuilt 108 product screens so both speak with one voice.',
     nextProject: 'finlancer-website'
   }

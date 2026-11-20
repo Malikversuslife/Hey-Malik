@@ -67,6 +67,7 @@ export function ProductCaseHero({ meta, media }: { meta: ProductCaseMeta; media:
         <MetaRow label="SCOPE" value={meta.scope} />
         <MetaRow label="PLATFORM" value={meta.platform} />
         <MetaRow label="PROJECT TYPE" value={meta.projectType} />
+        <MetaRow label="YEAR" value={meta.year} />
       </dl>
       <div className="pc-hero-media">
         <ProductCaseMedia media={media} priority />

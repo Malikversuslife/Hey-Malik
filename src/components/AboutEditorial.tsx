@@ -9,6 +9,7 @@ const sections = [
   ['Principles', 'about-principles'],
   ['How I Work', 'about-working-system'],
   ['Experience', 'about-experience'],
+  ['Leadership & Impact', 'about-leadership'],
   ['Beyond Work', 'about-offline'],
   ['Working Together', 'about-together']
 ] as const
@@ -161,6 +162,18 @@ export function AboutEditorial({ experienceRecords }: { experienceRecords: Exper
         </div>
       </section>
 
+      <section className="about-section" id="about-leadership">
+        <h3>Leadership &amp; Impact</h3>
+        <p className="about-lead">Leadership is how the work improves beyond the screens I design myself.</p>
+        <div className="about-impact-grid" aria-label="Selected leadership and product impact">
+          <article><strong>4,000+</strong><span>users reached across the multi-product SaaS portfolio I help lead at Emerj.</span></article>
+          <article><strong>1,000+</strong><span>visitors supported per PyCon Nigeria event through clearer discovery, ticketing, speaker, and session journeys.</span></article>
+          <article><strong>1,000+</strong><span>customers served by the Belsquared commerce experience I helped redesign from information architecture through handoff.</span></article>
+          <article><strong>1,000+</strong><span>design interns mentored through structured critique, sprint reviews, and implementation-ready product decisions at HNG.</span></article>
+        </div>
+        <p>I work as a hands-on player-coach: shaping product direction, presenting decisions to stakeholders, reviewing work, strengthening shared systems, and staying close enough to implementation to protect the experience through delivery.</p>
+      </section>
+
       <section className="about-section" id="about-offline">
         <h3>Beyond Work</h3>
         <p>Outside client and product work, I keep a steady practice of visual exploration, writing, mentoring, and building small experiments. The Lab and Sandbox are where those curiosities become tangible.</p>
@@ -169,7 +182,7 @@ export function AboutEditorial({ experienceRecords }: { experienceRecords: Exper
       <section className="about-section about-together" id="about-together">
         <h3>Interested in Working Together?</h3>
         <p>I'm available for work across product design, brand identity, and the space where the two meet. If you're building something that needs clarity, character, and a considered system behind it, let's talk.</p>
-        <div className="about-contact-actions"><a href={`mailto:${contact.email}`}>Get in touch <span aria-hidden="true">↗</span></a><a href={contact.linkedin} target="_blank" rel="noreferrer">LinkedIn <span aria-hidden="true">↗</span></a></div>
+        <div className="about-contact-actions"><a href={`mailto:${contact.email}`}>Get in touch <span aria-hidden="true">↗</span></a><a href={contact.linkedin} target="_blank" rel="noreferrer">LinkedIn <span aria-hidden="true">↗</span></a><a href={contact.resume} target="_blank" rel="noreferrer">Résumé <span aria-hidden="true">↗</span></a></div>
       </section>
 
     </div>

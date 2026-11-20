@@ -25,7 +25,7 @@ export function ProjectStackMedia({
       if (!entry.isIntersecting) return
       setShouldLoadVideo(true)
       observer.disconnect()
-    }, { rootMargin: '600px 0px' })
+    }, { rootMargin: '240px 0px' })
     observer.observe(media)
     return () => observer.disconnect()
   }, [isVideo, source])

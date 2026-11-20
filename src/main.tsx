@@ -100,10 +100,10 @@ const stages = [
   ['2026', 'AI PRODUCT DESIGN', 'INTELLIGENT PRODUCTS + SYSTEMS', 'current']
 ]
 const experienceRecords: [string, string, string, string, string[]][] = [
-  ['OCT 2025–PRESENT', 'PRODUCT DESIGN & VISUAL/BRAND DESIGN LEAD', 'EMERJ LLC', 'SHERIDAN, WYOMING, UNITED STATES', ['Lead UX strategy and end-to-end design across a multi-product SaaS portfolio spanning fintech and e-commerce.', 'Design interaction models, flows, and high-fidelity product experiences across complex SaaS products.', 'Lead visual and brand direction across the portfolio, connecting product interfaces with a consistent identity across touchpoints.', 'Contribute to product systems, reusable patterns, and consistency across products.']],
-  ['JUL 2024–JUN 2026', 'DESIGN MENTOR + TEAM LEAD', 'HNG TECH', '', ['Led and mentored design interns and product teams through structured product-design cycles.', 'Provided design reviews, critique, direction, and quality assurance across live product work.', 'Helped teams translate product requirements into usable interfaces and implementation-ready design decisions.']],
-  ['DEC 2023–NOV 2025', 'PRODUCT DESIGNER & VISUAL/BRAND DESIGNER', 'PYTHON NIGERIA', 'LAGOS, NIGERIA', ['Led UX/UI design for PyCon Nigeria 2024 and 2025 digital experiences.', 'Designed event discovery, ticketing, speaker and session experiences.', 'Developed the PyCon Nigeria 2024 conference identity across event graphics, merchandise, and digital touchpoints.', 'Created scalable UI patterns and collaborated with developers through implementation.']],
-  ['FEB 2023–FEB 2025', 'FOUNDING PRODUCT DESIGNER & VISUAL/BRAND DESIGNER', 'BELSQUARED INC.', 'ONTARIO, CANADA', ['Led product and experience design for a consumer e-commerce platform.', 'Created the Belsquared brand identity and packaging, carrying its visual system into the e-commerce experience.', 'Worked across information architecture, customer journeys, interface design, and high-fidelity product experiences.', 'Supported the product from design decisions through implementation and handoff.']],
+  ['OCT 2025–PRESENT', 'PRODUCT DESIGN LEAD', 'EMERJ LLC', 'SHERIDAN, WYOMING, UNITED STATES', ['Lead UX strategy and end-to-end design across a multi-product SaaS portfolio spanning fintech and e-commerce.', 'Contribute to products serving 4,000+ users through interaction models, flows, and enterprise-grade interfaces.', 'Present design direction to senior leadership and standardize component systems to improve delivery speed.', 'Partner with product managers and engineers from early concepts through implementation.']],
+  ['JUL 2024–PRESENT', 'DESIGN MENTOR + TEAM LEAD', 'HNG TECH', 'REMOTE', ['Mentor more than 1,000 design interns through sprint-based product cycles and implementation-ready decisions.', 'Provide structured critique, design reviews, direction, and quality assurance across cross-functional teams.', 'Help teams ship live, usable products to thousands of users under high-pressure delivery timelines.']],
+  ['DEC 2023–NOV 2025', 'PRODUCT DESIGNER & VISUAL/BRAND DESIGNER', 'PYTHON NIGERIA', 'LAGOS, NIGERIA', ['Led end-to-end UX/UI design for the PyCon Nigeria 2024 and 2025 websites, supporting 1,000+ visitors per event.', 'Designed event discovery, ticketing, speaker and session experiences and created reusable UI patterns.', 'Developed the conference identity across digital experiences, event graphics, merchandise, and campaign touchpoints.', 'Collaborated with developers and stakeholders through implementation, accessibility review, and usability feedback.']],
+  ['FEB 2023–FEB 2025', 'FOUNDING PRODUCT DESIGNER', 'BELSQUARED INC.', 'ONTARIO, CANADA', ['Led the consumer e-commerce redesign serving 1,000+ customers, from information architecture through developer handoff.', 'Created the Belsquared identity and packaging system and carried it into the digital shopping experience.', 'Balanced customer needs and business objectives across shopping flows, visual systems, and campaign touchpoints.']],
   ['MAY 2022–PRESENT', 'INDEPENDENT DESIGN CONSULTANT', 'SELF-EMPLOYED', 'REMOTE', ['Partner with clients to design digital products across fintech, SaaS, e-commerce, and Web3.', 'Work across discovery, product thinking, UX flows, interface design, design systems, prototyping, and developer handoff.', 'Translate business requirements and complex workflows into clear, usable product experiences.']],
   ['2018–PRESENT', 'INDEPENDENT BRAND DESIGNER', 'SELF-EMPLOYED', '', ['Built brand identities and visual systems for businesses and independent clients.', 'Work across brand identity, visual direction, marketing design, packaging, print, digital applications, and broader brand experiences.', 'This remains an active part of Malik’s multidisciplinary design practice alongside product and digital experience design.']]
 ]
@@ -144,8 +144,8 @@ const askFollowUps: Record<string, string[]> = {
 }
 const askFallback: AskAnswer = { text: "I can answer from what's documented on this site: Malik's role, branding practice, product and branding work, thinking on AI, tools, the Lab, the Sandbox, experience, and the published case studies.", followUps: ['What branding projects are in the portfolio?', 'What has Malik worked on?', 'How does Malik think about AI?'] }
 const askAnswers: Record<string, AskAnswer> = {
-  ROLE: { text: "I'm a Product & Brand Designer.\n\nOn the product side, I work across product thinking, UX, interaction, visual systems, prototyping, design systems, and increasingly AI product design.\n\nOn the brand side, I build identities and visual languages across art direction, packaging, campaigns, print, and digital touchpoints.\n\nBoth parts of the practice are connected by the same goal: turning an idea into a clear, coherent system people can understand and experience.", actions: [{ label: 'View product work ↗', page: 'home', view: 'product' }, { label: 'View branding work ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.ROLE },
-  PROFILE: { text: "I'm a Product & Brand Designer with a practice that has expanded from visual identity into digital products, complex systems, prototyping, and AI product design.\n\nI still work actively across both disciplines. Brand work lets me shape meaning, expression, and consistency across touchpoints. Product work lets me shape behaviour, usability, and the systems behind an experience.\n\nVisual thinker · Product designer · Brand designer · Systems oriented · Design + build", actions: [{ label: 'View product work ↗', page: 'home', view: 'product' }, { label: 'View branding work ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.PROFILE },
+  ROLE: { text: "I'm an AI Product Designer, Product Design Lead, and Brand Designer.\n\nOn the product side, I lead product thinking, UX, interaction, visual systems, prototyping, design systems, and AI product behaviour across complex SaaS, fintech, education, and healthcare experiences.\n\nOn the brand side, I build identities and visual languages across art direction, packaging, campaigns, print, product, and digital touchpoints.\n\nBoth parts of the practice are connected by the same goal: turning an idea into a clear, coherent system people can understand and experience.", actions: [{ label: 'View product work ↗', page: 'home', view: 'product' }, { label: 'View branding work ↗', page: 'home', view: 'branding' }, { label: 'View résumé ↗', href: contact.resume }], followUps: askFollowUps.ROLE },
+  PROFILE: { text: "I'm a Product & Brand Designer whose practice has expanded from visual identity into digital products, design leadership, complex systems, prototyping, and AI product design.\n\nI currently lead design across a multi-product SaaS portfolio serving 4,000+ users and mentor more than 1,000 design interns through structured product cycles. Brand work lets me shape meaning and consistency; product work lets me shape behaviour, usability, and the systems behind an experience.\n\nAI product designer · Product design lead · Brand designer · Systems oriented · Design + build", actions: [{ label: 'View product work ↗', page: 'home', view: 'product' }, { label: 'View branding work ↗', page: 'home', view: 'branding' }, { label: 'View résumé ↗', href: contact.resume }], followUps: askFollowUps.PROFILE },
   PHILOSOPHY: { text: "DESIGN UNCERTAINTY.\nIntelligent products do not always have definitive answers. Design what happens when confidence is low.\n\nHUMANS STILL DECIDE.\nAI can assist judgement. It should not quietly replace it.", followUps: askFollowUps.PHILOSOPHY },
   WORKFLOW: { text: "THINK : CHATGPT / OPENAI / CLAUDE\nDESIGN : FIGMA / FIGMA MAKE\nPROTOTYPE : LOVABLE\nBUILD / ITERATE : CLAUDE / OPENCODE\n\nI use AI across the process, not as a substitute for the process.", followUps: askFollowUps.WORKFLOW },
   CAPABILITIES: { text: "PRODUCT : product thinking, UX, interaction, prototyping, visual systems, and design systems\nBRAND : identity, visual language, art direction, packaging, campaigns, print, and digital applications\nBUILD : HTML and CSS\n\nI move between meaning, behaviour, and implementation so the idea stays coherent from the first concept to the final experience.", followUps: askFollowUps.CAPABILITIES },
@@ -153,12 +153,12 @@ const askAnswers: Record<string, AskAnswer> = {
   'WORKING SYSTEM': { text: "PROTOTYPE THE SYSTEM, NOT ONLY THE SCREEN.\nInteraction reveals assumptions static layouts hide.\n\nEARN TRUST BEFORE ASKING FOR ACTION.\nExplain enough for people to make informed decisions.", followUps: askFollowUps['WORKING SYSTEM'] },
   PRINCIPLES: { text: "TRUST & EXPLAINABILITY : making enough of a system visible for people to make informed decisions.\nSYSTEMS THINKING : looking for relationships, constraints and the effects that exist beyond one screen.\nHUMAN-CENTERED AI : exploring intelligence that supports judgement rather than quietly replacing it.", followUps: askFollowUps.PRINCIPLES },
   BACKGROUND: { text: "I didn't really leave visual design behind. I kept adding new questions to it.\n\nVisual / Brand design → Product design → Product systems → Design leadership → Design + build → AI product design", followUps: askFollowUps.BACKGROUND },
-  EXPERIENCE: { text: 'OCT 2025–PRESENT · PRODUCT DESIGN & VISUAL/BRAND DESIGN LEAD · EMERJ LLC\nJUL 2024–JUN 2026 · DESIGN MENTOR + TEAM LEAD · HNG TECH\nFEB 2023–FEB 2025 · FOUNDING PRODUCT DESIGNER & VISUAL/BRAND DESIGNER · BELSQUARED INC.', actions: [{ label: 'Read the full story ↗', page: 'about' }], followUps: askFollowUps.EXPERIENCE },
+  EXPERIENCE: { text: 'OCT 2025–PRESENT · PRODUCT DESIGN LEAD · EMERJ LLC\nUX strategy and end-to-end design across a multi-product SaaS portfolio serving 4,000+ users.\n\nJUL 2024–PRESENT · DESIGN MENTOR + TEAM LEAD · HNG TECH\nStructured critique, sprint leadership, and mentorship for more than 1,000 design interns shipping products to thousands of users.\n\nDEC 2023–NOV 2025 · PRODUCT DESIGNER & VISUAL/BRAND DESIGNER · PYTHON NIGERIA\nPyCon Nigeria 2024 and 2025 experiences supporting 1,000+ visitors per event.\n\nFEB 2023–FEB 2025 · FOUNDING PRODUCT DESIGNER · BELSQUARED INC.\nCommerce redesign and brand system serving 1,000+ customers.', actions: [{ label: 'Read the full story ↗', page: 'about' }, { label: 'View résumé ↗', href: contact.resume }], followUps: askFollowUps.EXPERIENCE },
   WORK: { text: `PRODUCT WORK\n${workProjects.map(project => `${project.name} : ${project.summary ?? project.category ?? project.status}`).join('\n')}\n\nBRANDING WORK\n${brandingIndex.map(project => `${project.title} : ${project.descriptor}`).join('\n')}`, actions: [{ label: 'View product work ↗', page: 'home', view: 'product' }, { label: 'View branding work ↗', page: 'home', view: 'branding' }], followUps: askFollowUps.WORK },
   LAB: { text: 'The Lab is a collection of small experiments I use to explore how AI changes the way we design, build and interact with software.\n\nExperiments are currently in progress : new things will appear here as they are built.', actions: [{ label: 'Open the Lab ↗', page: 'lab' }], followUps: askFollowUps.LAB },
   SANDBOX: { text: `The Sandbox holds ${sandboxExplorations.length} aesthetic design explorations, including interface concepts, visual studies, and graphic compositions. They are presented as individual images without case studies.`, actions: [{ label: 'Open the Sandbox ↗', page: 'home', view: 'sandbox' }], followUps: askFollowUps.SANDBOX },
   CONTACT: { text: 'EMAIL : heymalik05@gmail.com\nLINKEDIN : linkedin.com/in/temitayo-l-74984b16a\n\nAvailable for selected collaborations.', actions: [{ label: 'Email Malik ↗', href: 'mailto:heymalik05@gmail.com' }, { label: 'LinkedIn ↗', href: 'https://www.linkedin.com/in/temitayo-l-74984b16a/' }], followUps: askFollowUps.CONTACT },
-  EVOLUTION: { text: '2018–PRESENT · INDEPENDENT BRAND DESIGNER\n2022 · INDEPENDENT DESIGN CONSULTANT\n2023 · FOUNDING PRODUCT DESIGNER & VISUAL/BRAND DESIGNER · BELSQUARED\n2023 · PRODUCT DESIGNER & VISUAL/BRAND DESIGNER · PYTHON NIGERIA\nJUL 2024–JUN 2026 · DESIGN MENTOR + TEAM LEAD · HNG TECH\n2025 · PRODUCT DESIGN & VISUAL/BRAND DESIGN LEAD · EMERJ LLC\n2026 · AI PRODUCT DESIGN : intelligent products + systems', followUps: askFollowUps.EVOLUTION },
+  EVOLUTION: { text: '2018–PRESENT · INDEPENDENT BRAND DESIGNER\n2022 · INDEPENDENT DESIGN CONSULTANT\n2023 · FOUNDING PRODUCT DESIGNER & VISUAL/BRAND DESIGNER · BELSQUARED\n2023 · PRODUCT DESIGNER & VISUAL/BRAND DESIGNER · PYTHON NIGERIA\nJUL 2024–PRESENT · DESIGN MENTOR + TEAM LEAD · HNG TECH\nOCT 2025–PRESENT · PRODUCT DESIGN LEAD · EMERJ LLC\n2026 · AI PRODUCT DESIGN : intelligent products + systems', followUps: askFollowUps.EVOLUTION },
   OFFLINE: { text: "That isn't documented on the site yet. Try asking about the work, the Lab, or how Malik thinks about AI.", followUps: askFollowUps.OFFLINE },
   PRIMA: { text: 'Prima is an AI-assisted verification operating system that helps merchants verify decentralized identities and credentials, investigate suspicious transactions, and make informed settlement decisions.\n\nIt explores a future where decentralized identity, Verifiable Credentials and digital currencies have become part of everyday retail payments.', actions: [{ label: 'Open Prima case study ↗', page: 'workCaseStudy', slug: 'prima' }], followUps: askFollowUps.PRIMA },
   NOMI: { text: 'Nomi is an adaptive learning product designed around a simple idea: learning should respond to the learner, not force every learner through the same path.\n\nPractice, progress, recommendations, and contextual AI work together to shape what the learner does next.', actions: [{ label: 'Open Nomi case study ↗', page: 'workCaseStudy', slug: 'nomi' }], followUps: askFollowUps.NOMI },
@@ -494,7 +494,7 @@ function App() {
     {page === 'workCaseStudy' && <NewCaseShell key={`product-${route.slug}`} kind="product" crumbs={[{ label: breadcrumbMark, onClick: caseBack('product'), mark: true }, { label: 'PRODUCT DESIGN', onClick: caseBack('product') }, { label: workProjects.find(project => project.slug === route.slug)?.name ?? 'CASE STUDY', current: true }]} onBack={caseBack('product')} onAsk={() => openAsk()}><WorkPreparation project={workProjects.find(project => project.slug === route.slug)} onBack={caseBack('product')} onNext={slug => navigate('workCaseStudy', undefined, slug)} /></NewCaseShell>}
     {page === 'brandingCaseStudy' && <NewCaseShell key={`brand-${route.slug}`} kind="brand" crumbs={[{ label: breadcrumbMark, onClick: caseBack('branding'), mark: true }, { label: 'BRANDING', onClick: caseBack('branding') }, { label: brandingIndex.find(project => project.slug === route.slug)?.title ?? 'CASE STUDY', current: true }]} onBack={caseBack('branding')} onAsk={() => openAsk()}><BrandCase project={brandingIndex.some(project => project.slug === route.slug) ? brandProjects.find(project => project.slug === route.slug) : undefined} onNext={slug => navigate('brandingCaseStudy', undefined, slug)} /></NewCaseShell>}
     {page === 'labExperiment' && <NewCaseShell key={`lab-${route.slug}`} kind="lab" crumbs={[{ label: breadcrumbMark, onClick: caseBack('lab'), mark: true }, { label: 'LAB', onClick: caseBack('lab') }, { label: labExperiments.find(experiment => experiment.slug === route.slug)?.title ?? 'EXPERIMENT', current: true }]} onBack={caseBack('lab')} onAsk={() => openAsk()}><LabExperimentPage experiment={labExperiments.find(experiment => experiment.slug === route.slug)} onBack={caseBack('lab')} /></NewCaseShell>}
-    {!askOpen && createPortal(<button className="askmalik-float" onClick={() => openAsk()} aria-haspopup="dialog"><Icon name="chat" />Ask Malik</button>, document.body)}
+    {!askOpen && createPortal(<button className="askmalik-float" onClick={() => openAsk()} aria-haspopup="dialog" aria-label="Ask Malik"><Icon name="chat" /><span className="askmalik-float-label">Ask Malik</span></button>, document.body)}
     {askOpen && createPortal(<div className={`ask-vacuum-stage ${askClosing ? 'is-collapsing' : 'is-erupting'}`}><section className={`askpanel ${askClosing ? 'is-vacuuming' : 'is-materializing'}`} role="dialog" aria-modal="true" aria-label="Ask Malik" aria-hidden={askClosing || undefined}>
     <header className="askpanel-head">
       <span className="askpanel-title"><Icon name="chat" />Ask Malik</span>
@@ -547,29 +547,64 @@ function HomeShell({ theme, onToggleTheme, onProjectOpen, onBrandProjectOpen }: 
       const now = context.currentTime
       const master = context.createGain()
       master.gain.setValueAtTime(.0001, now)
-      master.gain.exponentialRampToValueAtTime(.22, now + .018)
-      master.gain.exponentialRampToValueAtTime(.0001, now + .52)
+      master.gain.exponentialRampToValueAtTime(.2, now + .012)
+      master.gain.exponentialRampToValueAtTime(.0001, now + .62)
       master.connect(context.destination)
-      const blade = context.createOscillator()
-      const bladeGain = context.createGain()
-      blade.type = 'sine'
-      blade.frequency.setValueAtTime(1850, now)
-      blade.frequency.exponentialRampToValueAtTime(520, now + .34)
-      bladeGain.gain.setValueAtTime(.18, now)
-      bladeGain.gain.exponentialRampToValueAtTime(.0001, now + .42)
-      blade.connect(bladeGain).connect(master)
-      const buffer = context.createBuffer(1, Math.ceil(context.sampleRate * .48), context.sampleRate)
+
+      // A fast, filtered air cut gives the slash its movement without turning it into a soft whoosh.
+      const buffer = context.createBuffer(1, Math.ceil(context.sampleRate * .42), context.sampleRate)
       const data = buffer.getChannelData(0)
-      for (let index = 0; index < data.length; index += 1) data[index] = (Math.random() * 2 - 1) * Math.pow(1 - index / data.length, 2)
-      const wind = context.createBufferSource()
-      const filter = context.createBiquadFilter()
-      const windGain = context.createGain()
-      wind.buffer = buffer
-      filter.type = 'bandpass'; filter.frequency.setValueAtTime(1350, now); filter.Q.value = .65
-      windGain.gain.setValueAtTime(.55, now); windGain.gain.exponentialRampToValueAtTime(.0001, now + .48)
-      wind.connect(filter).connect(windGain).connect(master)
-      blade.start(now); blade.stop(now + .45); wind.start(now); wind.stop(now + .49)
-      window.setTimeout(() => void context.close(), 650)
+      for (let index = 0; index < data.length; index += 1) {
+        const progress = index / data.length
+        const envelope = Math.min(1, progress * 18) * Math.pow(1 - progress, 1.8)
+        data[index] = (Math.random() * 2 - 1) * envelope
+      }
+      const air = context.createBufferSource()
+      const airFilter = context.createBiquadFilter()
+      const airGain = context.createGain()
+      air.buffer = buffer
+      airFilter.type = 'bandpass'
+      airFilter.Q.value = 1.25
+      airFilter.frequency.setValueAtTime(620, now)
+      airFilter.frequency.exponentialRampToValueAtTime(3100, now + .11)
+      airFilter.frequency.exponentialRampToValueAtTime(1250, now + .34)
+      airGain.gain.setValueAtTime(.0001, now)
+      airGain.gain.exponentialRampToValueAtTime(.78, now + .035)
+      airGain.gain.exponentialRampToValueAtTime(.0001, now + .38)
+      air.connect(airFilter).connect(airGain).connect(master)
+
+      // Inharmonic partials create the short steel 'shing' of a blade rather than a tonal laser sweep.
+      const steelFrequencies = [2180, 3270, 4860]
+      const steelNodes = steelFrequencies.map((frequency, index) => {
+        const oscillator = context.createOscillator()
+        const gain = context.createGain()
+        oscillator.type = index === 0 ? 'triangle' : 'sine'
+        oscillator.frequency.setValueAtTime(frequency, now + .025)
+        oscillator.frequency.exponentialRampToValueAtTime(frequency * .93, now + .24)
+        gain.gain.setValueAtTime(.0001, now)
+        gain.gain.exponentialRampToValueAtTime(.16 / (index + 1), now + .032)
+        gain.gain.exponentialRampToValueAtTime(.0001, now + .25 + index * .045)
+        oscillator.connect(gain).connect(master)
+        oscillator.start(now + .02)
+        oscillator.stop(now + .36)
+        return oscillator
+      })
+
+      // A very short scrape at the leading edge suggests metal leaving the scabbard.
+      const scrape = context.createBufferSource()
+      const scrapeFilter = context.createBiquadFilter()
+      const scrapeGain = context.createGain()
+      scrape.buffer = buffer
+      scrapeFilter.type = 'highpass'
+      scrapeFilter.frequency.setValueAtTime(4200, now)
+      scrapeGain.gain.setValueAtTime(.24, now)
+      scrapeGain.gain.exponentialRampToValueAtTime(.0001, now + .075)
+      scrape.connect(scrapeFilter).connect(scrapeGain).connect(master)
+
+      air.start(now); air.stop(now + .42)
+      scrape.start(now); scrape.stop(now + .09)
+      void steelNodes
+      window.setTimeout(() => void context.close(), 800)
     } catch { /* audio is an enhancement */ }
   }
   const startSlash = () => { playSlash(); setTransitionPhase('folding') }
@@ -721,7 +756,7 @@ function HomeShell({ theme, onToggleTheme, onProjectOpen, onBrandProjectOpen }: 
       <h1 className="rail-name">Temitayo Lawal Malik</h1>
       <p className="rail-role">Product &amp; Brand Designer</p>
       <div className="rail-intro">
-        <p>I design digital products and visual identities, from early ideas and systems to prototypes and shipped experiences.</p>
+        <p>I design AI products, lead complex digital systems, and build visual identities from early strategy through prototypes and shipped experiences.</p>
         <p>I helped raise funding and ticket sales through brand, marketing and product design for <span className="rail-company">PyCon Nigeria<span className="rail-company-logo rail-company-pycon"><img src="/partner-logos/pycon-nigeria.png" alt="" aria-hidden="true" /></span></span>.</p>
         <p>I have mentored over 1,000 design interns at <span className="rail-company">HNG<span className="rail-company-logo rail-company-hng"><img src="/partner-logos/hng.png" alt="" aria-hidden="true" /></span></span>.</p>
       </div>
@@ -732,7 +767,7 @@ function HomeShell({ theme, onToggleTheme, onProjectOpen, onBrandProjectOpen }: 
       <ToolCarousel />
       <div className="rail-social">
         <SocialLinks />
-        <button className="rail-social-resume" type="button" disabled title="Résumé to be added" aria-label="View résumé : résumé coming soon"><Icon name="file" />View résumé</button>
+        <a className="rail-social-resume" href={contact.resume} target="_blank" rel="noreferrer" aria-label="View Temitayo Lawal Malik résumé in a new tab"><Icon name="file" />View résumé</a>
       </div>
     </aside>
     <div className="home-canvas" role="region" aria-label="Portfolio canvas" tabIndex={0} ref={canvasRef}>
