@@ -228,6 +228,29 @@ const askAnswers: Record<string, AskAnswer> = {
 
 const normaliseAskText = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
 
+const findAskResponse = (value: string) => {
+  const normalisedValue = normaliseAskText(value)
+  const searchableValue = ` ${normalisedValue} `
+  let bestMatch: (typeof responses)[number] | undefined
+  let bestScore = 0
+
+  for (const response of responses) {
+    for (const term of response.terms) {
+      const normalisedTerm = normaliseAskText(term)
+      if (!normalisedTerm || !searchableValue.includes(` ${normalisedTerm} `)) continue
+
+      const wordCount = normalisedTerm.split(' ').length
+      const score = (normalisedTerm === normalisedValue ? 10_000 : 0) + (wordCount * 100) + normalisedTerm.length
+      if (score > bestScore) {
+        bestMatch = response
+        bestScore = score
+      }
+    }
+  }
+
+  return bestMatch
+}
+
 const askIntentSignals: Record<string, string[]> = {
   STRENGTHS: ['strength', 'strongest', 'best at', 'good at', 'excel', 'advantage', 'superpower'],
   DIFFERENCE: ['different', 'unique', 'stand out', 'why malik', 'why you', 'competitive advantage'],
@@ -490,7 +513,7 @@ function App() {
     if (!value || askInterpreting || !askOpen) return
     setAskMessages(previous => [...previous, { id: ++askMsgId.current, role: 'user', text: value }])
     setAskInput('')
-    const match = responses.find(item => item.terms.some(term => value.toLowerCase().includes(term)))
+    const match = findAskResponse(value)
     const intent = match?.classification.intent ?? inferAskIntent(value)
     setAskInterpreting(true)
     window.setTimeout(() => {
