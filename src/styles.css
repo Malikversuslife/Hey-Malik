@@ -3305,36 +3305,79 @@ main.page-brandingCaseStudy,.new-case-brand .brand-case { --world-bg:var(--play-
   .askmalik-float::after { position:absolute; top:8px; right:8px; }
 }
 
-/* Leadership evidence stays scannable beside the longer career narrative. */
-.about-impact-grid {
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:8px;
-  margin:24px 0;
-}
-.about-impact-grid article {
-  min-height:170px;
+/* Beyond Work reuses the entry photographs as a tactile, looping Polaroid deck. */
+.about-beyond-work-layout {
   display:flex;
   flex-direction:column;
-  justify-content:space-between;
-  gap:28px;
-  padding:18px;
-  border:1px solid var(--play-line);
-  border-radius:18px;
-  background:rgba(255,255,255,.42);
+  align-items:stretch;
+  gap:clamp(28px,4vw,44px);
 }
-.about-impact-grid strong {
-  font:600 clamp(2.5rem,5vw,4.8rem)/.85 'Rethink Sans',sans-serif;
-  letter-spacing:-.07em;
-  color:var(--play-ink);
-}
-.about-impact-grid span {
-  max-width:34ch;
+.about-beyond-work-layout > p {
+  max-width:66ch;
+  margin:0;
   color:var(--play-muted);
-  font:400 13px/1.45 'Rethink Sans',sans-serif;
+  font-size:16px;
+  line-height:1.62;
 }
-:root[data-theme='dark'] .about-impact-grid article { background:#20252b; border-color:var(--play-line); }
-@media(max-width:560px) {
-  .about-impact-grid { grid-template-columns:1fr; }
-  .about-impact-grid article { min-height:145px; }
+.about-polaroid-deck {
+  position:relative;
+  width:min(100%,430px);
+  aspect-ratio:1.13;
+  align-self:center;
+  border:0;
+  padding:0;
+  background:transparent;
+  color:inherit;
+  cursor:pointer;
+  isolation:isolate;
+  -webkit-tap-highlight-color:transparent;
+}
+.about-polaroid-deck:focus-visible {
+  outline:2px solid var(--play-orange);
+  outline-offset:12px;
+  border-radius:12px;
+}
+.about-polaroid {
+  position:absolute;
+  inset:7% 9% 9%;
+  display:block;
+  padding:12px 12px 42px;
+  border:1px solid rgba(33,31,26,.13);
+  background:#fffdf8;
+  box-shadow:0 18px 42px rgba(46,38,27,.18),0 2px 5px rgba(46,38,27,.08);
+  transform-origin:50% 115%;
+  transition:transform .44s cubic-bezier(.2,.74,.28,1),opacity .3s ease;
+  will-change:transform,opacity;
+}
+.about-polaroid-photo {
+  display:block;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  border:1px solid rgba(33,31,26,.08);
+  background:#ddd4c5;
+}
+.about-polaroid-photo img { display:block; width:100%; height:100%; object-fit:cover; }
+.about-polaroid[data-depth='0'] { transform:translate3d(0,-4px,0) rotate(-1.5deg); }
+.about-polaroid[data-depth='1'] { transform:translate3d(8px,3px,0) rotate(3.2deg); }
+.about-polaroid[data-depth='2'] { transform:translate3d(-8px,9px,0) rotate(-4.2deg); }
+.about-polaroid[data-depth='3'] { transform:translate3d(5px,13px,0) rotate(1.8deg); }
+.about-polaroid[data-depth='4'] { transform:translate3d(-3px,16px,0) rotate(-2deg); }
+.about-polaroid[data-depth='5'] { transform:translate3d(2px,18px,0) rotate(.8deg); }
+.about-polaroid-deck.is-advancing .about-polaroid[data-depth='0'] {
+  opacity:0;
+  transform:translate3d(78%,-12%,0) rotate(18deg);
+}
+:root[data-theme='dark'] .about-polaroid {
+  background:#fffdf8;
+  border-color:rgba(33,31,26,.13);
+  box-shadow:0 22px 50px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.28);
+}
+@media(max-width:760px) {
+  .about-beyond-work-layout { gap:28px; }
+  .about-polaroid-deck { width:min(100%,370px); }
+}
+@media(prefers-reduced-motion:reduce) {
+  .about-polaroid { transition:none; }
+  .about-polaroid-deck.is-advancing .about-polaroid[data-depth='0'] { transform:none; }
 }

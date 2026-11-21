@@ -279,7 +279,7 @@ export const brandProjects: BrandProject[] = [
     { title: 'Premise', copy: 'Belsquared needed to make authentic African snacks feel familiar, joyful, and easy to recognise across a growing range. The system had to organise flavours and product information without losing the warmth of the food or the people around it.' },
     { title: 'Identity', statement: 'SIMPLE SHAPES.\nSTRONG RECALL.', copy: 'Clear geometry, bold typography, and repeatable graphic devices create recognition at shelf distance, in a social feed, and throughout the shopping experience.' },
     { title: 'Visual Language', copy: 'Each flavour receives its own colour and product expression while typography, pattern, composition, and photography hold the family together. The result is flexible enough for campaigns but disciplined enough for packaging.' },
-    { title: 'Packaging', copy: 'The architecture scales across three flavour pouches, shipping touchpoints, social stories, outdoor campaigns, lifestyle imagery, and e-commerce—one system supporting a customer experience serving more than 1,000 people.' }
+    { title: 'Packaging', copy: 'The architecture scales across three flavour pouches, shipping touchpoints, social stories, outdoor campaigns, lifestyle imagery, and e-commerce, with one system supporting a customer experience serving more than 1,000 people.' }
   ], next: { name: 'SIDE B', slug: 'side-b', note: 'Brand Identity · Packaging · Art Direction' } })
 ]
 

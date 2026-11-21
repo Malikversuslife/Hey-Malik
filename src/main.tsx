@@ -10,6 +10,7 @@ import { productCaseMeta } from './data/productCases'
 import { brandProjects, brandingIndex } from './data/branding'
 import { contact } from './data/contact'
 import { sandboxExplorations, type SandboxExploration } from './data/sandbox'
+import { portfolioPolaroids } from './data/polaroids'
 import { CaseMedia, CaseMediaPair } from './components/work/CaseMedia'
 import { PrimaProductCase } from './components/work/PrimaProductCase'
 import { NomiProductCase } from './components/work/NomiProductCase'
@@ -291,20 +292,6 @@ const scrollDestinationToTop = () => {
 
 type EntryPhase = 'loading' | 'showing' | 'exiting' | 'done'
 type PortfolioTheme = 'light' | 'dark'
-const ENTRY_POLAROIDS = [
-  { src: '/entry-polaroids/polaroid-01.webp', position: '50% 52%' },
-  { src: '/entry-polaroids/polaroid-02.webp', position: '50% 54%' },
-  { src: '/entry-polaroids/polaroid-03.webp', position: '50% 58%' },
-  { src: '/entry-polaroids/polaroid-04.webp', position: '50% 52%' },
-  { src: '/entry-polaroids/polaroid-05.webp', position: '50% 68%' },
-  { src: '/entry-polaroids/polaroid-06.webp', position: '50% 56%' },
-  { src: '/entry-polaroids/polaroid-07.webp', position: '50% 58%' },
-  { src: '/entry-polaroids/polaroid-08.webp', position: '50% 56%' },
-  { src: '/entry-polaroids/polaroid-09.webp', position: '50% 62%' },
-  { src: '/entry-polaroids/polaroid-10.webp', position: '50% 62%' },
-  { src: '/entry-polaroids/polaroid-11.webp', position: '50% 62%' },
-  { src: '/entry-polaroids/polaroid-12.webp', position: '50% 50%' }
-] as const
 const initialTheme: PortfolioTheme = (() => {
   try {
     const saved = localStorage.getItem('m:portfolio-theme-choice')
@@ -319,7 +306,7 @@ function PortfolioEntry({ phase }: { phase: Exclude<EntryPhase, 'done'> }) {
     <div className="portfolio-entry-curtain portfolio-entry-curtain-left" />
     <div className="portfolio-entry-curtain portfolio-entry-curtain-right" />
     {phase !== 'loading' && <><div className="portfolio-entry-polaroids">
-      {ENTRY_POLAROIDS.map(photo => <div className="entry-polaroid" key={photo.src}>
+      {portfolioPolaroids.map(photo => <div className="entry-polaroid" key={photo.src}>
         <span className="entry-polaroid-photo"><img src={photo.src} alt="" style={{ objectPosition: photo.position }} loading="eager" decoding="sync" fetchPriority="high" /></span>
       </div>)}
     </div>
@@ -456,7 +443,7 @@ function App() {
   useEffect(() => {
     if (entryPhase !== 'loading') return
     let cancelled = false
-    const preload = ({ src }: (typeof ENTRY_POLAROIDS)[number]) => new Promise<void>(resolve => {
+    const preload = ({ src }: (typeof portfolioPolaroids)[number]) => new Promise<void>(resolve => {
       const image = new Image()
       let settled = false
       const finish = () => {
@@ -470,7 +457,7 @@ function App() {
       image.src = src
       if (image.complete) finish()
     })
-    Promise.all(ENTRY_POLAROIDS.map(preload)).then(() => { if (!cancelled) setEntryPhase('showing') })
+    Promise.all(portfolioPolaroids.map(preload)).then(() => { if (!cancelled) setEntryPhase('showing') })
     return () => { cancelled = true }
   }, [entryPhase])
   useEffect(() => {

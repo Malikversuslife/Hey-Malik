@@ -1,5 +1,6 @@
 import { contact } from '../data/contact'
 import { useEffect, useState } from 'react'
+import { portfolioPolaroids } from '../data/polaroids'
 
 type ExperienceRecord = [period: string, role: string, organization: string, location: string, responsibilities: string[]]
 
@@ -68,6 +69,55 @@ function TestimonialCards() {
       <footer><strong>{testimonial.author}</strong><small>{testimonial.role}</small></footer>
     </article>)}
   </>
+}
+
+function BeyondWorkPolaroids() {
+  const [frontIndex, setFrontIndex] = useState(0)
+  const [isAdvancing, setIsAdvancing] = useState(false)
+  const [isPaused, setIsPaused] = useState(false)
+
+  useEffect(() => {
+    if (isPaused || isAdvancing || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const timer = window.setTimeout(() => setIsAdvancing(true), 3600)
+    return () => window.clearTimeout(timer)
+  }, [frontIndex, isAdvancing, isPaused])
+
+  useEffect(() => {
+    if (!isAdvancing) return
+    const timer = window.setTimeout(() => {
+      setFrontIndex(current => (current + 1) % portfolioPolaroids.length)
+      setIsAdvancing(false)
+    }, 440)
+    return () => window.clearTimeout(timer)
+  }, [isAdvancing])
+
+  const advance = () => {
+    if (!isAdvancing) setIsAdvancing(true)
+  }
+
+  const orderedPhotos = portfolioPolaroids.map((_, offset) => portfolioPolaroids[(frontIndex + offset) % portfolioPolaroids.length])
+
+  return <button
+    type="button"
+    className={`about-polaroid-deck${isAdvancing ? ' is-advancing' : ''}`}
+    aria-label={`Show next photo. Photo ${frontIndex + 1} of ${portfolioPolaroids.length} is currently visible.`}
+    onClick={advance}
+    onMouseEnter={() => setIsPaused(true)}
+    onMouseLeave={() => setIsPaused(false)}
+    onFocus={() => setIsPaused(true)}
+    onBlur={() => setIsPaused(false)}
+  >
+    <span className="visually-hidden">The photos advance automatically. Click or press Enter to move the top photo to the back.</span>
+    {orderedPhotos.map((photo, offset) => <span
+      className="about-polaroid"
+      data-depth={Math.min(offset, 5)}
+      aria-hidden={offset === 0 ? undefined : true}
+      key={photo.src}
+      style={{ zIndex: portfolioPolaroids.length - offset }}
+    >
+      <span className="about-polaroid-photo"><img src={photo.src} alt={offset === 0 ? `A moment from Malik's life beyond work, photo ${frontIndex + 1}` : ''} style={{ objectPosition: photo.position }} loading="eager" decoding="async" /></span>
+    </span>)}
+  </button>
 }
 
 export function AboutEditorial({ experienceRecords }: { experienceRecords: ExperienceRecord[] }) {
@@ -165,18 +215,21 @@ export function AboutEditorial({ experienceRecords }: { experienceRecords: Exper
       <section className="about-section" id="about-leadership">
         <h3>Leadership &amp; Impact</h3>
         <p className="about-lead">Leadership is how the work improves beyond the screens I design myself.</p>
-        <div className="about-impact-grid" aria-label="Selected leadership and product impact">
-          <article><strong>4,000+</strong><span>users reached across the multi-product SaaS portfolio I help lead at Emerj.</span></article>
-          <article><strong>1,000+</strong><span>visitors supported per PyCon Nigeria event through clearer discovery, ticketing, speaker, and session journeys.</span></article>
-          <article><strong>1,000+</strong><span>customers served by the Belsquared commerce experience I helped redesign from information architecture through handoff.</span></article>
-          <article><strong>1,000+</strong><span>design interns mentored through structured critique, sprint reviews, and implementation-ready product decisions at HNG.</span></article>
+        <div className="about-card-grid" aria-label="Selected leadership and product impact">
+          <article className="about-card"><h4>4,000+</h4><p>users reached across the multi-product SaaS portfolio I help lead at Emerj.</p></article>
+          <article className="about-card"><h4>1,000+</h4><p>visitors supported per PyCon Nigeria event through clearer discovery, ticketing, speaker, and session journeys.</p></article>
+          <article className="about-card"><h4>1,000+</h4><p>customers served by the Belsquared commerce experience I helped redesign from information architecture through handoff.</p></article>
+          <article className="about-card"><h4>1,000+</h4><p>design interns mentored through structured critique, sprint reviews, and implementation-ready product decisions at HNG.</p></article>
         </div>
         <p>I work as a hands-on player-coach: shaping product direction, presenting decisions to stakeholders, reviewing work, strengthening shared systems, and staying close enough to implementation to protect the experience through delivery.</p>
       </section>
 
       <section className="about-section" id="about-offline">
         <h3>Beyond Work</h3>
-        <p>Outside client and product work, I keep a steady practice of visual exploration, writing, mentoring, and building small experiments. The Lab and Sandbox are where those curiosities become tangible.</p>
+        <div className="about-beyond-work-layout">
+          <p>Outside client and product work, I'm a contemporary artist and digital illustrator. I keep a steady practice of visual exploration, writing, mentoring, and building small experiments, with the Lab and Sandbox giving those curiosities somewhere to become tangible. When I get overstimulated, I like to touch grass: stepping away from the screen, spending time outside, and returning with a clearer head.</p>
+          <BeyondWorkPolaroids />
+        </div>
       </section>
 
       <section className="about-section about-together" id="about-together">

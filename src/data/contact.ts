@@ -6,5 +6,5 @@ export const contact = {
   substack: 'https://substack.com/@malikversuslife',
   dribbble: 'https://dribbble.com/Heymalik',
   linkedin: 'https://www.linkedin.com/in/temitayo-l-74984b16a/',
-  resume: 'https://drive.google.com/file/d/1NGunwx4HF87aBH3o87h24LX3Rupm19BP/view?usp=sharing'
+  resume: '/Temitayo-Lawal-Resume.pdf'
 }
