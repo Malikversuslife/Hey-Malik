@@ -759,7 +759,9 @@ main.page-workCaseStudy, main.page-labExperiment { padding-top:0; background:#f4
 .pc-pair .pc-media { margin-top:0; }
 .pc-media { margin:clamp(26px,3.2vw,40px) 0 0; width:100%; }
 .pc-media-frame { position:relative; width:100%; aspect-ratio:16/9; overflow:hidden; background:var(--pc-frame); border:1px solid var(--pc-frame-line); border-radius:var(--pc-radius); }
-.pc-media-frame > video,.pc-media-frame > img { width:100%; height:100%; display:block; object-fit:cover; background:#111; }
+.pc-media-frame > img { width:100%; height:100%; display:block; object-fit:cover; background:#111; }
+.pc-media-frame:has(> video) { min-height:0; height:auto; aspect-ratio:auto; }
+.pc-media-frame > video { width:100%; height:auto; display:block; object-fit:contain; background:#111; }
 .pc-video-play { position:absolute; z-index:3; top:50%; left:50%; display:grid; width:58px; height:58px; place-items:center; transform:translate(-50%,-50%); border:1px solid rgba(255,255,255,.55); border-radius:50%; background:rgba(17,17,19,.78); color:#fff; backdrop-filter:blur(10px); box-shadow:0 14px 35px rgba(0,0,0,.24); transition:transform .25s ease,background .25s ease; }
 .pc-video-play:hover { transform:translate(-50%,-50%) scale(1.05); background:rgba(17,17,19,.9); }
 .pc-video-play .portfolio-icon { width:22px; height:22px; margin-left:2px; }
@@ -788,6 +790,10 @@ main.page-workCaseStudy, main.page-labExperiment { padding-top:0; background:#f4
 .pc-media-wide .pc-media-frame { aspect-ratio:16/10; }
 .pc-media-tall .pc-media-frame { aspect-ratio:3/4; }
 .pc-media-square .pc-media-frame { aspect-ratio:1/1; }
+.pc-media-full .pc-media-frame:has(> video),
+.pc-media-wide .pc-media-frame:has(> video),
+.pc-media-tall .pc-media-frame:has(> video),
+.pc-media-square .pc-media-frame:has(> video) { min-height:0; height:auto; aspect-ratio:auto; }
 
 /* -- SYSTEM COMPOSITION (verification architecture / full shell width) -- */
 .pc-system { margin:clamp(44px,6vw,72px) 0 0; }

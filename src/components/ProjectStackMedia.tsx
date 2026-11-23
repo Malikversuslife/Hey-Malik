@@ -16,6 +16,7 @@ export function ProjectStackMedia({
   const mediaRef = useRef<HTMLSpanElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const isVideo = !!source && /\.(mp4|webm|mov)(?:[?#]|$)/i.test(source)
+  const resolvedPoster = poster ?? source?.replace(/\.(?:mp4|webm|mov)(?=([?#]|$))/i, '.jpg')
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false)
 
   useEffect(() => {
@@ -54,7 +55,7 @@ export function ProjectStackMedia({
     <span ref={mediaRef} className={`project-stack-media${className ? ` ${className}` : ''}`} aria-hidden="true">
       {source
         ? isVideo
-          ? <video ref={videoRef} src={shouldLoadVideo ? source : undefined} poster={poster} muted loop playsInline preload="none" />
+          ? <video ref={videoRef} src={shouldLoadVideo ? source : undefined} poster={resolvedPoster} muted loop playsInline preload="metadata" />
           : <img src={source} alt="" loading="lazy" decoding="async" fetchPriority="low" />
         : <><span className="project-stack-media-label">{label}</span><span className="project-stack-media-note">{note}</span></>}
     </span>
