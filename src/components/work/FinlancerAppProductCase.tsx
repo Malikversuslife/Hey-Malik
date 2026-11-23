@@ -103,9 +103,6 @@ export function FinlancerAppProductCase({ onNext }: { onNext: (slug: string) => 
     </ProductCaseSection>
 
     <ProductCaseClosing descriptor="A calmer financial operating system for independent work.">MONEY THAT EXPLAINS ITSELF.</ProductCaseClosing>
-    <ProductCaseNext next={NEXT} onNext={slug => {
-      if (slug === 'finlancer-website') window.open('https://finlancer-virid.vercel.app/', '_blank', 'noopener,noreferrer')
-      else onNext(slug)
-    }} />
+    <ProductCaseNext next={NEXT} onNext={onNext} />
   </ProductCase>
 }

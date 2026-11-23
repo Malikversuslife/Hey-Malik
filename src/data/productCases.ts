@@ -139,7 +139,7 @@ export const productCaseMeta: Record<string, ProductCaseMeta> = {
     projectType: 'Pre-launch Product',
     year: '2025',
     intro: 'Finlancer brings income, expenses, clients, invoices, tax preparation, savings goals and multiple currencies into one calm iOS app. I designed the brand first, then rebuilt 108 product screens so both speak with one voice.',
-    nextProject: 'finlancer-website'
+    nextProject: 'prima'
   }
 }
 
@@ -150,6 +150,5 @@ export const productCaseProjectMeta: Record<string, ProductCaseProjectMeta> = {
   yousewire: { slug: 'yousewire', index: '05', title: 'YOUSEWIRE', descriptor: 'Fintech', discipline: 'Product Design · Fintech', note: 'A cross-border financial system for personal and business money.' },
   'anansi-gallery': { slug: 'anansi-gallery', index: '07', title: 'ANANSI GALLERY', descriptor: 'Immersive Web · Art', discipline: 'Product Design · Immersive Web', note: 'A browser-based art journey built around atmosphere, access, and personal expression.' },
   roomwise: { slug: 'roomwise', index: '08', title: 'ROOMWISE', descriptor: 'Proptech · Mobile', discipline: 'Product Design · Proptech', note: 'A property app concept that makes a home’s actual dimensions visible while browsing.' },
-  'finlancer-app': { slug: 'finlancer-app', index: '09', title: 'FINLANCER', descriptor: 'Fintech · Mobile', discipline: 'Product Design · Fintech', note: 'An iOS money app that helps freelancers understand what each payment means.' },
-  'finlancer-website': { slug: 'finlancer-website', index: '06', title: 'FINLANCER WEBSITE', descriptor: 'Web design · Fintech', discipline: 'Web design · Brand experience', note: 'The live marketing website for Finlancer.' }
+  'finlancer-app': { slug: 'finlancer-app', index: '09', title: 'FINLANCER', descriptor: 'Fintech · Mobile', discipline: 'Product Design · Fintech', note: 'An iOS money app that helps freelancers understand what each payment means.' }
 }
