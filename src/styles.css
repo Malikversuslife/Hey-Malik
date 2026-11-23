@@ -2283,36 +2283,6 @@ body::before {
   object-fit:contain !important;
 }
 
-/* Preserve the Nomi mobile-navigation recording as a complete portrait capture. */
-.pc-case-nomi #nomi-shell .pc-pair .pc-media:nth-child(2) {
-  width:min(100%,390px);
-  justify-self:center;
-}
-.pc-case-nomi #nomi-shell .pc-pair .pc-media:nth-child(2) .pc-media-frame {
-  aspect-ratio:390/844 !important;
-  min-height:0 !important;
-}
-.pc-case-nomi #nomi-shell .pc-pair .pc-media:nth-child(2) .pc-media-frame > video {
-  width:100% !important;
-  height:100% !important;
-  object-fit:contain !important;
-}
-
-/* Keep Hanya's dedicated mobile progress capture complete and portrait. */
-.pc-case-hanya #hanya-navigation-gap .pc-pair .pc-media:nth-child(2) {
-  width:min(100%,390px);
-  justify-self:center;
-}
-.pc-case-hanya #hanya-navigation-gap .pc-pair .pc-media:nth-child(2) .pc-media-frame {
-  aspect-ratio:390/844 !important;
-  min-height:0 !important;
-}
-.pc-case-hanya #hanya-navigation-gap .pc-pair .pc-media:nth-child(2) .pc-media-frame > video {
-  width:100% !important;
-  height:100% !important;
-  object-fit:contain !important;
-}
-
 /* Warm, playful portfolio system inspired by friendly community software. */
 :root {
   --play-paper:#f7f4ed;

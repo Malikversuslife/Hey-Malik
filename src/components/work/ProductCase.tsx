@@ -169,19 +169,50 @@ export function ProductCaseMedia({ media, className = '', priority = false }: { 
   const ratio = media.ratio ?? 'wide'
   const isImage = !!media.source && /\.(?:avif|gif|jpe?g|png|svg|webp)(?:[?#].*)?$/i.test(media.source)
   const poster = media.poster ?? media.source?.replace(/\.(?:mp4|webm|mov)(?=([?#]|$))/i, '.jpg')
+  const frameRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
+  const playWhenReadyRef = useRef(false)
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(priority)
   const [playing, setPlaying] = useState(false)
+
+  useEffect(() => {
+    const frame = frameRef.current
+    if (isImage || !media.source || shouldLoadVideo || !frame) return
+    if (!('IntersectionObserver' in window)) {
+      setShouldLoadVideo(true)
+      return
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return
+      setShouldLoadVideo(true)
+      observer.disconnect()
+    }, { rootMargin: '480px 0px' })
+    observer.observe(frame)
+    return () => observer.disconnect()
+  }, [isImage, media.source, shouldLoadVideo])
+
+  useEffect(() => {
+    if (!shouldLoadVideo || !playWhenReadyRef.current) return
+    playWhenReadyRef.current = false
+    videoRef.current?.play().catch(() => undefined)
+  }, [shouldLoadVideo])
+
   const togglePlayback = () => {
     const video = videoRef.current
     if (!video) return
+    if (!shouldLoadVideo) {
+      playWhenReadyRef.current = true
+      setShouldLoadVideo(true)
+      return
+    }
     if (video.paused) video.play().catch(() => undefined)
     else video.pause()
   }
   return (
     <figure className={`pc-media pc-media-${ratio} pc-reveal ${className}`.trim()} role="group" aria-label={media.title}>
-      <div className="pc-media-frame">
+      <div ref={frameRef} className="pc-media-frame">
         {isImage ? <img src={media.source} alt={media.caption ?? media.title} loading={priority ? 'eager' : 'lazy'} decoding="async" fetchPriority={priority ? 'high' : 'low'} /> : media.source ? <>
-          <video ref={videoRef} src={media.source} poster={poster} controls playsInline preload="metadata" onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onEnded={() => setPlaying(false)} />
+          <video ref={videoRef} src={shouldLoadVideo ? media.source : undefined} poster={poster} controls playsInline preload={shouldLoadVideo ? 'metadata' : 'none'} onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onEnded={() => setPlaying(false)} />
           {!playing && <button type="button" className="pc-video-play" onClick={togglePlayback} aria-label={`Play ${media.title}`}><Icon name="play" /></button>}
         </> : <>
           <div className="pc-media-grid" />
