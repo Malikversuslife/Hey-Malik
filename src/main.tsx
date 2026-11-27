@@ -4,6 +4,7 @@ import { AboutEditorial } from './components/AboutEditorial'
 import { useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createPortal } from 'react-dom'
+import { Analytics } from '@vercel/analytics/react'
 import { labExperiments, type LabExperiment } from './data/lab'
 import { workProjects, type WorkProject } from './data/work'
 import { productCaseMeta } from './data/productCases'
@@ -1091,5 +1092,10 @@ function LabExperimentPage({ experiment, onBack }: { experiment?: LabExperiment;
 function GlobalFooter() { return <footer className="global-footer"><span>M/ CONTACT</span><div><a href={`mailto:${contact.email}`} aria-label={`Email Malik at ${contact.email}`}><Icon name="mail" /> EMAIL</a><SocialLinks /></div></footer> }
 
 function Contact() { return <section className="contact section" id="contact"><div className="section-label">M/ CONTACT <span>05</span></div><h2>HAVE A<br />COMPLICATED<br />PROBLEM?</h2><em>Good.</em><a className="talk" href={`mailto:${contact.email}`} aria-label={`Email Malik at ${contact.email}`}>LET'S TALK <span>↗</span></a><div className="contact-links"><a href={`mailto:${contact.email}`} aria-label={`Email Malik at ${contact.email}`}><Icon name="mail" /> EMAIL</a><SocialLinks /></div><div className="contact-meta"><span>{contact.email}</span><span>LAGOS, NG</span><span>GLOBAL / REMOTE</span><span>AVAILABLE FOR SELECTED COLLABORATIONS</span></div></section> }
-createRoot(document.getElementById('root')!).render(<App />)
+createRoot(document.getElementById('root')!).render(
+  <>
+    <App />
+    <Analytics />
+  </>,
+)
 
